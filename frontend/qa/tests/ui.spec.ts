@@ -272,3 +272,85 @@ test.describe("Stage 4 unified assessment and reconciliation workflows", () => {
     await expect(page.getByText("Direct Interval Overlap Conflict")).toBeVisible();
   });
 });
+
+test.describe("Sprint 3.3 cross-registry project and entity intelligence workspace", () => {
+  test("macro summary census and comparative retirement pacing trends render accurately", async ({ page }) => {
+    await page.goto("/cross-registry");
+    await expect(page.getByRole("heading", { name: "Cross-Registry Intelligence" })).toBeVisible();
+
+    // Verify macro census metrics
+    await expect(page.getByText("Verra VCS Retired Volume")).toBeVisible();
+    await expect(page.getByText("Gold Standard Retired Volume")).toBeVisible();
+    await expect(page.getByText("Pure Retirement Accounting")).toBeVisible();
+    await expect(page.getByText(/669 Excluded/)).toBeVisible();
+
+    // Verify pacing chart
+    await expect(page.getByRole("region", { name: "Comparative Retirement Pacing & Volume Trends" })).toBeVisible();
+    await expect(page.getByText("Verra VCS Pacing")).toBeVisible();
+    await expect(page.getByText("Gold Standard Pacing")).toBeVisible();
+
+    // Toggle data table
+    await page.getByRole("button", { name: "Show Table" }).click();
+    await expect(page.getByText("Data Table — YEARLY PACING")).toBeVisible();
+    await page.getByRole("button", { name: "Hide Table" }).click();
+    await expect(page.getByText("Data Table — YEARLY PACING")).toBeHidden();
+  });
+
+  test("correlation explorer filters candidates and inspects pairwise comparison modal", async ({ page }) => {
+    await page.goto("/cross-registry");
+    await expect(page.getByRole("tab", { name: /Correlation Explorer/ })).toBeVisible();
+
+    // Verify candidate pairs are rendered
+    await expect(page.getByText("Name Similarity").first()).toBeVisible({ timeout: 10_000 });
+
+    // Open pairwise inspection modal
+    await page.getByRole("button", { name: "Inspect Pair" }).first().click();
+    const modal = page.getByRole("dialog", { name: "Cross-Registry Project Comparison Detail" });
+    await expect(modal).toBeVisible();
+    await expect(modal.getByText("Deterministic Lexical Metrics")).toBeVisible();
+    await expect(modal.getByText("Attribute Relation Matrix")).toBeVisible();
+
+    // Close modal
+    await modal.getByRole("button", { name: "Close Detail" }).click();
+    await expect(modal).toBeHidden();
+  });
+
+  test("project comparator studio runs presets and flags identifier collisions with safety invariant", async ({ page }) => {
+    await page.goto("/cross-registry");
+    // Switch to Project Comparator tab
+    await page.getByRole("tab", { name: /Project Comparator/ }).click();
+    await expect(page.getByText("Quick Demonstration Presets:")).toBeVisible();
+
+    // Click Preset 2: Identifier Collision (VCS 1845 vs GS 1845)
+    await page.getByRole("button", { name: /Identifier Collision/ }).click();
+    await page.getByRole("button", { name: "Compare Project Profiles" }).click();
+
+    // Verify collision safety banner
+    await expect(page.getByText("Cross-Registry Identifier Collision Detected")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/uncoordinated identifier namespaces/)).toBeVisible();
+
+    // Click Preset 1: Attribute Correlation (VCS 1904 vs GS 3044)
+    await page.getByRole("button", { name: /Attribute Correlation/ }).click();
+    await page.getByRole("button", { name: "Compare Project Profiles" }).click();
+    await expect(page.getByText("Partial Attribute Correlation")).toBeVisible({ timeout: 10_000 });
+  });
+
+  test("entity & broker studio executes entity resolution and intermediary narrative extraction", async ({ page }) => {
+    await page.goto("/cross-registry");
+    // Switch to Entity & Broker Studio tab
+    await page.getByRole("tab", { name: /Entity & Broker Studio/ }).click();
+    await expect(page.getByText("Entity Resolution & Legal Non-Equivalence Mandate")).toBeVisible();
+
+    // Run Entity Resolution
+    await page.getByRole("button", { name: "Compare Entity Names" }).click();
+    await expect(page.getByText("Resolution Scorecard")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Canonical Variant")).toBeVisible();
+
+    // Run Intermediary Extraction
+    await page.getByRole("button", { name: "Extract Intermediary Structure" }).click();
+    await expect(page.getByText("Structured Extraction")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Delegated Retirement")).toBeVisible();
+    await expect(page.getByText("South Pole Carbon Asset Management Ltd")).toBeVisible();
+    await expect(page.getByText("Apple Inc.")).toBeVisible();
+  });
+});

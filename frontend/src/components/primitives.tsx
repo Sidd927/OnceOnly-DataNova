@@ -178,6 +178,7 @@ export {
   AssessmentStatusBadge,
   EvidenceStrengthBadge,
   CategoryBadge,
+  ProjectCorrelationCategoryBadge,
   SourceStageBadge,
   MetricTile,
 } from "./AnalyticalPrimitives";

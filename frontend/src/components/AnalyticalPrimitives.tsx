@@ -178,9 +178,10 @@ export function EvidenceStrengthBadge({ strength }: { strength: EvidenceStrength
         </span>
       );
     case "UNRESOLVED":
+    case "INSUFFICIENT":
       return (
-        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-1.5 py-0.5 text-[10.5px] font-medium text-muted" title="Unresolved: missing attributes prevent full confidence">
-          Unresolved
+        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-1.5 py-0.5 text-[10.5px] font-medium text-muted" title="Insufficient: missing attributes prevent full confidence">
+          Insufficient
         </span>
       );
     default:
@@ -210,6 +211,57 @@ export function CategoryBadge({ category }: { category: EvidenceCategory | strin
       {label}
     </span>
   );
+}
+
+export function ProjectCorrelationCategoryBadge({ category }: { category: string }) {
+  const cat = (category || "").toUpperCase();
+  switch (cat) {
+    case "CROSS_REGISTRY_IDENTIFIER_COLLISION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/40 bg-crimson-wash px-2 py-0.5 font-mono text-[11px] font-bold text-crimson" title="Identifier Collision: disjoint registry namespaces share identical ID strings">
+          <AlertTriangle size={12} aria-hidden />
+          ID Collision
+        </span>
+      );
+    case "STRONG_ATTRIBUTE_CORRELATION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-lichen/40 bg-lichen-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-lichen" title="Strong Attribute Correlation: multi-attribute alignment across independent registries">
+          Strong Correlation
+        </span>
+      );
+    case "PARTIAL_ATTRIBUTE_CORRELATION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-glacier/30 bg-glacier-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-glacier" title="Partial Attribute Correlation: significant name similarity with subset of corroborating attributes">
+          Partial Correlation
+        </span>
+      );
+    case "EXACT_IDENTIFIER_MATCH":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-glacier/40 bg-glacier-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-glacier" title="Exact Identifier Match within coordinated registry namespace">
+          Exact ID Match
+        </span>
+      );
+    case "CONFLICTING_ATTRIBUTES":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-ochre/40 bg-ochre-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-ochre" title="Conflicting Attributes: names are similar but countries or vintages directly conflict">
+          <AlertTriangle size={12} aria-hidden />
+          Conflicting Attributes
+        </span>
+      );
+    case "NAME_SIMILARITY_ONLY":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-rule-strong bg-fog px-2 py-0.5 font-mono text-[11px] font-medium text-ink-soft" title="Name Similarity Only: lexical similarity without corroborating metadata">
+          Name Similarity Only
+        </span>
+      );
+    case "INSUFFICIENT_EVIDENCE":
+    default:
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-2 py-0.5 font-mono text-[11px] font-medium text-muted" title="Insufficient Evidence: sparse metadata prevents confident categorization">
+          Insufficient Evidence
+        </span>
+      );
+  }
 }
 
 export function SourceStageBadge({ stage }: { stage: SourceStage | string }) {
@@ -260,3 +312,4 @@ export function MetricTile({
     </div>
   );
 }
+
