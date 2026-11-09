@@ -34,7 +34,7 @@ Use this for a human-narrated take. The synthetic reference cut already exists (
 - [ ] Export H.264 MP4 at 1080p.
 - [ ] Check that the duration is between 3:00 and 5:00 and that the audio is in sync at 4d ("from here, to here").
 - [ ] Captions: adapt `exports/demo_reference/captions.srt` or use YouTube auto-captions and correct them.
-- [ ] Upload to YouTube as **Unlisted** (or Vimeo), after the owner approves. Title: "OnceOnly: every retired tonne, claimed once (IEEE ClimateChain 2026)".
+- [ ] Upload to YouTube as **Unlisted** (or Vimeo), after the owner approves. Title: "OnceOnly: every retired tonne, claimed once".
 - [ ] Open the link in a private window to confirm it plays without signing in.
 - [ ] Restore the seeded demo for judges: `make reset`, restart `make api`, `make seed`, `make demo-check`.
 

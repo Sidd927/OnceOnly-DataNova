@@ -3,7 +3,7 @@
 **Nothing has been submitted.** Submission, publishing the repository, uploading the video and any public deployment are owner actions.
 
 ## 1. Repository and branch
-- **URL:** https://github.com/Sidd927/ClimateChain (currently **private**).
+- **URL:** https://github.com/Sidd927/OnceOnly-DataNova
 - **Branch to submit:** `main`. Mission 04 work was done on `feature/submission-readiness` and merged into `main`.
 
 ## 2. Final verified commit
@@ -111,7 +111,7 @@ The overview asks for a **public** repository. Before making it public:
 
 ## 13. Pre-submission smoke test (about 10 minutes)
 1. In a fresh clone:
-   - `git clone https://github.com/Sidd927/ClimateChain.git /tmp/oo-check && cd /tmp/oo-check`
+   - `git clone https://github.com/Sidd927/OnceOnly-DataNova.git /tmp/oo-check && cd /tmp/oo-check`
    - `make setup`
    - `make test`, which should report 24 and 24 passing
 2. Start the stack and seed it:

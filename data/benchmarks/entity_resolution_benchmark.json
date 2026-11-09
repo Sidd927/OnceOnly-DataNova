@@ -1,0 +1,1243 @@
+[
+  {
+    "id": "ER-001",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "Minerva S.A.",
+    "name_b": "Minerva S.A.",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Exact identical string from Berkeley VROD Verra retirements."
+  },
+  {
+    "id": "ER-002",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "CNaught Inc.",
+    "name_b": "CNaught Inc.",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Exact match for US corporate registrant in VROD."
+  },
+  {
+    "id": "ER-003",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "Air New Zealand Limited",
+    "name_b": "Air New Zealand Limited",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Exact match for airline registrant in VROD."
+  },
+  {
+    "id": "ER-004",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "natureOffice GmbH",
+    "name_b": "natureOffice GmbH",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Exact match for German registrant in VROD."
+  },
+  {
+    "id": "ER-005",
+    "category": "exact_matches",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Siemens AG",
+    "name_b": "Siemens AG",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Exact corporate disclosure name match."
+  },
+  {
+    "id": "ER-006",
+    "category": "exact_matches",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Microsoft Corporation",
+    "name_b": "Microsoft Corporation",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Identical US registrant name."
+  },
+  {
+    "id": "ER-007",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "UNLSH Mobility B.V.",
+    "name_b": "UNLSH Mobility B.V.",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Dutch B.V. exact match in VROD."
+  },
+  {
+    "id": "ER-008",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "RISEL COMBUSTIVEIS LTDA",
+    "name_b": "RISEL COMBUSTIVEIS LTDA",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Brazilian LTDA registrant exact match."
+  },
+  {
+    "id": "ER-009",
+    "category": "exact_matches",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Shell PLC",
+    "name_b": "Shell PLC",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "UK PLC exact match."
+  },
+  {
+    "id": "ER-010",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "Webjet Marketing Pty Ltd",
+    "name_b": "Webjet Marketing Pty Ltd",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Australian Pty Ltd exact match."
+  },
+  {
+    "id": "ER-011",
+    "category": "exact_matches",
+    "source_provenance": "real_vrod",
+    "name_a": "Ecologi Action Ltd",
+    "name_b": "Ecologi Action Ltd",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "UK Ltd exact match."
+  },
+  {
+    "id": "ER-012",
+    "category": "exact_matches",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Delta Air Lines",
+    "name_b": "Delta Air Lines",
+    "expected_relationship": "EXACT_MATCH",
+    "expected_is_match": true,
+    "rationale": "Identical airline brand name."
+  },
+  {
+    "id": "ER-013",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "Minerva S.A.",
+    "name_b": "MINERVA SA",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Case variation and stripped period in legal suffix."
+  },
+  {
+    "id": "ER-014",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "UNLSH Mobility B.V.",
+    "name_b": "unlsh mobility bv",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "All lowercase without punctuation."
+  },
+  {
+    "id": "ER-015",
+    "category": "formatting_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "L'Oreal S.A.",
+    "name_b": "L OREAL SA",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Apostrophe stripped vs preserved."
+  },
+  {
+    "id": "ER-016",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "Qantas Airways Limited",
+    "name_b": "QANTAS AIRWAYS LIMITED",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "All-caps registry entry vs standard title case."
+  },
+  {
+    "id": "ER-017",
+    "category": "formatting_variants",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Northwind Foods (SYNTHETIC)",
+    "name_b": "Northwind Foods",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Synthetic evaluation tag stripped."
+  },
+  {
+    "id": "ER-018",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "Enel S.p.A.",
+    "name_b": "Enel Spa",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Italian Spa legal suffix formatting."
+  },
+  {
+    "id": "ER-019",
+    "category": "formatting_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Schneider Electric SE",
+    "name_b": "Schneider Electric S.E.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "European Company (SE) punctuation."
+  },
+  {
+    "id": "ER-020",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "AI ODESSA (MI) LIMITED",
+    "name_b": "AI Odessa MI Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Parentheses and casing variation in VROD entry."
+  },
+  {
+    "id": "ER-021",
+    "category": "formatting_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "H&M Hennes & Mauritz AB",
+    "name_b": "H & M Hennes and Mauritz AB",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Ampersand vs 'and' variation."
+  },
+  {
+    "id": "ER-022",
+    "category": "formatting_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Marks and Spencer PLC",
+    "name_b": "Marks & Spencer plc",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Ampersand and lower-case plc."
+  },
+  {
+    "id": "ER-023",
+    "category": "formatting_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Johnson & Johnson Services Inc",
+    "name_b": "Johnson and Johnson Services, Inc.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Comma and ampersand normalization."
+  },
+  {
+    "id": "ER-024",
+    "category": "formatting_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "Watson Fuels Ltd.",
+    "name_b": "Watson Fuels Limited",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Period in suffix and expansion."
+  },
+  {
+    "id": "ER-025",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Acme Industries Limited",
+    "name_b": "Acme Industries Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Standard English Limited vs Ltd abbreviation."
+  },
+  {
+    "id": "ER-026",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Apple Incorporated",
+    "name_b": "Apple Inc.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Incorporated vs Inc."
+  },
+  {
+    "id": "ER-027",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Amazon.com Corporation",
+    "name_b": "Amazon.com Inc.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Interchangeable US corporate designator."
+  },
+  {
+    "id": "ER-028",
+    "category": "legal_suffix_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "natureOffice GmbH",
+    "name_b": "natureOffice Gesellschaft mit beschraenkter Haftung",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Full German corporate form vs GmbH."
+  },
+  {
+    "id": "ER-029",
+    "category": "legal_suffix_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "Webjet Marketing Pty Ltd",
+    "name_b": "Webjet Marketing Proprietary Limited",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Australian Proprietary Limited vs Pty Ltd."
+  },
+  {
+    "id": "ER-030",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Tata Consultancy Services Private Limited",
+    "name_b": "Tata Consultancy Services Pvt Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Indian Private Limited vs Pvt Ltd."
+  },
+  {
+    "id": "ER-031",
+    "category": "legal_suffix_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "RISEL COMBUSTIVEIS LTDA",
+    "name_b": "Risel Combustiveis Limitada",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Portuguese LTDA vs Limitada."
+  },
+  {
+    "id": "ER-032",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Novartis Aktiengesellschaft",
+    "name_b": "Novartis AG",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Swiss Aktiengesellschaft vs AG."
+  },
+  {
+    "id": "ER-033",
+    "category": "legal_suffix_variants",
+    "source_provenance": "real_vrod",
+    "name_a": "UNLSH Mobility B.V.",
+    "name_b": "UNLSH Mobility Besloten Vennootschap",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Dutch Besloten Vennootschap vs B.V."
+  },
+  {
+    "id": "ER-034",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Barclays Bank PLC",
+    "name_b": "Barclays Bank Public Limited Company",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "UK Public Limited Company vs PLC."
+  },
+  {
+    "id": "ER-035",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Societa Benefit Enel S.p.A.",
+    "name_b": "Enel Societa Benefit",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Italian benefit corporation designation."
+  },
+  {
+    "id": "ER-036",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Volvo Personvagnar Aktiebolag",
+    "name_b": "Volvo Personvagnar AB",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Swedish Aktiebolag vs AB."
+  },
+  {
+    "id": "ER-037",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "TotalEnergies S.A.",
+    "name_b": "TotalEnergies Societe Anonyme",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "French Societe Anonyme vs S.A."
+  },
+  {
+    "id": "ER-038",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Iberdrola Sociedad Anonima",
+    "name_b": "Iberdrola S.A.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Spanish Sociedad Anonima vs S.A."
+  },
+  {
+    "id": "ER-039",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Singapore Airlines Pte Ltd",
+    "name_b": "Singapore Airlines Private Limited",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Singapore Pte Ltd vs Private Limited."
+  },
+  {
+    "id": "ER-040",
+    "category": "legal_suffix_variants",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "BASF SE",
+    "name_b": "BASF Societas Europaea",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "European public company SE."
+  },
+  {
+    "id": "ER-041",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Oak International Freight Limited",
+    "name_b": "Oak Intl Freight Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "International vs Intl abbreviation in real VROD record."
+  },
+  {
+    "id": "ER-042",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Applied Technology Solutions Inc",
+    "name_b": "Applied Tech Solns Inc",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Technology -> Tech, Solutions -> Solns."
+  },
+  {
+    "id": "ER-043",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Precision Manufacturing Corp",
+    "name_b": "Precision Mfg Corp",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Manufacturing -> Mfg abbreviation."
+  },
+  {
+    "id": "ER-044",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Global Management Services Ltd",
+    "name_b": "Global Mgmt Svcs Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Management -> Mgmt, Services -> Svcs."
+  },
+  {
+    "id": "ER-045",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "National Chemical Industries LLC",
+    "name_b": "Natl Chem Ind LLC",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Multiple corporate token abbreviations."
+  },
+  {
+    "id": "ER-046",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Advanced Systems Development Corp",
+    "name_b": "Advanced Sys Dev Corp",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Systems -> Sys, Development -> Dev."
+  },
+  {
+    "id": "ER-047",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Apex Logistics Group Ltd",
+    "name_b": "Apex Logistics Grp Ltd",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Group -> Grp."
+  },
+  {
+    "id": "ER-048",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "International Carbon Foundation",
+    "name_b": "Intl Carbon Fdn",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "International -> Intl, Foundation -> Fdn."
+  },
+  {
+    "id": "ER-049",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "United Trade Association",
+    "name_b": "United Trade Assoc",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Association -> Assoc."
+  },
+  {
+    "id": "ER-050",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Energy Distribution Solutions B.V.",
+    "name_b": "Energy Dist Solns BV",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Distribution -> Dist, Solutions -> Solns."
+  },
+  {
+    "id": "ER-051",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Climate Technology Partners",
+    "name_b": "Climate Tech Partners",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Technology -> Tech."
+  },
+  {
+    "id": "ER-052",
+    "category": "corporate_abbreviations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Universal Corporate Services",
+    "name_b": "Universal Corp Svcs",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Corporate -> Corp, Services -> Svcs."
+  },
+  {
+    "id": "ER-053",
+    "category": "intermediary_delegations",
+    "source_provenance": "real_vrod",
+    "name_a": "Lenovo",
+    "name_b": "TBK Group on behalf of Lenovo",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Real VROD retirement entry with TBK Group acting on behalf of Lenovo."
+  },
+  {
+    "id": "ER-054",
+    "category": "intermediary_delegations",
+    "source_provenance": "real_vrod",
+    "name_a": "Telefonica Brazil",
+    "name_b": "GP-31 - On behalf of Telefonica Brazil - 2021 emissions",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Real VROD retirement with GP-31 broker for Telefonica Brazil."
+  },
+  {
+    "id": "ER-055",
+    "category": "intermediary_delegations",
+    "source_provenance": "real_vrod",
+    "name_a": "Hiroshima Gas Co., Ltd",
+    "name_b": "Retired on behalf of Hiroshima Gas Co., Ltd for the LNG cargo delivered from Malaysia LNG Sdn. Bhd.",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Real VROD retirement record with complex purpose clause."
+  },
+  {
+    "id": "ER-056",
+    "category": "intermediary_delegations",
+    "source_provenance": "real_vrod",
+    "name_a": "easyJet",
+    "name_b": "Retired on behalf of easyJet for aviation emissions period 01 April 30 June 2022",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Real VROD airline retirement entry."
+  },
+  {
+    "id": "ER-057",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Shopify Inc.",
+    "name_b": "Patch Technologies - Client: Shopify Inc.",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Climate API aggregator platform retirement for customer."
+  },
+  {
+    "id": "ER-058",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Siemens AG",
+    "name_b": "South Pole Trading Corp for account of Siemens AG",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Bilateral broker for account of corporate client."
+  },
+  {
+    "id": "ER-059",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Delta Air Lines",
+    "name_b": "EcoAct on behalf of Delta Air Lines",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Broker retirement on behalf of airline."
+  },
+  {
+    "id": "ER-060",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Lufthansa AG",
+    "name_b": "Compensaid c/o Lufthansa AG",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "In care of subsidiary platform."
+  },
+  {
+    "id": "ER-061",
+    "category": "intermediary_delegations",
+    "source_provenance": "real_vrod",
+    "name_a": "Delta Air Lines",
+    "name_b": "Retired on behalf of Delta Air Lines Inc",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Direct retirement clause resolving to beneficial owner."
+  },
+  {
+    "id": "ER-062",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Nike Inc.",
+    "name_b": "3Degrees Group on behalf of Nike Inc.",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Sustainability broker retirement."
+  },
+  {
+    "id": "ER-063",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Google LLC",
+    "name_b": "Tradewater LLC on behalf of Google LLC",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Project developer retiring on behalf of corporate offtaker."
+  },
+  {
+    "id": "ER-064",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Salesforce Inc.",
+    "name_b": "Cooleaf - Beneficiary: Salesforce Inc.",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Explicit beneficiary tag."
+  },
+  {
+    "id": "ER-065",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Microsoft Corp",
+    "name_b": "ClimeCo - Offtaker: Microsoft Corp",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Explicit offtaker tag."
+  },
+  {
+    "id": "ER-066",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Meta Platforms Inc",
+    "name_b": "ACT Commodities o.b.o. Meta Platforms Inc",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "o.b.o. abbreviation."
+  },
+  {
+    "id": "ER-067",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Amazon.com Inc",
+    "name_b": "Nature Source Capital represented by Amazon.com Inc",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Represented by tag."
+  },
+  {
+    "id": "ER-068",
+    "category": "intermediary_delegations",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Target Corporation",
+    "name_b": "BGC Partners on behalf of Target Corporation",
+    "expected_relationship": "INTERMEDIARY_DELEGATION",
+    "expected_is_match": true,
+    "rationale": "Financial intermediary broker on behalf of retailer."
+  },
+  {
+    "id": "ER-069",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Microsoft Corporation",
+    "name_b": "Microsoft Ireland Operations Ltd",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "US global parent company and primary overseas operating subsidiary."
+  },
+  {
+    "id": "ER-070",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Siemens AG",
+    "name_b": "Siemens Energy Global GmbH & Co. KG",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Spun-off / divisional energy corporate entity."
+  },
+  {
+    "id": "ER-071",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Shell PLC",
+    "name_b": "Shell Energy North America L.P.",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Regional trading subsidiary of parent oil major."
+  },
+  {
+    "id": "ER-072",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "TotalEnergies SE",
+    "name_b": "TotalEnergies Renewables USA LLC",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Renewables division subsidiary."
+  },
+  {
+    "id": "ER-073",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Enel S.p.A.",
+    "name_b": "Enel Green Power North America Inc.",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Green power division of Italian utility."
+  },
+  {
+    "id": "ER-074",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "BP PLC",
+    "name_b": "BP Energy Retail Company LLC",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Retail energy subsidiary."
+  },
+  {
+    "id": "ER-075",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Iberdrola S.A.",
+    "name_b": "Iberdrola Renovables Internacional S.A.",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "International renewables subsidiary."
+  },
+  {
+    "id": "ER-076",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "General Electric Company",
+    "name_b": "GE Vernova LLC",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Energy transition spinoff of GE."
+  },
+  {
+    "id": "ER-077",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Amazon.com Inc",
+    "name_b": "Amazon Web Services Inc",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Cloud infrastructure subsidiary of Amazon."
+  },
+  {
+    "id": "ER-078",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Alphabet Inc.",
+    "name_b": "Google LLC",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Operating company and parent holding."
+  },
+  {
+    "id": "ER-079",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Bayer AG",
+    "name_b": "Bayer CropScience AG",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Crop science division."
+  },
+  {
+    "id": "ER-080",
+    "category": "parent_subsidiary_hierarchy",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Engie SA",
+    "name_b": "Engie North America Inc.",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "North American regional operating subsidiary."
+  },
+  {
+    "id": "ER-081",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Acme Solar LLC",
+    "name_b": "Acme Wind LLC",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Conflicting sector tokens: Solar vs Wind. Distinct legal project entities."
+  },
+  {
+    "id": "ER-082",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Pacific Hydro Corp",
+    "name_b": "Pacific Thermal Corp",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Conflicting generation sector: Hydro vs Thermal."
+  },
+  {
+    "id": "ER-083",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Global Maritime Logistics",
+    "name_b": "Global Aviation Logistics",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Conflicting transport sector: Maritime vs Aviation."
+  },
+  {
+    "id": "ER-084",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Northern Electric Power",
+    "name_b": "Northern Gas Power",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Electric vs Gas power utility."
+  },
+  {
+    "id": "ER-085",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Green Energy Solutions",
+    "name_b": "Green Mining Solutions",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Energy vs Mining solutions."
+  },
+  {
+    "id": "ER-086",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Apex Forestry Management",
+    "name_b": "Apex Steel Management",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Forestry vs Steel sector divergence."
+  },
+  {
+    "id": "ER-087",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Continental Oil Co.",
+    "name_b": "Continental Coal Co.",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Oil vs Coal sector tokens."
+  },
+  {
+    "id": "ER-088",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Titan Banking Group",
+    "name_b": "Titan Agriculture Group",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Banking vs Agriculture."
+  },
+  {
+    "id": "ER-089",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Summit Rail Logistics",
+    "name_b": "Summit Shipping Logistics",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Rail vs Shipping transport."
+  },
+  {
+    "id": "ER-090",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Horizon Telecom Solutions",
+    "name_b": "Horizon Cement Solutions",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Telecom vs Cement."
+  },
+  {
+    "id": "ER-091",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "First Solar Inc.",
+    "name_b": "Second Solar Inc.",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Conflicting ordinal modifier First vs Second."
+  },
+  {
+    "id": "ER-092",
+    "category": "hard_negatives_sector_conflict",
+    "source_provenance": "synthetic_curated",
+    "name_a": "North Capital Partners",
+    "name_b": "South Capital Partners",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Conflicting directional token North vs South."
+  },
+  {
+    "id": "ER-093",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Delta Air Lines Inc.",
+    "name_b": "Delta Electronics Inc.",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Aviation major vs Taiwanese electronics manufacturer. Shared brand token 'Delta' only."
+  },
+  {
+    "id": "ER-094",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Apple Inc.",
+    "name_b": "Applied Materials Inc.",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "High string prefix overlap but distinct global technology companies."
+  },
+  {
+    "id": "ER-095",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "General Electric Company",
+    "name_b": "General Motors Corporation",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Shared generic token 'General' but distinct industrial vs automotive conglomerates."
+  },
+  {
+    "id": "ER-096",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Standard Chartered PLC",
+    "name_b": "Standard Oil Co.",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Bank vs historic petroleum company."
+  },
+  {
+    "id": "ER-097",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Amazon.com Inc.",
+    "name_b": "Amazon Forest Protection LLC",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "E-commerce giant vs carbon project entity named after Amazon basin."
+  },
+  {
+    "id": "ER-098",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "TotalEnergies SE",
+    "name_b": "Total Transportation Services Inc",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Energy supermajor vs trucking logistics firm."
+  },
+  {
+    "id": "ER-099",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Ford Motor Company",
+    "name_b": "Tom Ford International LLC",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Automaker vs luxury fashion label."
+  },
+  {
+    "id": "ER-100",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "United Airlines Holdings",
+    "name_b": "United Parcel Service Inc",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Shared 'United' generic token; commercial airline vs freight courier (UPS)."
+  },
+  {
+    "id": "ER-101",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "British Airways PLC",
+    "name_b": "British American Tobacco PLC",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Shared 'British' geographic token; airline vs tobacco manufacturer."
+  },
+  {
+    "id": "ER-102",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "National Grid PLC",
+    "name_b": "National Bank of Canada",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Electricity grid operator vs Canadian chartered bank."
+  },
+  {
+    "id": "ER-103",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Tesla Inc.",
+    "name_b": "Tesla Motors India Pvt Ltd",
+    "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+    "expected_is_match": true,
+    "rationale": "Global automaker and Indian operational subsidiary."
+  },
+  {
+    "id": "ER-104",
+    "category": "hard_negatives_distinct_companies",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "American Airlines Group",
+    "name_b": "American Express Company",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Aviation major vs credit card / financial services company."
+  },
+  {
+    "id": "ER-105",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "real_vrod",
+    "name_a": "customer 10184",
+    "name_b": "customer 10185",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Real VROD anonymized customer account numbers differing by 1."
+  },
+  {
+    "id": "ER-106",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "real_vrod",
+    "name_a": "on behalf of customer 10080",
+    "name_b": "on behalf of customer 10090",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Real VROD customer account number mismatch."
+  },
+  {
+    "id": "ER-107",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Solar Project Unit 1 LLC",
+    "name_b": "Solar Project Unit 2 LLC",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Unit 1 vs Unit 2 numerical designation mismatch."
+  },
+  {
+    "id": "ER-108",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Carbon Offset Fund 2024",
+    "name_b": "Carbon Offset Fund 2025",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Different vintage / reporting year funds."
+  },
+  {
+    "id": "ER-109",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "real_vrod",
+    "name_a": "customer 10930",
+    "name_b": "customer 10931",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Real VROD distinct sequential customer records."
+  },
+  {
+    "id": "ER-110",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Biochar Facility Phase 1",
+    "name_b": "Biochar Facility Phase 2",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Phase 1 vs Phase 2 project units."
+  },
+  {
+    "id": "ER-111",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Hydro Group Station 3",
+    "name_b": "Hydro Group Station 4",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Station number conflict."
+  },
+  {
+    "id": "ER-112",
+    "category": "hard_negatives_number_mismatch",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Account 90812",
+    "name_b": "Account 90813",
+    "expected_relationship": "DIFFERENT_ENTITIES",
+    "expected_is_match": false,
+    "rationale": "Account number conflict."
+  },
+  {
+    "id": "ER-113",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "real_vrod",
+    "name_a": "Not Disclosed",
+    "name_b": "Shell PLC",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Real VROD 44.7% undisclosed placeholder record compared against corporate claimant."
+  },
+  {
+    "id": "ER-114",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "real_vrod",
+    "name_a": "Not Disclosed",
+    "name_b": "Not Disclosed",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Two undisclosed records must NOT match as the same legal entity."
+  },
+  {
+    "id": "ER-115",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "real_vrod",
+    "name_a": "Confidential",
+    "name_b": "Acme Industries Ltd",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Confidential privacy placeholder."
+  },
+  {
+    "id": "ER-116",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Anonymous",
+    "name_b": "Delta Air Lines",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Anonymous placeholder."
+  },
+  {
+    "id": "ER-117",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "real_vrod",
+    "name_a": "N/A",
+    "name_b": "Qantas Airways",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "N/A string entry in registry."
+  },
+  {
+    "id": "ER-118",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "",
+    "name_b": "Microsoft Corp",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Empty string comparison."
+  },
+  {
+    "id": "ER-119",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "None",
+    "name_b": "None",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "None placeholder string."
+  },
+  {
+    "id": "ER-120",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Undisclosed",
+    "name_b": "Private Beneficiary",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Placeholder vs private designation."
+  },
+  {
+    "id": "ER-121",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Unknown",
+    "name_b": "Siemens AG",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Unknown placeholder."
+  },
+  {
+    "id": "ER-122",
+    "category": "undisclosed_placeholders",
+    "source_provenance": "synthetic_curated",
+    "name_a": "Private",
+    "name_b": "Private",
+    "expected_relationship": "UNRESOLVED",
+    "expected_is_match": false,
+    "rationale": "Private placeholder pair."
+  },
+  {
+    "id": "ER-123",
+    "category": "multilingual_unicode_mojibake",
+    "source_provenance": "real_vrod",
+    "name_a": "Condomínio 17.007 Nações",
+    "name_b": "Condom√≠nio 17.007 Na√ß√µes",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "Real VROD mojibake encoding of Brazilian corporate building."
+  },
+  {
+    "id": "ER-124",
+    "category": "multilingual_unicode_mojibake",
+    "source_provenance": "corporate_disclosure",
+    "name_a": "Societe Generale SA",
+    "name_b": "Société Générale S.A.",
+    "expected_relationship": "CANONICAL_VARIANT",
+    "expected_is_match": true,
+    "rationale": "French diacritic accents vs ASCII representation."
+  }
+]
+

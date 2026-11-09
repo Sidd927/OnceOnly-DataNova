@@ -102,7 +102,7 @@ Interval arithmetic is a better model for carbon claims than document hashing. M
 ## Links (fill in after owner approval)
 | Field | Value | Status |
 |---|---|---|
-| Source code | https://github.com/Sidd927/ClimateChain | **Private; it must be made public before submission (owner action)** |
+| Source code | https://github.com/Sidd927/OnceOnly-DataNova |
 | Demo video | YouTube/Vimeo link to the final MP4 | **Not uploaded; owner action** |
 | Try it out (optional) | Render URL, labelled "Demo instance: ledger writes disabled; contract runs on a private chain inside the container; may take ~2 minutes to wake" | **Not deployed; needs owner approval** (`08_deployment_runbook.md` §C) |
 

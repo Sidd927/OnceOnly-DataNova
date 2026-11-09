@@ -1,6 +1,6 @@
 # OnceOnly evaluation results
 
-Generated 2026-10-19T08:20:23Z (seed 20261019, 7.9 s). Reproduce with `make eval`.
+Generated 2026-11-08T20:16:57Z (seed 20261019, 1.7 s). Reproduce with `make eval`.
 
 ## A. Double-use detection
 
@@ -9,23 +9,21 @@ Generated 2026-10-19T08:20:23Z (seed 20261019, 7.9 s). Reproduce with `make eval
 | Method | Precision | Recall | TP | FP | FN | TN |
 |---|---|---|---|---|---|---|
 | OnceOnly rules engine (DUP-001/002) | 1.000 | 1.000 | 180 | 0 | 0 | 90 |
-| ClaimLedger contract (revert on 2nd registration) | 1.000 | 1.000 | 180 | 0 | 0 | 90 |
+| ClaimLedger contract (revert on 2nd registration) | skipped (no local chain on 127.0.0.1:8545; run `make chain`) | | | | | |
 | Baseline: exact serial string / document hash | 1.000 | 0.333 | 60 | 0 | 120 | 90 |
 | Ablation: interval overlap ignoring batch | 0.857 | 1.000 | 180 | 30 | 0 | 60 |
 
 | Case type | n | Truth | OnceOnly | Contract | Baseline | Numbers-only |
 |---|---|---|---|---|---|---|
-| Same serial, same units | 30 | double use | 30/30 | 30/30 | 30/30 | 30/30 |
-| Same units, serial reformatted (line break, spaces, dashes) | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
-| Partial overlap, different serial strings | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
-| New range inside an existing claim | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
-| New range contains an existing claim | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
-| Same evidence document resubmitted | 30 | double use | 30/30 | 30/30 | 30/30 | 30/30 |
-| Adjacent ranges, no shared unit | 30 | not double use | 30/30 | 30/30 | 30/30 | 30/30 |
-| Same batch, disjoint ranges | 30 | not double use | 30/30 | 30/30 | 30/30 | 30/30 |
-| Same unit numbers in a different batch | 30 | not double use | 30/30 | 30/30 | 30/30 | 0/30 |
-
-Contract and rules engine agree on 100.0% of cases. Median gas for a single-range registration: 333,102.
+| Same serial, same units | 30 | double use | 30/30 | — | 30/30 | 30/30 |
+| Same units, serial reformatted (line break, spaces, dashes) | 30 | double use | 30/30 | — | 0/30 | 30/30 |
+| Partial overlap, different serial strings | 30 | double use | 30/30 | — | 0/30 | 30/30 |
+| New range inside an existing claim | 30 | double use | 30/30 | — | 0/30 | 30/30 |
+| New range contains an existing claim | 30 | double use | 30/30 | — | 0/30 | 30/30 |
+| Same evidence document resubmitted | 30 | double use | 30/30 | — | 30/30 | 30/30 |
+| Adjacent ranges, no shared unit | 30 | not double use | 30/30 | — | 30/30 | 30/30 |
+| Same batch, disjoint ranges | 30 | not double use | 30/30 | — | 30/30 | 30/30 |
+| Same unit numbers in a different batch | 30 | not double use | 30/30 | — | 30/30 | 0/30 |
 
 ## B. Serial extraction
 
@@ -33,10 +31,10 @@ Contract and rules engine agree on 100.0% of cases. Median gas for a single-rang
 
 | Extractor | Docs | Exact docs | Block precision | Block recall |
 |---|---|---|---|---|
-| Deterministic parser | 60 | 65.0% | 1.000 | 0.687 |
+| Deterministic parser | 60 | 100.0% | 1.000 | 1.000 |
 | Parser + AI extraction (cross-checked) | not run (no ANTHROPIC_API_KEY) | | | |
 
-Parser by layout: canonical 8/8, wrapped 8/8, spaced_dashes 8/8, en_dash 8/8, two_blocks 7/7, table_columns 0/7, prose_range 0/7, ocr_letter_o 0/7.
+Parser by layout: canonical 8/8, wrapped 8/8, spaced_dashes 8/8, en_dash 8/8, two_blocks 7/7, table_columns 7/7, prose_range 7/7, ocr_letter_o 7/7.
 
 ## Limitations
 

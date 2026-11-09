@@ -5,11 +5,12 @@ import html
 import json
 import logging
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
-from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 from . import db, service
 from .chain import try_ledger
@@ -17,6 +18,16 @@ from .config import ROOT, settings
 from .extraction import llm_available
 from .reference import Reference
 from .rules import RULES
+from .analytics import (
+    AnalyticsEngine,
+    BatchAnalyticsRequest,
+    BatchAnalyticsResult,
+    BatchFragmentationRequest,
+    ConcentrationRequest,
+    CrossRegistryEntityCompareRequest,
+    CrossRegistryProjectCompareRequest,
+    RiskAssessmentRequest,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
@@ -180,6 +191,115 @@ def overview():
 @app.get("/api/claims")
 def list_claims():
     return [summarize(c) for c in con().execute("SELECT * FROM claims ORDER BY id DESC")]
+
+
+class EntityPairRequest(BaseModel):
+    name_a: str
+    name_b: str
+
+
+class IntermediaryRequest(BaseModel):
+    text: str
+
+
+@app.post("/api/resolve/entity-pair")
+def resolve_entity_pair(body: EntityPairRequest):
+    from .entity_resolution import EntityResolutionEngine
+    res = EntityResolutionEngine.resolve_pair(body.name_a, body.name_b)
+    return res.to_dict()
+
+
+@app.post("/api/resolve/intermediary")
+def resolve_intermediary(body: IntermediaryRequest):
+    from .entity_resolution import EntityResolutionEngine
+    res = EntityResolutionEngine.extract_intermediary(body.text)
+    return res.to_dict()
+
+
+# ------------------------------------------------------------------- allocation & reconciliation (Phase 2B)
+
+class AllocationModel(BaseModel):
+    registry: str
+    batch_id: str
+    unit_start: int
+    unit_end: int
+    claimant: str
+    claim_id: int | None = None
+    claim_ref: str | None = None
+    status: str | None = None
+
+    @model_validator(mode="after")
+    def validate_interval(self) -> AllocationModel:
+        if self.unit_start < 0:
+            raise ValueError(f"unit_start must be non-negative, got {self.unit_start}")
+        if self.unit_end < 0:
+            raise ValueError(f"unit_end must be non-negative, got {self.unit_end}")
+        if self.unit_start > self.unit_end:
+            raise ValueError(f"unit_start ({self.unit_start}) cannot exceed unit_end ({self.unit_end})")
+        return self
+
+
+class CompareAllocationsRequest(BaseModel):
+    candidate: AllocationModel
+    existing: AllocationModel
+
+
+class BatchReconcileRequest(BaseModel):
+    registry: str
+    batch_id: str
+    allocations: list[AllocationModel]
+
+
+@app.post("/api/reconcile/compare")
+def reconcile_compare(body: CompareAllocationsRequest):
+    from .reconciliation import AllocationReconciler
+    item = AllocationReconciler.reconcile_allocation_pair(body.candidate.model_dump(), body.existing.model_dump())
+    return item.to_dict()
+
+
+@app.post("/api/reconcile/batch")
+def reconcile_batch(body: BatchReconcileRequest):
+    from .reconciliation import AllocationReconciler, validate_disjoint_ranges
+    allocs = [a.model_dump() for a in body.allocations]
+    ranges = [(int(a["unit_start"]), int(a["unit_end"])) for a in allocs]
+    is_disjoint, err = validate_disjoint_ranges(ranges)
+
+    pairwise = []
+    splits = []
+    conflicts = []
+    for i in range(len(allocs)):
+        for j in range(i + 1, len(allocs)):
+            res = AllocationReconciler.reconcile_allocation_pair(allocs[i], allocs[j])
+            p_dict = res.to_dict()
+            pairwise.append(p_dict)
+            if res.overlap.is_conflict:
+                conflicts.append(p_dict)
+            else:
+                splits.append(p_dict)
+
+    return {
+        "registry": body.registry,
+        "batch_id": body.batch_id,
+        "total_allocations": len(allocs),
+        "total_units": sum(int(a["unit_end"]) - int(a["unit_start"]) + 1 for a in allocs),
+        "is_disjoint": is_disjoint,
+        "disjoint_error": err,
+        "conflicts": conflicts,
+        "splits": splits,
+        "pairwise_count": len(pairwise),
+    }
+
+
+@app.get("/api/claims/{claim_id}/reconciliation")
+def get_claim_reconciliation(claim_id: int):
+    from .reconciliation import AllocationReconciler
+    claim = con().execute("SELECT * FROM claims WHERE id=?", (claim_id,)).fetchone()
+    if claim is None:
+        raise HTTPException(404, "Claim not found")
+    blocks = [dict(r) for r in con().execute("SELECT * FROM claim_blocks WHERE claim_id=? ORDER BY idx", (claim_id,))]
+    active = service.active_ranges(con(), exclude_claim=claim_id)
+    report = AllocationReconciler.reconcile_claim_blocks(claim_id, claim["claimant"], blocks, active)
+    return report.to_dict()
 
 
 @app.post("/api/claims", status_code=201)
@@ -382,6 +502,330 @@ def sample_file(name: str):
         raise HTTPException(404, "Unknown sample")
     media = "application/pdf" if name.endswith(".pdf") else "text/plain"
     return FileResponse(DEMO_DIR / name, media_type=media, filename=name)
+
+
+# ------------------------------------------------------- analytics (Phase 2C Stage 1)
+
+
+@app.get("/api/analytics/population/summary")
+def analytics_population_summary():
+    """Retrieve population-level dual-track concentration and batch fragmentation summaries."""
+    from .analytics import AnalyticsEngine
+    summary = AnalyticsEngine.analyze_population_summary()
+    return summary.to_dict()
+
+
+@app.get("/api/analytics/batches/{registry}/{batch_id}")
+def analytics_batch(registry: str, batch_id: str):
+    """Retrieve concentration and fragmentation analytics for a specific batch in a registry namespace."""
+    from .analytics import AnalyticsEngine
+    try:
+        res = AnalyticsEngine.analyze_batch(registry=registry, batch_id=batch_id)
+        return res.to_dict()
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.post("/api/analytics/concentration")
+def analytics_concentration(body: ConcentrationRequest):
+    """Perform ad-hoc beneficiary concentration analysis over supplied retirement records."""
+    from .analytics import AnalyticsEngine
+    metrics = AnalyticsEngine.analyze_concentration_records(
+        body.records, total_units_override=body.total_units_override
+    )
+    return metrics.to_dict()
+
+
+@app.post("/api/analytics/fragmentation")
+def analytics_fragmentation(body: BatchFragmentationRequest):
+    """Perform ad-hoc batch fragmentation and interval structure analysis over supplied records."""
+    from .analytics import AnalyticsEngine
+    metrics = AnalyticsEngine.analyze_batch_records(
+        body.records,
+        registry=body.registry,
+        batch_id=body.batch_id,
+        project_id=body.project_id,
+        micro_threshold=body.micro_threshold,
+    )
+    return metrics.to_dict()
+
+
+@app.post("/api/analytics/batch")
+def analytics_batch_adhoc(body: BatchAnalyticsRequest):
+    """Perform combined concentration and batch fragmentation analysis over ad-hoc retirement records."""
+    from datetime import datetime, timezone
+    from .analytics import AnalyticsEngine, BatchAnalyticsResult
+    concentration = AnalyticsEngine.analyze_concentration_records(body.records)
+    fragmentation = AnalyticsEngine.analyze_batch_records(
+        body.records,
+        registry=body.registry,
+        batch_id=body.batch_id,
+        project_id=body.project_id,
+    )
+    res = BatchAnalyticsResult(
+        registry=body.registry,
+        batch_id=body.batch_id,
+        project_id=body.project_id,
+        project_name=body.project_name,
+        country=body.country,
+        vintage=body.vintage,
+        total_quantity=fragmentation.total_units,
+        total_events=fragmentation.total_events,
+        concentration=concentration,
+        fragmentation=fragmentation,
+        computed_at=datetime.now(timezone.utc),
+    )
+    return res.to_dict()
+
+
+# ------------------------------------------------------- temporal analytics (Phase 2C Stage 2)
+
+
+@app.get("/api/analytics/temporal/activity")
+def analytics_temporal_activity(
+    registry: Optional[str] = Query(None, description="Optional registry code ('VCS', 'GS')"),
+    project_id: Optional[str] = Query(None, description="Optional project identifier"),
+    start_date: Optional[str] = Query(None, description="Optional ISO start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="Optional ISO end date (YYYY-MM-DD)"),
+    period: str = Query("monthly", description="Aggregation granularity: daily, weekly, monthly"),
+):
+    """Retrieve temporal retirement activity aggregated across continuous calendar periods."""
+    from .analytics import AnalyticsEngine, parse_date
+    p_type = period.strip().lower()
+    if p_type not in ("daily", "weekly", "monthly"):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid period '{period}'. Must be 'daily', 'weekly', or 'monthly'.",
+        )
+    p_start = parse_date(start_date) if start_date else None
+    if start_date and p_start is None:
+        raise HTTPException(status_code=422, detail=f"Invalid start_date format: '{start_date}'. Must be YYYY-MM-DD.")
+    p_end = parse_date(end_date) if end_date else None
+    if end_date and p_end is None:
+        raise HTTPException(status_code=422, detail=f"Invalid end_date format: '{end_date}'. Must be YYYY-MM-DD.")
+    if p_start and p_end and p_start > p_end:
+        raise HTTPException(status_code=422, detail=f"start_date ({start_date}) cannot be after end_date ({end_date}).")
+
+    resp = AnalyticsEngine.analyze_temporal_activity(
+        registry=registry,
+        project_id=project_id,
+        start_date=p_start,
+        end_date=p_end,
+        period_type=p_type,
+    )
+    return resp.to_dict()
+
+
+@app.get("/api/analytics/temporal/trends")
+def analytics_temporal_trends(
+    registry: Optional[str] = Query(None, description="Optional registry code ('VCS', 'GS')"),
+    project_id: Optional[str] = Query(None, description="Optional project identifier"),
+    start_date: Optional[str] = Query(None, description="Optional ISO start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="Optional ISO end date (YYYY-MM-DD)"),
+    period: str = Query("monthly", description="Aggregation granularity: daily, weekly, monthly"),
+    window: int = Query(4, ge=1, description="Rolling window size in prior periods"),
+    threshold_pct: float = Query(5.0, ge=0.0, description="Percentage threshold for direction classification"),
+):
+    """Retrieve rolling average trends and directional velocity classifications."""
+    from .analytics import AnalyticsEngine, parse_date
+    p_type = period.strip().lower()
+    if p_type not in ("daily", "weekly", "monthly"):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid period '{period}'. Must be 'daily', 'weekly', or 'monthly'.",
+        )
+    p_start = parse_date(start_date) if start_date else None
+    if start_date and p_start is None:
+        raise HTTPException(status_code=422, detail=f"Invalid start_date format: '{start_date}'. Must be YYYY-MM-DD.")
+    p_end = parse_date(end_date) if end_date else None
+    if end_date and p_end is None:
+        raise HTTPException(status_code=422, detail=f"Invalid end_date format: '{end_date}'. Must be YYYY-MM-DD.")
+    if p_start and p_end and p_start > p_end:
+        raise HTTPException(status_code=422, detail=f"start_date ({start_date}) cannot be after end_date ({end_date}).")
+
+    resp = AnalyticsEngine.analyze_temporal_trends(
+        registry=registry,
+        project_id=project_id,
+        start_date=p_start,
+        end_date=p_end,
+        period_type=p_type,
+        window=window,
+        threshold_pct=threshold_pct,
+    )
+    return resp.to_dict()
+
+
+@app.get("/api/analytics/temporal/bursts")
+def analytics_temporal_bursts(
+    registry: Optional[str] = Query(None, description="Optional registry code ('VCS', 'GS')"),
+    project_id: Optional[str] = Query(None, description="Optional project identifier"),
+    start_date: Optional[str] = Query(None, description="Optional ISO start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="Optional ISO end date (YYYY-MM-DD)"),
+    period: str = Query("monthly", description="Aggregation granularity: daily, weekly, monthly"),
+    baseline_window: int = Query(12, ge=1, description="Historical baseline window size in periods"),
+    sensitivity: float = Query(3.0, ge=0.5, description="MAD multiplier threshold k"),
+    min_history: int = Query(5, ge=1, description="Minimum historical baseline periods"),
+    min_tonne_threshold: float = Query(100.0, ge=0.0, description="Minimum volume threshold for burst flag"),
+    min_record_threshold: int = Query(2, ge=1, description="Minimum record threshold for burst flag"),
+):
+    """Detect anomalous transaction volume and frequency bursts using robust leave-one-out baseline."""
+    from .analytics import AnalyticsEngine, parse_date
+    p_type = period.strip().lower()
+    if p_type not in ("daily", "weekly", "monthly"):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid period '{period}'. Must be 'daily', 'weekly', or 'monthly'.",
+        )
+    p_start = parse_date(start_date) if start_date else None
+    if start_date and p_start is None:
+        raise HTTPException(status_code=422, detail=f"Invalid start_date format: '{start_date}'. Must be YYYY-MM-DD.")
+    p_end = parse_date(end_date) if end_date else None
+    if end_date and p_end is None:
+        raise HTTPException(status_code=422, detail=f"Invalid end_date format: '{end_date}'. Must be YYYY-MM-DD.")
+    if p_start and p_end and p_start > p_end:
+        raise HTTPException(status_code=422, detail=f"start_date ({start_date}) cannot be after end_date ({end_date}).")
+
+    resp = AnalyticsEngine.analyze_temporal_bursts(
+        registry=registry,
+        project_id=project_id,
+        start_date=p_start,
+        end_date=p_end,
+        period_type=p_type,
+        baseline_window=baseline_window,
+        sensitivity=sensitivity,
+        min_history=min_history,
+        min_tonne_threshold=min_tonne_threshold,
+        min_record_threshold=min_record_threshold,
+    )
+    return resp.to_dict()
+
+
+@app.get("/api/analytics/temporal/gaps")
+def analytics_temporal_gaps(
+    registry: Optional[str] = Query(None, description="Optional registry code ('VCS', 'GS')"),
+    project_id: Optional[str] = Query(None, description="Optional project identifier"),
+    start_date: Optional[str] = Query(None, description="Optional ISO start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="Optional ISO end date (YYYY-MM-DD)"),
+    period: str = Query("monthly", description="Aggregation granularity: daily, weekly, monthly"),
+):
+    """Analyze temporal inactivity intervals and coverage gaps across calendar periods."""
+    from .analytics import AnalyticsEngine, parse_date
+    p_type = period.strip().lower()
+    if p_type not in ("daily", "weekly", "monthly"):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid period '{period}'. Must be 'daily', 'weekly', or 'monthly'.",
+        )
+    p_start = parse_date(start_date) if start_date else None
+    if start_date and p_start is None:
+        raise HTTPException(status_code=422, detail=f"Invalid start_date format: '{start_date}'. Must be YYYY-MM-DD.")
+    p_end = parse_date(end_date) if end_date else None
+    if end_date and p_end is None:
+        raise HTTPException(status_code=422, detail=f"Invalid end_date format: '{end_date}'. Must be YYYY-MM-DD.")
+    if p_start and p_end and p_start > p_end:
+        raise HTTPException(status_code=422, detail=f"start_date ({start_date}) cannot be after end_date ({end_date}).")
+
+    resp = AnalyticsEngine.analyze_temporal_gaps(
+        registry=registry,
+        project_id=project_id,
+        start_date=p_start,
+        end_date=p_end,
+        period_type=p_type,
+    )
+    return resp.to_dict()
+
+
+# ------------------------------------------------------- cross-registry analytics (Phase 2C Stage 3)
+
+@app.post("/api/cross-registry/projects/compare")
+def cross_registry_projects_compare(body: CrossRegistryProjectCompareRequest):
+    """Compare two projects across or within registries and produce explainable correlation evidence."""
+    from .analytics import AnalyticsEngine
+    cmp = AnalyticsEngine.compare_projects(body.project_a, body.project_b)
+    return cmp.to_dict()
+
+
+@app.get("/api/cross-registry/projects/correlations")
+def cross_registry_projects_correlations(
+    min_similarity: float = Query(0.50, ge=0.0, le=1.0, description="Minimum name similarity threshold"),
+    category: Optional[str] = Query(None, description="Optional category filter (e.g. 'STRONG_ATTRIBUTE_CORRELATION')"),
+    country: Optional[str] = Query(None, description="Optional country name or ISO alpha-2 code filter"),
+    limit: int = Query(50, ge=1, le=500, description="Maximum number of candidate correlations to return"),
+):
+    """Generate and rank candidate project correlations across Verra VCS and Gold Standard."""
+    from .analytics import AnalyticsEngine, ProjectCorrelationCategory
+    cat_val = category.strip().upper() if category else None
+    if cat_val and cat_val not in [c.value for c in ProjectCorrelationCategory]:
+        valid_cats = ", ".join(c.value for c in ProjectCorrelationCategory)
+        raise HTTPException(status_code=422, detail=f"Invalid category '{category}'. Valid options: {valid_cats}")
+    resp = AnalyticsEngine.correlate_cross_registry_projects(
+        min_similarity=min_similarity,
+        category_filter=cat_val,
+        country_filter=country,
+        limit=limit,
+    )
+    return resp.to_dict()
+
+
+@app.post("/api/cross-registry/entities/compare")
+def cross_registry_entities_compare(body: CrossRegistryEntityCompareRequest):
+    """Compare two entity names across registries using the Phase 2A resolution engine."""
+    from .analytics import AnalyticsEngine
+    res = AnalyticsEngine.compare_entities(
+        entity_a=body.entity_a,
+        entity_b=body.entity_b,
+        registry_a=body.registry_a,
+        registry_b=body.registry_b,
+    )
+    return res.to_dict()
+
+
+@app.get("/api/cross-registry/retirements/summary")
+def cross_registry_retirements_summary():
+    """Retrieve comparative retirement summary statistics across voluntary registries."""
+    from .analytics import AnalyticsEngine
+    resp = AnalyticsEngine.get_cross_registry_retirement_summary()
+    return resp.to_dict()
+
+
+@app.get("/api/cross-registry/retirements/trends")
+def cross_registry_retirements_trends(
+    period: str = Query("yearly", description="Trend period granularity: 'yearly' or 'monthly'"),
+):
+    """Retrieve comparative retirement pacing time series across registries."""
+    from .analytics import AnalyticsEngine
+    p_clean = period.strip().lower()
+    if p_clean not in ("yearly", "monthly"):
+        raise HTTPException(status_code=422, detail=f"Invalid period '{period}'. Must be 'yearly' or 'monthly'.")
+    resp = AnalyticsEngine.get_cross_registry_retirement_trends(period_type=p_clean)
+    return resp.to_dict()
+
+
+# ------------------------------------------------------- unified risk assessment (Phase 2C Stage 4)
+
+
+@app.post("/api/analytics/assessment")
+def analytics_risk_assessment(body: RiskAssessmentRequest):
+    """Execute unified, explainable risk assessment aggregating multi-stage intelligence."""
+    from .analytics import AnalyticsEngine
+    try:
+        res = AnalyticsEngine.assess_risk(body)
+        return res.to_dict()
+    except ValueError as e:
+        msg = str(e).lower()
+        if "not found" in msg or "no retirement records" in msg:
+            raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e))
+
+
+@app.get("/api/analytics/assessment/rules")
+def analytics_risk_assessment_rules():
+    """Retrieve catalog of versioned deterministic risk assessment rules."""
+    from .analytics import AnalyticsEngine
+    catalog = AnalyticsEngine.get_assessment_rules_catalog()
+    return catalog.model_dump()
+
+
 
 
 

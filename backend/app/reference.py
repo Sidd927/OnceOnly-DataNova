@@ -1,7 +1,15 @@
-"""Read-only access to the registry reference index (real Berkeley VROD registry records)."""
+"""Read-only access to the registry reference index (real Berkeley VROD registry records).
+
+Supports dual-mode execution:
+  - 'full': full local index built from VROD raw files (~470k retirement rows).
+  - 'demo-subset': committed reference subset (38,004 rows across 22 projects).
+  - 'auto': prefers 'full' if valid; falls back seamlessly to 'demo-subset'.
+"""
 from __future__ import annotations
 
 import json
+import logging
+import os
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,6 +17,9 @@ from pathlib import Path
 import pandas as pd
 
 from .config import settings
+from .normalization import normalize_date_iso, normalize_text_field
+
+log = logging.getLogger("onceonly.reference")
 
 COLS = [
     "kind", "registry", "batch_id", "unit_start", "unit_end", "quantity", "serial", "project_id",
@@ -24,8 +35,44 @@ class Coverage:
     issuance_records: list[dict]
 
 
+def validate_reference_db(path: Path) -> tuple[bool, str | None]:
+    """Verify that a SQLite reference database exists, is non-empty, and conforms to the expected schema."""
+    if not path.exists():
+        return False, f"File does not exist: {path}"
+    if path.stat().st_size == 0:
+        return False, f"Database file is empty (0 bytes): {path}"
+
+    try:
+        con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        # Check SQLite header / readability
+        con.execute("PRAGMA schema_version")
+        tables = {r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if "records" not in tables or "meta" not in tables:
+            con.close()
+            return False, f"Missing required tables (found: {sorted(tables)})"
+
+        cols = [r[1] for r in con.execute("PRAGMA table_info(records)").fetchall()]
+        if cols != COLS:
+            con.close()
+            return False, f"Schema mismatch: expected {COLS}, got {cols}"
+
+        row_count = con.execute("SELECT COUNT(*) FROM records").fetchone()[0]
+        if row_count == 0:
+            con.close()
+            return False, "Database contains zero records in 'records' table"
+
+        indices = {r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='index'")}
+        if "ix_ns" not in indices:
+            log.warning("Index 'ix_ns' missing in %s; queries may be slower", path)
+
+        con.close()
+        return True, None
+    except sqlite3.DatabaseError as e:
+        return False, f"Database corruption or SQLite error: {e}"
+
+
 def build_demo_db(csv_path: Path, out: Path) -> None:
-    """Materialize the committed demo subset CSV into a SQLite index (idempotent)."""
+    """Materialize the committed demo subset CSV into a SQLite index with idempotent normalization."""
     out.parent.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(csv_path, dtype=str, keep_default_na=False)
     tmp = out.with_suffix(".tmp")
@@ -33,10 +80,37 @@ def build_demo_db(csv_path: Path, out: Path) -> None:
         tmp.unlink()
     con = sqlite3.connect(tmp)
     con.execute(f"CREATE TABLE records ({', '.join(COLS)})")
-    rows = [
-        tuple((None if v == "" else (int(v) if c in ("unit_start", "unit_end", "quantity", "source_row") else v)) for c, v in zip(COLS, r))
-        for r in df[COLS].itertuples(index=False)
-    ]
+
+    # Clean text fields non-destructively during materialization
+    rows = []
+    for r in df[COLS].itertuples(index=False):
+        row_dict = dict(zip(COLS, r))
+        # Non-destructive text cleaning
+        p_name = normalize_text_field(row_dict["project_name"] or None).normalized_value
+        ben = normalize_text_field(row_dict["beneficiary"] or None).normalized_value
+        reason = normalize_text_field(row_dict["reason"] or None).normalized_value
+        date_val = normalize_date_iso(row_dict["event_date"] or None).normalized_value
+
+        row = (
+            row_dict["kind"] or None,
+            row_dict["registry"] or None,
+            row_dict["batch_id"] or None,
+            int(row_dict["unit_start"]) if row_dict["unit_start"] else None,
+            int(row_dict["unit_end"]) if row_dict["unit_end"] else None,
+            int(row_dict["quantity"]) if row_dict["quantity"] else None,
+            row_dict["serial"] or None,
+            row_dict["project_id"] or None,
+            p_name,
+            row_dict["vintage"] or None,
+            row_dict["country"] or None,
+            date_val or row_dict["event_date"] or None,
+            ben,
+            reason,
+            row_dict["source_sheet"] or None,
+            int(row_dict["source_row"]) if row_dict["source_row"] else None,
+        )
+        rows.append(row)
+
     con.executemany(f"INSERT INTO records VALUES ({','.join('?' * len(COLS))})", rows)
     con.execute("CREATE INDEX ix_ns ON records(registry, batch_id, unit_start)")
     con.execute("CREATE INDEX ix_proj ON records(registry, project_id, vintage)")
@@ -46,6 +120,7 @@ def build_demo_db(csv_path: Path, out: Path) -> None:
         "version": "2026-08 (data through 2026-08-31)",
         "license": "CC BY 4.0",
         "url": "https://gspp.berkeley.edu/berkeley-carbon-trading-project/offsets-database",
+        "normalized": True,
     }
     con.execute("INSERT INTO meta VALUES ('source', ?)", (json.dumps(src),))
     con.execute("INSERT INTO meta VALUES ('scope', ?)", (json.dumps("demo-subset"),))
@@ -63,16 +138,55 @@ class Reference:
 
     @classmethod
     def open(cls) -> "Reference | None":
-        mode = settings.reference_mode
+        mode = os.environ.get("ONCEONLY_REFERENCE_MODE", settings.reference_mode)
+        # 1. Mode full or auto: check full index
         if mode in ("auto", "full") and settings.reference_full.exists():
-            return cls(settings.reference_full, "full")
+            valid, err = validate_reference_db(settings.reference_full)
+            if valid:
+                return cls(settings.reference_full, "full")
+            log.warning("Full reference DB at %s invalid: %s", settings.reference_full, err)
+
         if mode == "full":
             return None
+
+        # 2. Mode demo or auto fallback: ensure demo db is materialized
         if not settings.reference_demo.exists() and settings.reference_subset_csv.exists():
             build_demo_db(settings.reference_subset_csv, settings.reference_demo)
+
         if settings.reference_demo.exists():
-            return cls(settings.reference_demo, "demo-subset")
+            valid, err = validate_reference_db(settings.reference_demo)
+            if valid:
+                return cls(settings.reference_demo, "demo-subset")
+            log.warning("Demo reference DB at %s invalid: %s", settings.reference_demo, err)
+
         return None
+
+    @classmethod
+    def open_or_raise(cls) -> "Reference":
+        ref = cls.open()
+        if ref is None:
+            raise RuntimeError(
+                f"No valid reference registry index found in mode '{settings.reference_mode}'. "
+                f"Run 'make data-download && make data' to build the full 493k-record index, "
+                f"or ensure '{settings.reference_subset_csv}' exists to materialize the reproducible demo subset."
+            )
+        return ref
+
+    def verify_integrity(self) -> dict:
+        """Run self-integrity checks and return detailed counts."""
+        check = self.con.execute("PRAGMA quick_check").fetchone()[0]
+        counts = self.con.execute("SELECT registry, kind, COUNT(*) FROM records GROUP BY registry, kind").fetchall()
+        ns_count = self.con.execute("SELECT COUNT(DISTINCT registry || ':' || batch_id) FROM records").fetchone()[0]
+        total_rows = self.con.execute("SELECT COUNT(*) FROM records").fetchone()[0]
+        return {
+            "status": "ok" if check == "ok" else "corrupt",
+            "sqlite_check": check,
+            "path": str(self.path),
+            "scope": self.scope,
+            "total_records": total_rows,
+            "namespaces": ns_count,
+            "row_counts": {f"{r[0]}_{r[1]}": r[2] for r in counts},
+        }
 
     def meta(self) -> dict:
         out = {k: json.loads(v) for k, v in self.con.execute("SELECT key, value FROM meta")}

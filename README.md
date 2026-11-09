@@ -10,7 +10,7 @@ Registries make sure a carbon credit is **retired** only once. Nothing checks wh
 OnceOnly reads the serial numbers behind a claim, turns them into unit intervals, finds units that are already claimed, and anchors claims on a smart contract that **refuses to register the same unit twice**.
 
 <p>
-<img alt="Track: Carbon Markets &amp; Emissions Transparency" src="https://img.shields.io/badge/IEEE_ClimateChain_2026-Carbon_Markets_%26_Emissions_Transparency-1f5e3b?style=flat-square">
+<img alt="Carbon Markets &amp; Emissions Transparency" src="https://img.shields.io/badge/Carbon_Markets_%26_Emissions_Transparency-1f5e3b?style=flat-square">
 </p>
 <p>
 <img alt="Solidity 0.8.24" src="https://img.shields.io/badge/Solidity-0.8.24-0e2a2b?style=flat-square&logo=solidity&logoColor=white">
@@ -314,7 +314,7 @@ Design research, critique, polish log and QA reports are in [docs/design/](docs/
 ## Project structure
 
 ```text
-ClimateChain/
+OnceOnly/
 ├── contracts/            Solidity + Hardhat
 │   ├── contracts/        ClaimLedger.sol · benchmark/ClaimLedgerLinear.sol (v0)
 │   ├── scripts/deploy.js
@@ -376,5 +376,5 @@ Registry data © the respective registries, compiled by Berkeley Carbon Trading 
 
 <div align="center">
 <br>
-<sub>Built for the IEEE ClimateChain Global Hackathon 2026 by <a href="https://github.com/Sidd927">Siddhant Patil</a>.</sub>
+<sub>Developed by <a href="https://github.com/Sidd927">Siddhant Patil</a>. Built for carbon market integrity and emissions claim transparency.</sub>
 </div>

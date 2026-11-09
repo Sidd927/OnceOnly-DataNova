@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-19T08:20:23Z",
+  "generated_at": "2026-11-08T20:16:57Z",
   "seed": 20261019,
-  "runtime_seconds": 7.9,
+  "runtime_seconds": 1.7,
   "double_use": {
     "description": "270 labelled claim pairs (30 per case type). Each pair cites real Verra retirement records (Berkeley VROD 2026-08); claimants are synthetic. Positive = the new claim shares at least one unit with an anchored claim.",
     "n": 270,
@@ -32,15 +32,9 @@
       "recall": 1.0
     },
     "contract": {
-      "tp": 180,
-      "fp": 0,
-      "fn": 0,
-      "tn": 90,
-      "precision": 1.0,
-      "recall": 1.0,
-      "register_gas_median": 333102
+      "status": "skipped (no local chain on 127.0.0.1:8545; run `make chain`)"
     },
-    "contract_agrees_with_engine": 1.0,
+    "contract_agrees_with_engine": null,
     "by_category": {
       "exact_duplicate": {
         "label": "Same serial, same units",
@@ -48,8 +42,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 30,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "reformatted_duplicate": {
         "label": "Same units, serial reformatted (line break, spaces, dashes)",
@@ -57,8 +50,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 0,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "partial_overlap": {
         "label": "Partial overlap, different serial strings",
@@ -66,8 +58,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 0,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "contained": {
         "label": "New range inside an existing claim",
@@ -75,8 +66,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 0,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "superset": {
         "label": "New range contains an existing claim",
@@ -84,8 +74,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 0,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "reused_document": {
         "label": "Same evidence document resubmitted",
@@ -93,8 +82,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 30,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "adjacent": {
         "label": "Adjacent ranges, no shared unit",
@@ -102,8 +90,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 30,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "disjoint_same_batch": {
         "label": "Same batch, disjoint ranges",
@@ -111,8 +98,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 30,
-        "numbers_only_correct": 30,
-        "contract_correct": 30
+        "numbers_only_correct": 30
       },
       "same_numbers_other_batch": {
         "label": "Same unit numbers in a different batch",
@@ -120,8 +106,7 @@
         "n": 30,
         "onceonly_correct": 30,
         "baseline_correct": 30,
-        "numbers_only_correct": 0,
-        "contract_correct": 30
+        "numbers_only_correct": 0
       }
     }
   },
@@ -132,9 +117,9 @@
         "label": "Deterministic parser",
         "status": "ok",
         "n": 60,
-        "doc_exact": 0.65,
+        "doc_exact": 1.0,
         "block_precision": 1.0,
-        "block_recall": 0.6865671641791045,
+        "block_recall": 1.0,
         "per_variant": {
           "canonical": {
             "correct": 8,
@@ -157,15 +142,15 @@
             "n": 7
           },
           "table_columns": {
-            "correct": 0,
+            "correct": 7,
             "n": 7
           },
           "prose_range": {
-            "correct": 0,
+            "correct": 7,
             "n": 7
           },
           "ocr_letter_o": {
-            "correct": 0,
+            "correct": 7,
             "n": 7
           }
         }

@@ -1,0 +1,2559 @@
+{
+  "benchmark_file": "entity_resolution_benchmark.json",
+  "total_test_cases": 124,
+  "evaluation_timestamp": "2026-11-09T07:26:11Z",
+  "elapsed_seconds": 0.021,
+  "models": {
+    "Baseline (Exact String)": {
+      "total_pairs": 124,
+      "tp": 13,
+      "fp": 3,
+      "tn": 38,
+      "fn": 70,
+      "precision": 0.8125,
+      "recall": 0.1566,
+      "f1": 0.2626,
+      "false_positive_rate": 0.0732,
+      "false_negative_rate": 0.8434,
+      "accuracy": 0.4113,
+      "by_category": {
+        "exact_matches": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "formatting_variants": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 11,
+          "acc": 0.0833
+        },
+        "legal_suffix_variants": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 16,
+          "acc": 0.0
+        },
+        "corporate_abbreviations": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 12,
+          "acc": 0.0
+        },
+        "intermediary_delegations": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 16,
+          "acc": 0.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 12,
+          "acc": 0.0
+        },
+        "hard_negatives_sector_conflict": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 12,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "hard_negatives_distinct_companies": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 11,
+          "fn": 1,
+          "acc": 0.9167
+        },
+        "hard_negatives_number_mismatch": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 8,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "undisclosed_placeholders": {
+          "tp": 0,
+          "fp": 3,
+          "tn": 7,
+          "fn": 0,
+          "acc": 0.7
+        },
+        "multilingual_unicode_mojibake": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 2,
+          "acc": 0.0
+        }
+      }
+    },
+    "Baseline (Naive Token Match >= 85)": {
+      "total_pairs": 124,
+      "tp": 45,
+      "fp": 15,
+      "tn": 26,
+      "fn": 38,
+      "precision": 0.75,
+      "recall": 0.5422,
+      "f1": 0.6294,
+      "false_positive_rate": 0.3659,
+      "false_negative_rate": 0.4578,
+      "accuracy": 0.5726,
+      "by_category": {
+        "exact_matches": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "formatting_variants": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 8,
+          "acc": 0.3333
+        },
+        "legal_suffix_variants": {
+          "tp": 6,
+          "fp": 0,
+          "tn": 0,
+          "fn": 10,
+          "acc": 0.375
+        },
+        "corporate_abbreviations": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 8,
+          "acc": 0.3333
+        },
+        "intermediary_delegations": {
+          "tp": 16,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 9,
+          "acc": 0.25
+        },
+        "hard_negatives_sector_conflict": {
+          "tp": 0,
+          "fp": 4,
+          "tn": 8,
+          "fn": 0,
+          "acc": 0.6667
+        },
+        "hard_negatives_distinct_companies": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 11,
+          "fn": 1,
+          "acc": 0.9167
+        },
+        "hard_negatives_number_mismatch": {
+          "tp": 0,
+          "fp": 8,
+          "tn": 0,
+          "fn": 0,
+          "acc": 0.0
+        },
+        "undisclosed_placeholders": {
+          "tp": 0,
+          "fp": 3,
+          "tn": 7,
+          "fn": 0,
+          "acc": 0.7
+        },
+        "multilingual_unicode_mojibake": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 2,
+          "acc": 0.0
+        }
+      }
+    },
+    "OnceOnly Analytical Engine": {
+      "total_pairs": 124,
+      "tp": 80,
+      "fp": 0,
+      "tn": 41,
+      "fn": 3,
+      "precision": 1.0,
+      "recall": 0.9639,
+      "f1": 0.9816,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0361,
+      "accuracy": 0.9758,
+      "by_category": {
+        "exact_matches": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "formatting_variants": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "legal_suffix_variants": {
+          "tp": 16,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "corporate_abbreviations": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "intermediary_delegations": {
+          "tp": 16,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 9,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "acc": 0.75
+        },
+        "hard_negatives_sector_conflict": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 12,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "hard_negatives_distinct_companies": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 11,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "hard_negatives_number_mismatch": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 8,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "undisclosed_placeholders": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 10,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "multilingual_unicode_mojibake": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        }
+      }
+    }
+  },
+  "blocking_efficiency": {
+    "all_pairs": 42436.0,
+    "candidates_evaluated": 379.0,
+    "reduction_ratio": 0.991069,
+    "reduction_percent": 99.11
+  },
+  "cases": [
+    {
+      "id": "ER-001",
+      "category": "exact_matches",
+      "name_a": "Minerva S.A.",
+      "name_b": "Minerva S.A.",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-002",
+      "category": "exact_matches",
+      "name_a": "CNaught Inc.",
+      "name_b": "CNaught Inc.",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-003",
+      "category": "exact_matches",
+      "name_a": "Air New Zealand Limited",
+      "name_b": "Air New Zealand Limited",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-004",
+      "category": "exact_matches",
+      "name_a": "natureOffice GmbH",
+      "name_b": "natureOffice GmbH",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'gmbh'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-005",
+      "category": "exact_matches",
+      "name_a": "Siemens AG",
+      "name_b": "Siemens AG",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ag'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-006",
+      "category": "exact_matches",
+      "name_a": "Microsoft Corporation",
+      "name_b": "Microsoft Corporation",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'corp'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-007",
+      "category": "exact_matches",
+      "name_a": "UNLSH Mobility B.V.",
+      "name_b": "UNLSH Mobility B.V.",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'bv'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-008",
+      "category": "exact_matches",
+      "name_a": "RISEL COMBUSTIVEIS LTDA",
+      "name_b": "RISEL COMBUSTIVEIS LTDA",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ltda'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-009",
+      "category": "exact_matches",
+      "name_a": "Shell PLC",
+      "name_b": "Shell PLC",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'plc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-010",
+      "category": "exact_matches",
+      "name_a": "Webjet Marketing Pty Ltd",
+      "name_b": "Webjet Marketing Pty Ltd",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'pvt ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-011",
+      "category": "exact_matches",
+      "name_a": "Ecologi Action Ltd",
+      "name_b": "Ecologi Action Ltd",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-012",
+      "category": "exact_matches",
+      "name_a": "Delta Air Lines",
+      "name_b": "Delta Air Lines",
+      "expected_relationship": "EXACT_MATCH",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-013",
+      "category": "formatting_variants",
+      "name_a": "Minerva S.A.",
+      "name_b": "MINERVA SA",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'minerva'",
+        "Compatible normalized legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'minerva' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-014",
+      "category": "formatting_variants",
+      "name_a": "UNLSH Mobility B.V.",
+      "name_b": "unlsh mobility bv",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'unlsh mobility'",
+        "Compatible normalized legal suffix: 'bv'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'unlsh mobility' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-015",
+      "category": "formatting_variants",
+      "name_a": "L'Oreal S.A.",
+      "name_b": "L OREAL SA",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'l oreal'",
+        "Compatible normalized legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'l oreal' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-016",
+      "category": "formatting_variants",
+      "name_a": "Qantas Airways Limited",
+      "name_b": "QANTAS AIRWAYS LIMITED",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-017",
+      "category": "formatting_variants",
+      "name_a": "Northwind Foods (SYNTHETIC)",
+      "name_b": "Northwind Foods",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'northwind foods'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'northwind foods' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-018",
+      "category": "formatting_variants",
+      "name_a": "Enel S.p.A.",
+      "name_b": "Enel Spa",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'enel'",
+        "Compatible normalized legal suffix: 'spa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'enel' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-019",
+      "category": "formatting_variants",
+      "name_a": "Schneider Electric SE",
+      "name_b": "Schneider Electric S.E.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'schneider electric'",
+        "Compatible normalized legal suffix: 'se'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'schneider electric' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-020",
+      "category": "formatting_variants",
+      "name_a": "AI ODESSA (MI) LIMITED",
+      "name_b": "AI Odessa MI Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'ai odessa mi'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'ai odessa mi' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-021",
+      "category": "formatting_variants",
+      "name_a": "H&M Hennes & Mauritz AB",
+      "name_b": "H & M Hennes and Mauritz AB",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "High character alignment (0.95)",
+        "Shared distinctive root tokens: ['h', 'hennes', 'm', 'mauritz']",
+        "Compatible normalized legal suffixes: 'ab'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 100.0/100) supported by shared root tokens ['h', 'hennes', 'm', 'mauritz'] with no conflicting signals."
+    },
+    {
+      "id": "ER-022",
+      "category": "formatting_variants",
+      "name_a": "Marks and Spencer PLC",
+      "name_b": "Marks & Spencer plc",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 99.72,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "High character alignment (0.92)",
+        "Shared distinctive root tokens: ['marks', 'spencer']",
+        "Compatible normalized legal suffixes: 'plc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 99.7/100) supported by shared root tokens ['marks', 'spencer'] with no conflicting signals."
+    },
+    {
+      "id": "ER-023",
+      "category": "formatting_variants",
+      "name_a": "Johnson & Johnson Services Inc",
+      "name_b": "Johnson and Johnson Services, Inc.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "High character alignment (0.94)",
+        "Shared distinctive root tokens: ['johnson', 'services']",
+        "Compatible normalized legal suffixes: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 100.0/100) supported by shared root tokens ['johnson', 'services'] with no conflicting signals."
+    },
+    {
+      "id": "ER-024",
+      "category": "formatting_variants",
+      "name_a": "Watson Fuels Ltd.",
+      "name_b": "Watson Fuels Limited",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'watson fuels'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'watson fuels' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-025",
+      "category": "legal_suffix_variants",
+      "name_a": "Acme Industries Limited",
+      "name_b": "Acme Industries Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'acme industries'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'acme industries' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-026",
+      "category": "legal_suffix_variants",
+      "name_a": "Apple Incorporated",
+      "name_b": "Apple Inc.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'apple'",
+        "Compatible normalized legal suffix: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'apple' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-027",
+      "category": "legal_suffix_variants",
+      "name_a": "Amazon.com Corporation",
+      "name_b": "Amazon.com Inc.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 95.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'amazon com'",
+        "High token overlap ratio (1.00)",
+        "High character alignment (1.00)",
+        "Shared distinctive root tokens: ['amazon', 'com']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 95.0/100) supported by shared root tokens ['amazon', 'com'] with no conflicting signals."
+    },
+    {
+      "id": "ER-028",
+      "category": "legal_suffix_variants",
+      "name_a": "natureOffice GmbH",
+      "name_b": "natureOffice Gesellschaft mit beschraenkter Haftung",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 64.7,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['natureoffice']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 64.7/100). Core brand matches; differing qualifier tokens: ['beschraenkter', 'gesellschaft', 'haftung', 'mit']."
+    },
+    {
+      "id": "ER-029",
+      "category": "legal_suffix_variants",
+      "name_a": "Webjet Marketing Pty Ltd",
+      "name_b": "Webjet Marketing Proprietary Limited",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'webjet marketing'",
+        "Compatible normalized legal suffix: 'pvt ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'webjet marketing' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-030",
+      "category": "legal_suffix_variants",
+      "name_a": "Tata Consultancy Services Private Limited",
+      "name_b": "Tata Consultancy Services Pvt Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'tata consultancy services'",
+        "Compatible normalized legal suffix: 'pvt ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'tata consultancy services' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-031",
+      "category": "legal_suffix_variants",
+      "name_a": "RISEL COMBUSTIVEIS LTDA",
+      "name_b": "Risel Combustiveis Limitada",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'risel combustiveis'",
+        "Compatible normalized legal suffix: 'ltda'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'risel combustiveis' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-032",
+      "category": "legal_suffix_variants",
+      "name_a": "Novartis Aktiengesellschaft",
+      "name_b": "Novartis AG",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'novartis'",
+        "Compatible normalized legal suffix: 'ag'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'novartis' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-033",
+      "category": "legal_suffix_variants",
+      "name_a": "UNLSH Mobility B.V.",
+      "name_b": "UNLSH Mobility Besloten Vennootschap",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'unlsh mobility'",
+        "Compatible normalized legal suffix: 'bv'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'unlsh mobility' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-034",
+      "category": "legal_suffix_variants",
+      "name_a": "Barclays Bank PLC",
+      "name_b": "Barclays Bank Public Limited Company",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'barclays bank'",
+        "Compatible normalized legal suffix: 'plc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'barclays bank' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-035",
+      "category": "legal_suffix_variants",
+      "name_a": "Societa Benefit Enel S.p.A.",
+      "name_b": "Enel Societa Benefit",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 95.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'enel'",
+        "High token overlap ratio (1.00)",
+        "High character alignment (1.00)",
+        "Shared distinctive root tokens: ['enel']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 95.0/100) supported by shared root tokens ['enel'] with no conflicting signals."
+    },
+    {
+      "id": "ER-036",
+      "category": "legal_suffix_variants",
+      "name_a": "Volvo Personvagnar Aktiebolag",
+      "name_b": "Volvo Personvagnar AB",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'volvo personvagnar'",
+        "Compatible normalized legal suffix: 'ab'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'volvo personvagnar' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-037",
+      "category": "legal_suffix_variants",
+      "name_a": "TotalEnergies S.A.",
+      "name_b": "TotalEnergies Societe Anonyme",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'totalenergies'",
+        "Compatible normalized legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'totalenergies' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-038",
+      "category": "legal_suffix_variants",
+      "name_a": "Iberdrola Sociedad Anonima",
+      "name_b": "Iberdrola S.A.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'iberdrola'",
+        "Compatible normalized legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'iberdrola' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-039",
+      "category": "legal_suffix_variants",
+      "name_a": "Singapore Airlines Pte Ltd",
+      "name_b": "Singapore Airlines Private Limited",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'singapore airlines'",
+        "Compatible normalized legal suffix: 'pvt ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'singapore airlines' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-040",
+      "category": "legal_suffix_variants",
+      "name_a": "BASF SE",
+      "name_b": "BASF Societas Europaea",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'basf'",
+        "Compatible normalized legal suffix: 'se'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'basf' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-041",
+      "category": "corporate_abbreviations",
+      "name_a": "Oak International Freight Limited",
+      "name_b": "Oak Intl Freight Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'oak international freight'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'oak international freight' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-042",
+      "category": "corporate_abbreviations",
+      "name_a": "Applied Technology Solutions Inc",
+      "name_b": "Applied Tech Solns Inc",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'applied technology solutions'",
+        "Compatible normalized legal suffix: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'applied technology solutions' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-043",
+      "category": "corporate_abbreviations",
+      "name_a": "Precision Manufacturing Corp",
+      "name_b": "Precision Mfg Corp",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'precision manufacturing'",
+        "Compatible normalized legal suffix: 'corp'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'precision manufacturing' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-044",
+      "category": "corporate_abbreviations",
+      "name_a": "Global Management Services Ltd",
+      "name_b": "Global Mgmt Svcs Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'global management services'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'global management services' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-045",
+      "category": "corporate_abbreviations",
+      "name_a": "National Chemical Industries LLC",
+      "name_b": "Natl Chem Ind LLC",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 92.97,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.98)",
+        "High character alignment (0.96)",
+        "Shared distinctive root tokens: ['industries', 'national']",
+        "Compatible normalized legal suffixes: 'llc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 93.0/100) supported by shared root tokens ['industries', 'national'] with no conflicting signals."
+    },
+    {
+      "id": "ER-046",
+      "category": "corporate_abbreviations",
+      "name_a": "Advanced Systems Development Corp",
+      "name_b": "Advanced Sys Dev Corp",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'advanced systems development'",
+        "Compatible normalized legal suffix: 'corp'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'advanced systems development' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-047",
+      "category": "corporate_abbreviations",
+      "name_a": "Apex Logistics Group Ltd",
+      "name_b": "Apex Logistics Grp Ltd",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'apex logistics group'",
+        "Compatible normalized legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'apex logistics group' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-048",
+      "category": "corporate_abbreviations",
+      "name_a": "International Carbon Foundation",
+      "name_b": "Intl Carbon Fdn",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'international carbon foundation'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'international carbon foundation' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-049",
+      "category": "corporate_abbreviations",
+      "name_a": "United Trade Association",
+      "name_b": "United Trade Assoc",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'united trade association'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'united trade association' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-050",
+      "category": "corporate_abbreviations",
+      "name_a": "Energy Distribution Solutions B.V.",
+      "name_b": "Energy Dist Solns BV",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 84.61,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High character alignment (0.91)",
+        "Shared distinctive root tokens: ['energy', 'solutions']",
+        "Compatible normalized legal suffixes: 'bv'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Medium-confidence match candidate (score 84.6/100). Names exhibit substantial similarity but minor token or suffix differences exist."
+    },
+    {
+      "id": "ER-051",
+      "category": "corporate_abbreviations",
+      "name_a": "Climate Technology Partners",
+      "name_b": "Climate Tech Partners",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'climate technology partners'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'climate technology partners' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-052",
+      "category": "corporate_abbreviations",
+      "name_a": "Universal Corporate Services",
+      "name_b": "Universal Corp Svcs",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 85.34,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.93)",
+        "High character alignment (0.97)",
+        "Shared distinctive root tokens: ['services', 'universal']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Medium-confidence match candidate (score 85.3/100). Names exhibit substantial similarity but minor token or suffix differences exist."
+    },
+    {
+      "id": "ER-053",
+      "category": "intermediary_delegations",
+      "name_a": "Lenovo",
+      "name_b": "TBK Group on behalf of Lenovo",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Intermediary allocation identified: 'TBK Group' retired on behalf of 'Lenovo'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Lenovo' via 'TBK Group')."
+    },
+    {
+      "id": "ER-054",
+      "category": "intermediary_delegations",
+      "name_a": "Telefonica Brazil",
+      "name_b": "GP-31 - On behalf of Telefonica Brazil - 2021 emissions",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Intermediary allocation identified: 'GP-31' retired on behalf of 'Telefonica Brazil'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Telefonica Brazil' via 'GP-31')."
+    },
+    {
+      "id": "ER-055",
+      "category": "intermediary_delegations",
+      "name_a": "Hiroshima Gas Co., Ltd",
+      "name_b": "Retired on behalf of Hiroshima Gas Co., Ltd for the LNG cargo delivered from Malaysia LNG Sdn. Bhd.",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ltd'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-056",
+      "category": "intermediary_delegations",
+      "name_a": "easyJet",
+      "name_b": "Retired on behalf of easyJet for aviation emissions period 01 April 30 June 2022",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-057",
+      "category": "intermediary_delegations",
+      "name_a": "Shopify Inc.",
+      "name_b": "Patch Technologies - Client: Shopify Inc.",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'shopify'",
+        "Compatible normalized legal suffix: 'inc'",
+        "Intermediary allocation identified: 'Patch Technologies' retired on behalf of 'Shopify Inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Shopify Inc' via 'Patch Technologies')."
+    },
+    {
+      "id": "ER-058",
+      "category": "intermediary_delegations",
+      "name_a": "Siemens AG",
+      "name_b": "South Pole Trading Corp for account of Siemens AG",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'ag'",
+        "Intermediary allocation identified: 'South Pole Trading Corp' retired on behalf of 'Siemens AG'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Siemens AG' via 'South Pole Trading Corp')."
+    },
+    {
+      "id": "ER-059",
+      "category": "intermediary_delegations",
+      "name_a": "Delta Air Lines",
+      "name_b": "EcoAct on behalf of Delta Air Lines",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Intermediary allocation identified: 'EcoAct' retired on behalf of 'Delta Air Lines'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Delta Air Lines' via 'EcoAct')."
+    },
+    {
+      "id": "ER-060",
+      "category": "intermediary_delegations",
+      "name_a": "Lufthansa AG",
+      "name_b": "Compensaid c/o Lufthansa AG",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 90.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Claimant matches the recorded intermediary account holder ('Lufthansa AG')"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the intermediary entity ('Lufthansa AG') rather than the downstream principal. Downstream allocation documentation should be kept on file."
+    },
+    {
+      "id": "ER-061",
+      "category": "intermediary_delegations",
+      "name_a": "Delta Air Lines",
+      "name_b": "Retired on behalf of Delta Air Lines Inc",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'delta air lines'",
+        "High token overlap ratio (1.00)",
+        "High character alignment (1.00)",
+        "Shared distinctive root tokens: ['air', 'delta', 'lines']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "High-confidence match (score 100.0/100) supported by shared root tokens ['air', 'delta', 'lines'] with no conflicting signals."
+    },
+    {
+      "id": "ER-062",
+      "category": "intermediary_delegations",
+      "name_a": "Nike Inc.",
+      "name_b": "3Degrees Group on behalf of Nike Inc.",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'nike'",
+        "Compatible normalized legal suffix: 'inc'",
+        "Intermediary allocation identified: '3Degrees Group' retired on behalf of 'Nike Inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Nike Inc' via '3Degrees Group')."
+    },
+    {
+      "id": "ER-063",
+      "category": "intermediary_delegations",
+      "name_a": "Google LLC",
+      "name_b": "Tradewater LLC on behalf of Google LLC",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'llc'",
+        "Intermediary allocation identified: 'Tradewater LLC' retired on behalf of 'Google LLC'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Google LLC' via 'Tradewater LLC')."
+    },
+    {
+      "id": "ER-064",
+      "category": "intermediary_delegations",
+      "name_a": "Salesforce Inc.",
+      "name_b": "Cooleaf - Beneficiary: Salesforce Inc.",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'salesforce'",
+        "Compatible normalized legal suffix: 'inc'",
+        "Intermediary allocation identified: 'Cooleaf' retired on behalf of 'Salesforce Inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Salesforce Inc' via 'Cooleaf')."
+    },
+    {
+      "id": "ER-065",
+      "category": "intermediary_delegations",
+      "name_a": "Microsoft Corp",
+      "name_b": "ClimeCo - Offtaker: Microsoft Corp",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'corp'",
+        "Intermediary allocation identified: 'ClimeCo' retired on behalf of 'Microsoft Corp'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Microsoft Corp' via 'ClimeCo')."
+    },
+    {
+      "id": "ER-066",
+      "category": "intermediary_delegations",
+      "name_a": "Meta Platforms Inc",
+      "name_b": "ACT Commodities o.b.o. Meta Platforms Inc",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'inc'",
+        "Intermediary allocation identified: 'ACT Commodities' retired on behalf of 'Meta Platforms Inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Meta Platforms Inc' via 'ACT Commodities')."
+    },
+    {
+      "id": "ER-067",
+      "category": "intermediary_delegations",
+      "name_a": "Amazon.com Inc",
+      "name_b": "Nature Source Capital represented by Amazon.com Inc",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "EXACT_MATCH",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "The entity names are identical."
+    },
+    {
+      "id": "ER-068",
+      "category": "intermediary_delegations",
+      "name_a": "Target Corporation",
+      "name_b": "BGC Partners on behalf of Target Corporation",
+      "expected_relationship": "INTERMEDIARY_DELEGATION",
+      "predicted_relationship": "INTERMEDIARY_DELEGATION",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Exact character-for-character raw string equality",
+        "Identical legal suffix: 'corp'",
+        "Intermediary allocation identified: 'BGC Partners' retired on behalf of 'Target Corporation'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Claimant matches the beneficial principal disclosed in the intermediary allocation ('Target Corporation' via 'BGC Partners')."
+    },
+    {
+      "id": "ER-069",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Microsoft Corporation",
+      "name_b": "Microsoft Ireland Operations Ltd",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 65.44,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['microsoft']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 65.4/100). Core brand matches; differing qualifier tokens: ['ireland', 'operations']."
+    },
+    {
+      "id": "ER-070",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Siemens AG",
+      "name_b": "Siemens Energy Global GmbH & Co. KG",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 65.83,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['siemens']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 65.8/100). Core brand matches; differing qualifier tokens: ['energy', 'global']."
+    },
+    {
+      "id": "ER-071",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Shell PLC",
+      "name_b": "Shell Energy North America L.P.",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 61.31,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['shell']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 61.3/100). Core brand matches; differing qualifier tokens: ['america', 'energy', 'l', 'north', 'p']."
+    },
+    {
+      "id": "ER-072",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "TotalEnergies SE",
+      "name_b": "TotalEnergies Renewables USA LLC",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 69.84,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['totalenergies']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 69.8/100). Core brand matches; differing qualifier tokens: ['renewables', 'usa']."
+    },
+    {
+      "id": "ER-073",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Enel S.p.A.",
+      "name_b": "Enel Green Power North America Inc.",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 55.55,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['enel']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 55.5/100). Core brand matches; differing qualifier tokens: ['america', 'green', 'north', 'power']."
+    },
+    {
+      "id": "ER-074",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "BP PLC",
+      "name_b": "BP Energy Retail Company LLC",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 51.21,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['bp']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 51.2/100). Core brand matches; differing qualifier tokens: ['company', 'energy', 'retail']."
+    },
+    {
+      "id": "ER-075",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Iberdrola S.A.",
+      "name_b": "Iberdrola Renovables Internacional S.A.",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 73.46,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['iberdrola']",
+        "Compatible normalized legal suffixes: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 73.5/100). Core brand matches; differing qualifier tokens: ['internacional', 'renovables']."
+    },
+    {
+      "id": "ER-076",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "General Electric Company",
+      "name_b": "GE Vernova LLC",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": true,
+      "predicted_is_match": false,
+      "score": 22.78,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'co' vs 'llc'"
+      ],
+      "explanation": "Entity names differ substantially (score 22.8/100)."
+    },
+    {
+      "id": "ER-077",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Amazon.com Inc",
+      "name_b": "Amazon Web Services Inc",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": true,
+      "predicted_is_match": false,
+      "score": 63.53,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['amazon']",
+        "Compatible normalized legal suffixes: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 63.5/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-078",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Alphabet Inc.",
+      "name_b": "Google LLC",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": true,
+      "predicted_is_match": false,
+      "score": 13.91,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'inc' vs 'llc'"
+      ],
+      "explanation": "Entity names differ substantially (score 13.9/100)."
+    },
+    {
+      "id": "ER-079",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Bayer AG",
+      "name_b": "Bayer CropScience AG",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 77.83,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['bayer']",
+        "Compatible normalized legal suffixes: 'ag'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 77.8/100). Core brand matches; differing qualifier tokens: ['cropscience']."
+    },
+    {
+      "id": "ER-080",
+      "category": "parent_subsidiary_hierarchy",
+      "name_a": "Engie SA",
+      "name_b": "Engie North America Inc.",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 63.4,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['engie']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 63.4/100). Core brand matches; differing qualifier tokens: ['america', 'north']."
+    },
+    {
+      "id": "ER-081",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Acme Solar LLC",
+      "name_b": "Acme Wind LLC",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['acme']",
+        "Compatible normalized legal suffixes: 'llc'"
+      ],
+      "contradictory_signals": [
+        "Conflicting energy source / fuel tokens: ['solar'] vs ['wind']",
+        "Conflicting industry/sector tokens: ['solar'] vs ['wind']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting energy source / fuel tokens: ['solar'] vs ['wind']; Conflicting industry/sector tokens: ['solar'] vs ['wind']. Not considered the same entity."
+    },
+    {
+      "id": "ER-082",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Pacific Hydro Corp",
+      "name_b": "Pacific Thermal Corp",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['pacific']",
+        "Compatible normalized legal suffixes: 'corp'"
+      ],
+      "contradictory_signals": [
+        "Conflicting energy source / fuel tokens: ['hydro'] vs ['thermal']",
+        "Conflicting industry/sector tokens: ['hydro'] vs ['thermal']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting energy source / fuel tokens: ['hydro'] vs ['thermal']; Conflicting industry/sector tokens: ['hydro'] vs ['thermal']. Not considered the same entity."
+    },
+    {
+      "id": "ER-083",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Global Maritime Logistics",
+      "name_b": "Global Aviation Logistics",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 39.36,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High character alignment (0.93)",
+        "Shared distinctive root tokens: ['global', 'logistics']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['maritime'] vs ['aviation']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['maritime'] vs ['aviation']. Not considered the same entity."
+    },
+    {
+      "id": "ER-084",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Northern Electric Power",
+      "name_b": "Northern Gas Power",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 40.97,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['northern', 'power']"
+      ],
+      "contradictory_signals": [
+        "Conflicting energy source / fuel tokens: ['electric'] vs ['gas']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting energy source / fuel tokens: ['electric'] vs ['gas']. Not considered the same entity."
+    },
+    {
+      "id": "ER-085",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Green Energy Solutions",
+      "name_b": "Green Mining Solutions",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 38.38,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['green', 'solutions']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['energy'] vs ['mining']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['energy'] vs ['mining']. Not considered the same entity."
+    },
+    {
+      "id": "ER-086",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Apex Forestry Management",
+      "name_b": "Apex Steel Management",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 38.57,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['apex', 'management']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['forestry'] vs ['steel']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['forestry'] vs ['steel']. Not considered the same entity."
+    },
+    {
+      "id": "ER-087",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Continental Oil Co.",
+      "name_b": "Continental Coal Co.",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 10.55,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.90)",
+        "High character alignment (0.96)",
+        "Shared distinctive root tokens: ['continental']",
+        "Compatible normalized legal suffixes: 'co'"
+      ],
+      "contradictory_signals": [
+        "Conflicting energy source / fuel tokens: ['oil'] vs ['coal']",
+        "Conflicting industry/sector tokens: ['oil'] vs ['coal']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting energy source / fuel tokens: ['oil'] vs ['coal']; Conflicting industry/sector tokens: ['oil'] vs ['coal']. Not considered the same entity."
+    },
+    {
+      "id": "ER-088",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Titan Banking Group",
+      "name_b": "Titan Agriculture Group",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 34.87,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['group', 'titan']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['banking'] vs ['agriculture']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['banking'] vs ['agriculture']. Not considered the same entity."
+    },
+    {
+      "id": "ER-089",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Summit Rail Logistics",
+      "name_b": "Summit Shipping Logistics",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 42.01,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['logistics', 'summit']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['rail'] vs ['shipping']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['rail'] vs ['shipping']. Not considered the same entity."
+    },
+    {
+      "id": "ER-090",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "Horizon Telecom Solutions",
+      "name_b": "Horizon Cement Solutions",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 40.75,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High character alignment (0.94)",
+        "Shared distinctive root tokens: ['horizon', 'solutions']"
+      ],
+      "contradictory_signals": [
+        "Conflicting industry/sector tokens: ['telecom'] vs ['cement']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting industry/sector tokens: ['telecom'] vs ['cement']. Not considered the same entity."
+    },
+    {
+      "id": "ER-091",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "First Solar Inc.",
+      "name_b": "Second Solar Inc.",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 27.94,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['solar']",
+        "Compatible normalized legal suffixes: 'inc'"
+      ],
+      "contradictory_signals": [
+        "Conflicting directional/ordinal tokens: 'first' vs 'second'"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting directional/ordinal tokens: 'first' vs 'second'. Not considered the same entity."
+    },
+    {
+      "id": "ER-092",
+      "category": "hard_negatives_sector_conflict",
+      "name_a": "North Capital Partners",
+      "name_b": "South Capital Partners",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 43.94,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.91)",
+        "High character alignment (0.94)",
+        "Shared distinctive root tokens: ['capital', 'partners']"
+      ],
+      "contradictory_signals": [
+        "Conflicting directional/ordinal tokens: 'north' vs 'south'"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Conflicting directional/ordinal tokens: 'north' vs 'south'. Not considered the same entity."
+    },
+    {
+      "id": "ER-093",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Delta Air Lines Inc.",
+      "name_b": "Delta Electronics Inc.",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 62.63,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['delta']",
+        "Compatible normalized legal suffixes: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 62.6/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-094",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Apple Inc.",
+      "name_b": "Applied Materials Inc.",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 51.47,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Compatible normalized legal suffixes: 'inc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 51.5/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-095",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "General Electric Company",
+      "name_b": "General Motors Corporation",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 45.03,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['general']"
+      ],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'co' vs 'corp'"
+      ],
+      "explanation": "Entity names differ substantially (score 45.0/100)."
+    },
+    {
+      "id": "ER-096",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Standard Chartered PLC",
+      "name_b": "Standard Oil Co.",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 51.92,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['standard']"
+      ],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'plc' vs 'co'"
+      ],
+      "explanation": "Low-confidence entity similarity (score 51.9/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-097",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Amazon.com Inc.",
+      "name_b": "Amazon Forest Protection LLC",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 46.4,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['amazon']"
+      ],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'inc' vs 'llc'"
+      ],
+      "explanation": "Entity names differ substantially (score 46.4/100)."
+    },
+    {
+      "id": "ER-098",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "TotalEnergies SE",
+      "name_b": "Total Transportation Services Inc",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 21.9,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'se' vs 'inc'"
+      ],
+      "explanation": "Entity names differ substantially (score 21.9/100)."
+    },
+    {
+      "id": "ER-099",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Ford Motor Company",
+      "name_b": "Tom Ford International LLC",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 36.76,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['ford']"
+      ],
+      "contradictory_signals": [
+        "Divergent legal entity forms: 'co' vs 'llc'"
+      ],
+      "explanation": "Entity names differ substantially (score 36.8/100)."
+    },
+    {
+      "id": "ER-100",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "United Airlines Holdings",
+      "name_b": "United Parcel Service Inc",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 53.87,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['united']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 53.9/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-101",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "British Airways PLC",
+      "name_b": "British American Tobacco PLC",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 64.28,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['british']",
+        "Compatible normalized legal suffixes: 'plc'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 64.3/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-102",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "National Grid PLC",
+      "name_b": "National Bank of Canada",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 62.77,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['national']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 62.8/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-103",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "Tesla Inc.",
+      "name_b": "Tesla Motors India Pvt Ltd",
+      "expected_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "predicted_relationship": "CORPORATE_HIERARCHY_OR_SUBSIDIARY",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 63.93,
+      "match_tier": "MEDIUM_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (1.00)",
+        "Shared distinctive root tokens: ['tesla']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Likely parent/subsidiary or divisional relationship (score 63.9/100). Core brand matches; differing qualifier tokens: ['india', 'motors']."
+    },
+    {
+      "id": "ER-104",
+      "category": "hard_negatives_distinct_companies",
+      "name_a": "American Airlines Group",
+      "name_b": "American Express Company",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 58.76,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "Shared distinctive root tokens: ['american']"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Low-confidence entity similarity (score 58.8/100). Insufficient evidence to conclude that these represent the same legal claimant."
+    },
+    {
+      "id": "ER-105",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "customer 10184",
+      "name_b": "customer 10185",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 42.02,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.93)",
+        "High character alignment (0.97)",
+        "Shared distinctive root tokens: ['customer']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['10184'] vs ['10185']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['10184'] vs ['10185']. Not considered the same entity."
+    },
+    {
+      "id": "ER-106",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "on behalf of customer 10080",
+      "name_b": "on behalf of customer 10090",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 47.59,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.96)",
+        "High character alignment (0.99)",
+        "Shared distinctive root tokens: ['behalf', 'customer']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['10080'] vs ['10090']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['10080'] vs ['10090']. Not considered the same entity."
+    },
+    {
+      "id": "ER-107",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "Solar Project Unit 1 LLC",
+      "name_b": "Solar Project Unit 2 LLC",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 53.75,
+      "match_tier": "LOW_CONFIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.95)",
+        "High character alignment (0.98)",
+        "Shared distinctive root tokens: ['project', 'solar', 'unit']",
+        "Compatible normalized legal suffixes: 'llc'"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['1'] vs ['2']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['1'] vs ['2']. Not considered the same entity."
+    },
+    {
+      "id": "ER-108",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "Carbon Offset Fund 2024",
+      "name_b": "Carbon Offset Fund 2025",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 49.17,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.96)",
+        "High character alignment (0.98)",
+        "Shared distinctive root tokens: ['carbon', 'fund', 'offset']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['2024'] vs ['2025']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['2024'] vs ['2025']. Not considered the same entity."
+    },
+    {
+      "id": "ER-109",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "customer 10930",
+      "name_b": "customer 10931",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 42.02,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.93)",
+        "High character alignment (0.97)",
+        "Shared distinctive root tokens: ['customer']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['10930'] vs ['10931']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['10930'] vs ['10931']. Not considered the same entity."
+    },
+    {
+      "id": "ER-110",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "Biochar Facility Phase 1",
+      "name_b": "Biochar Facility Phase 2",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 49.29,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.96)",
+        "High character alignment (0.98)",
+        "Shared distinctive root tokens: ['biochar', 'facility', 'phase']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['1'] vs ['2']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['1'] vs ['2']. Not considered the same entity."
+    },
+    {
+      "id": "ER-111",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "Hydro Group Station 3",
+      "name_b": "Hydro Group Station 4",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 48.9,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.95)",
+        "High character alignment (0.98)",
+        "Shared distinctive root tokens: ['group', 'hydro', 'station']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['3'] vs ['4']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['3'] vs ['4']. Not considered the same entity."
+    },
+    {
+      "id": "ER-112",
+      "category": "hard_negatives_number_mismatch",
+      "name_a": "Account 90812",
+      "name_b": "Account 90813",
+      "expected_relationship": "DIFFERENT_ENTITIES",
+      "predicted_relationship": "DIFFERENT_ENTITIES",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 41.67,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [
+        "High token overlap ratio (0.92)",
+        "High character alignment (0.97)",
+        "Shared distinctive root tokens: ['account']"
+      ],
+      "contradictory_signals": [
+        "Mismatched numeric identifiers: ['90812'] vs ['90813']"
+      ],
+      "explanation": "Entities share name components but exhibit material contradictions: Mismatched numeric identifiers: ['90812'] vs ['90813']. Not considered the same entity."
+    },
+    {
+      "id": "ER-113",
+      "category": "undisclosed_placeholders",
+      "name_a": "Not Disclosed",
+      "name_b": "Shell PLC",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-114",
+      "category": "undisclosed_placeholders",
+      "name_a": "Not Disclosed",
+      "name_b": "Not Disclosed",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-115",
+      "category": "undisclosed_placeholders",
+      "name_a": "Confidential",
+      "name_b": "Acme Industries Ltd",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-116",
+      "category": "undisclosed_placeholders",
+      "name_a": "Anonymous",
+      "name_b": "Delta Air Lines",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-117",
+      "category": "undisclosed_placeholders",
+      "name_a": "N/A",
+      "name_b": "Qantas Airways",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-118",
+      "category": "undisclosed_placeholders",
+      "name_a": "",
+      "name_b": "Microsoft Corp",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-119",
+      "category": "undisclosed_placeholders",
+      "name_a": "None",
+      "name_b": "None",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-120",
+      "category": "undisclosed_placeholders",
+      "name_a": "Undisclosed",
+      "name_b": "Private Beneficiary",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-121",
+      "category": "undisclosed_placeholders",
+      "name_a": "Unknown",
+      "name_b": "Siemens AG",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-122",
+      "category": "undisclosed_placeholders",
+      "name_a": "Private",
+      "name_b": "Private",
+      "expected_relationship": "UNRESOLVED",
+      "predicted_relationship": "UNRESOLVED",
+      "expected_is_match": false,
+      "predicted_is_match": false,
+      "score": 0.0,
+      "match_tier": "INSUFFICIENT_EVIDENCE",
+      "positive_signals": [],
+      "contradictory_signals": [],
+      "explanation": "One or both entity records do not disclose a beneficial entity name. Entitlement cannot be verified by name matching."
+    },
+    {
+      "id": "ER-123",
+      "category": "multilingual_unicode_mojibake",
+      "name_a": "Condom\u00ednio 17.007 Na\u00e7\u00f5es",
+      "name_b": "Condom\u221a\u2260nio 17.007 Na\u221a\u00df\u221a\u00b5es",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'condominio 17 007 nacoes'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'condominio 17 007 nacoes' across formatting or suffix variations."
+    },
+    {
+      "id": "ER-124",
+      "category": "multilingual_unicode_mojibake",
+      "name_a": "Societe Generale SA",
+      "name_b": "Soci\u00e9t\u00e9 G\u00e9n\u00e9rale S.A.",
+      "expected_relationship": "CANONICAL_VARIANT",
+      "predicted_relationship": "CANONICAL_VARIANT",
+      "expected_is_match": true,
+      "predicted_is_match": true,
+      "score": 100.0,
+      "match_tier": "HIGH_CONFIDENCE",
+      "positive_signals": [
+        "Identical canonical root name: 'societe generale'",
+        "Compatible normalized legal suffix: 'sa'"
+      ],
+      "contradictory_signals": [],
+      "explanation": "Names resolve to the identical canonical entity 'societe generale' across formatting or suffix variations."
+    }
+  ]
+}

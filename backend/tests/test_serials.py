@@ -1,6 +1,13 @@
 import pytest
 
-from app.serials import SerialError, find_serials, overlap, parse_serial
+from app.serials import (
+    SerialBlock,
+    SerialError,
+    find_ambiguous_mentions,
+    find_serials,
+    overlap,
+    parse_serial,
+)
 
 VERRA = "18453-896309560-896329558-VCS-VCU-1507-VER-IN-1-1904-01092024-31122024-0"
 VERRA_LEGACY = "7056-367376734-367376744-VCU-263-VER-ID-14-674-01012016-31122016-1"
@@ -68,3 +75,93 @@ def test_verra_2025_format_without_scope_and_underscore_dates():
     assert b.project_id == "2551" and b.vintage == "2023" and b.quantity == 870
     c = parse_serial("1247-54685576-54747845-VCU-008-CDC-IN-1-92-16062010_30062010-0")
     assert c.project_id == "92" and c.vintage == "2010"
+
+
+# ---------------------------------------------------------------- Phase 1 Tests
+
+def test_extract_from_table_columns():
+    # Tab-delimited table row
+    tsv = "Batch\tFrom\tTo\tRest\n18453\t896309560\t896329558\tVCS-VCU-1507-VER-IN-1-1904-01092024-31122024-0"
+    blocks = find_serials(tsv)
+    assert len(blocks) == 1
+    b = blocks[0]
+    assert b.batch_id == "18453" and b.unit_start == 896309560 and b.unit_end == 896329558
+    assert b.source_method == "table"
+    assert b.confidence == "high"
+    assert "table_columns_joined" in b.transformations
+
+    # Pipe-delimited markdown table
+    pipe = "| Batch | From | To | Details |\n| 18453 | 896309560 | 896329558 | VCS-VCU-1507-VER-IN-1-1904-01092024-31122024-0 |"
+    blocks_pipe = find_serials(pipe)
+    assert len(blocks_pipe) == 1
+    assert blocks_pipe[0].batch_id == "18453"
+
+
+def test_extract_from_ocr_healed_serial():
+    # Letter 'O' substituted for digit '0' in numeric fields
+    ocr_text = "Serial Number: 18453-8963O956O-896329558-VCS-VCU-15O7-VER-IN-1-19O4-01092024-31122024-0"
+    blocks = find_serials(ocr_text)
+    assert len(blocks) == 1
+    b = blocks[0]
+    assert b.batch_id == "18453"
+    assert b.unit_start == 896309560
+    assert b.unit_end == 896329558
+    assert b.source_method == "ocr_healed"
+    assert "ocr_char_healed" in b.transformations
+
+
+def test_extract_from_prose_range():
+    # Standard phrasing
+    prose = "We retired units 896,309,560 to 896,329,558 of Verra issuance batch 18453 (project 1904, vintage 2024)."
+    blocks = find_serials(prose)
+    assert len(blocks) == 1
+    b = blocks[0]
+    assert b.registry == "VCS"
+    assert b.batch_id == "18453"
+    assert b.unit_start == 896309560
+    assert b.unit_end == 896329558
+    assert b.project_id == "1904"
+    assert b.vintage == "2024"
+    assert b.source_method == "prose"
+    assert b.confidence == "medium"
+
+    # Alternative order phrasing
+    prose_alt = "Verra issuance batch 18453 (project 1904, vintage 2024), units 896,309,560 to 896,329,558."
+    blocks_alt = find_serials(prose_alt)
+    assert len(blocks_alt) == 1
+    assert blocks_alt[0].unit_start == 896309560
+
+
+def test_ambiguous_inverted_prose_range_is_flagged_not_parsed():
+    inverted = "We retired units 50,000 to 40,000 of Verra batch 18453."
+    # Must NOT produce a valid block
+    assert find_serials(inverted) == []
+
+    # Must be identified in ambiguous mentions
+    amb = find_ambiguous_mentions(inverted)
+    assert len(amb) == 1
+    assert amb[0]["type"] == "inverted_unit_range"
+    assert "Start unit 50000 exceeds end unit 40000" in amb[0]["detail"]
+
+
+def test_serial_block_provenance_dataclass():
+    b = SerialBlock(
+        registry="VCS",
+        batch_id="18453",
+        unit_start=100,
+        unit_end=200,
+        serial="test-serial",
+        source_method="table",
+        raw_text="raw row",
+        transformations=("table_columns_joined",),
+        confidence="high",
+        is_ambiguous=False,
+    )
+    d = b.to_dict()
+    assert d["source_method"] == "table"
+    assert d["raw_text"] == "raw row"
+    assert d["transformations"] == ("table_columns_joined",)
+    assert d["confidence"] == "high"
+    assert d["is_ambiguous"] is False
+    assert d["quantity"] == 101
+    assert d["namespace"] == "VCS:18453"

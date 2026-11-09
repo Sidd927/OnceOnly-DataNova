@@ -61,10 +61,10 @@ reset: clean-runtime deploy
 test: test-contracts test-backend
 
 test-contracts:
-	cd contracts && npx hardhat test
+	cd contracts && HARDHAT_DISABLE_TELEMETRY_PROMPT=true npx hardhat test
 
 gas:
-	cd contracts && WRITE_GAS=1 npx hardhat test --grep gas
+	cd contracts && HARDHAT_DISABLE_TELEMETRY_PROMPT=true WRITE_GAS=1 npx hardhat test --grep gas
 
 test-backend:
 	cd backend && ../$(VPY) -m pytest -q -p no:warnings

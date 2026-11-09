@@ -193,28 +193,65 @@ def evaluate(
                                  uncertainty="Entitlement must come from the retiring account holder's allocation records.",
                                  next_action="Keep the broker's allocation confirmation with the claim evidence.", block_index=i))
             elif bens:
-                best = max(bens, key=lambda x: name_similarity(claimant, x))
-                score = name_similarity(claimant, best)
-                if score >= 85:
-                    F.append(Finding("BEN-000", PASS, RULES["BEN-000"], f"Claimant matches the registry beneficiary “{best}” (similarity {score}/100).", block_index=i))
+                from .entity_resolution import EntityResolutionEngine
+                matches = EntityResolutionEngine.resolve_claimant_against_registry(claimant, bens)
+                best_match = matches[0] if matches else None
+                best = best_match.entity_b.raw_value if best_match and best_match.entity_b.raw_value else bens[0]
+                score = int(best_match.overall_score) if best_match else name_similarity(claimant, best)
+
+                if best_match and best_match.is_match and best_match.relationship_type == "INTERMEDIARY_DELEGATION":
+                    F.append(Finding(
+                        "BEN-000", PASS, RULES["BEN-000"],
+                        f"Claimant matches beneficial principal in intermediary retirement “{best}” (similarity {score}/100).",
+                        uncertainty="Allocation documentation from the retiring broker should be retained to verify unit distribution.",
+                        evidence={"match": best_match.to_dict(), "registry_beneficiaries": bens[:5], "similarity": score},
+                        block_index=i,
+                    ))
+                elif best_match and best_match.is_match and (score >= 85 or best_match.match_tier == "HIGH_CONFIDENCE"):
+                    F.append(Finding(
+                        "BEN-000", PASS, RULES["BEN-000"],
+                        f"Claimant matches the registry beneficiary “{best}” (similarity {score}/100).",
+                        evidence={"match": best_match.to_dict(), "registry_beneficiaries": bens[:5], "similarity": score},
+                        block_index=i,
+                    ))
                 else:
-                    F.append(Finding("BEN-001", REVIEW, RULES["BEN-001"],
-                                     f"The registry records the beneficiary as “{best}”, which does not match the claimant (similarity {score}/100).",
-                                     uncertainty="The beneficiary may be an intermediary retiring on the claimant's behalf, a parent company, or a different entity.",
-                                     next_action="Request documentation linking the claimant to the recorded beneficiary.",
-                                     evidence={"registry_beneficiaries": bens[:5], "similarity": score}, block_index=i))
+                    uncertainty_msg = "The beneficiary may be an intermediary retiring on the claimant's behalf, a parent company, or a different entity."
+                    if best_match and best_match.contradictory_signals:
+                        uncertainty_msg += f" Note: {'; '.join(best_match.contradictory_signals)}."
+                    F.append(Finding(
+                        "BEN-001", REVIEW, RULES["BEN-001"],
+                        f"The registry records the beneficiary as “{best}”, which does not match the claimant (similarity {score}/100).",
+                        uncertainty=uncertainty_msg,
+                        next_action="Request documentation linking the claimant to the recorded beneficiary.",
+                        evidence={"match": best_match.to_dict() if best_match else {}, "registry_beneficiaries": bens[:5], "similarity": score},
+                        block_index=i,
+                    ))
 
         # double use against the ledger
         clashes = [a for a in active if a.registry == b.registry and a.batch_id == b.batch_id and a.unit_start <= b.unit_end and b.unit_start <= a.unit_end]
         for a in clashes:
             lo, hi = max(a.unit_start, b.unit_start), min(a.unit_end, b.unit_end)
+            from .reconciliation import AllocationReconciler
+            alloc_cand = {"registry": b.registry, "batch_id": b.batch_id, "unit_start": b.unit_start, "unit_end": b.unit_end, "claimant": claimant}
+            alloc_prior = {"registry": a.registry, "batch_id": a.batch_id, "unit_start": a.unit_start, "unit_end": a.unit_end, "claimant": a.claimant,
+                           "claim_id": a.claim_id, "claim_ref": a.claim_ref, "status": a.status}
+            rec_item = AllocationReconciler.reconcile_allocation_pair(alloc_cand, alloc_prior, block_idx=i)
+            overlap_meta = {
+                "start": lo,
+                "end": hi,
+                "units": hi - lo + 1,
+                "type": rec_item.overlap.overlap_type,
+                "pct_of_candidate": round(rec_item.overlap.pct_of_candidate, 2),
+                "pct_of_existing": round(rec_item.overlap.pct_of_existing, 2),
+                "allocation_type": rec_item.allocation_type,
+            }
             F.append(Finding("DUP-001", BLOCKING, RULES["DUP-001"],
                              f"Units {fmt(lo)}–{fmt(hi)} ({fmt(hi - lo + 1)} units) of {b.namespace} are already backing claim {a.claim_ref} by {a.claimant} ({a.status}). A retired unit can support only one claim.",
                              uncertainty="This check cannot tell which claim is correct. Possible causes: a broker allocated the same units to two customers; a transcription error; a split retirement recorded with wrong ranges.",
                              next_action=f"Request the retiring account holder's allocation record. If {a.claim_ref} is wrong, open a challenge against it; otherwise correct this claim's serials.",
                              evidence={"block": ev_block, "conflict": {"claim_id": a.claim_id, "claim_ref": a.claim_ref, "claimant": a.claimant, "status": a.status,
                                                                           "unit_start": a.unit_start, "unit_end": a.unit_end, "chain_claim_id": a.chain_claim_id, "tx_hash": a.tx_hash},
-                                       "overlap": {"start": lo, "end": hi, "units": hi - lo + 1}}, block_index=i))
+                                       "overlap": overlap_meta, "reconciliation": rec_item.to_dict()}, block_index=i))
 
     for r in reused_evidence:
         F.append(Finding("DUP-002", REVIEW, RULES["DUP-002"],

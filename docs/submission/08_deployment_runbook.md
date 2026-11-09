@@ -84,7 +84,7 @@ Open http://127.0.0.1:7860. The container prints the demo fingerprint at boot; i
 **Approval required:** creating a Render account or service, and granting Render access to the GitHub repository (or making the repo public first). Free tier; no payment is needed per Render's free-tier docs.
 
 1. Push `main` (already done for this commit).
-2. In Render: **New → Blueprint**, select `Sidd927/ClimateChain`, branch `main`. It reads `render.yaml` (`runtime: docker`, `plan: free`, health check `/api/health`, `autoDeploy: false`).
+2. In Render: **New → Blueprint**, select `Sidd927/OnceOnly-DataNova`, branch `main`. It reads `render.yaml` (`runtime: docker`, `plan: free`, health check `/api/health`, `autoDeploy: false`).
 3. Wait for the build (several minutes), then the boot (about 4 s at full CPU; 116 s measured at 0.1 CPU).
 4. Smoke test (replace the URL):
    - `curl -s https://<service>.onrender.com/api/health` should show `"public_demo":true` and `"chain":{"available":true,...}`.

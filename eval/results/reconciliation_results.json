@@ -1,0 +1,884 @@
+{
+  "benchmark_file": "reconciliation_benchmark.json",
+  "total_test_cases": 36,
+  "evaluation_timestamp": "2026-11-09T07:26:11Z",
+  "elapsed_seconds": 0.006,
+  "models": {
+    "Baseline (Exact Interval)": {
+      "total_cases": 36,
+      "tp": 16,
+      "fp": 0,
+      "tn": 12,
+      "fn": 8,
+      "precision": 1.0,
+      "recall": 0.6667,
+      "f1": 0.8,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.3333,
+      "accuracy": 0.7778,
+      "by_category": {
+        "legitimate_splits": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 5,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "exact_overlaps": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "partial_overlaps": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 4,
+          "acc": 0.0
+        },
+        "containment_superset": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 4,
+          "acc": 0.0
+        },
+        "cross_namespace_same_numbers": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "intermediary_attributions": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "unresolved_unknown_beneficiaries": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "contradictory_disclosures": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "same_claimant_multi_tranche": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "acc": 1.0
+        }
+      },
+      "by_split": {
+        "development": {
+          "tp": 6,
+          "fp": 0,
+          "tn": 6,
+          "fn": 4,
+          "acc": 0.75
+        },
+        "validation": {
+          "tp": 5,
+          "fp": 0,
+          "tn": 2,
+          "fn": 2,
+          "acc": 0.7778
+        },
+        "held_out": {
+          "tp": 5,
+          "fp": 0,
+          "tn": 4,
+          "fn": 2,
+          "acc": 0.8182
+        }
+      }
+    },
+    "Baseline (Naive Interval Matcher)": {
+      "total_cases": 36,
+      "tp": 24,
+      "fp": 0,
+      "tn": 12,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "accuracy": 1.0,
+      "by_category": {
+        "legitimate_splits": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 5,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "exact_overlaps": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "partial_overlaps": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "containment_superset": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "cross_namespace_same_numbers": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "intermediary_attributions": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "unresolved_unknown_beneficiaries": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "contradictory_disclosures": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "same_claimant_multi_tranche": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "acc": 1.0
+        }
+      },
+      "by_split": {
+        "development": {
+          "tp": 10,
+          "fp": 0,
+          "tn": 6,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "validation": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "held_out": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "acc": 1.0
+        }
+      }
+    },
+    "OnceOnly Allocation Reconciler": {
+      "total_cases": 36,
+      "tp": 24,
+      "fp": 0,
+      "tn": 12,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "accuracy": 1.0,
+      "by_category": {
+        "legitimate_splits": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 5,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "exact_overlaps": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "partial_overlaps": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "containment_superset": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "cross_namespace_same_numbers": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "intermediary_attributions": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "parent_subsidiary_hierarchy": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "unresolved_unknown_beneficiaries": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "contradictory_disclosures": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "same_claimant_multi_tranche": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "acc": 1.0
+        }
+      },
+      "by_split": {
+        "development": {
+          "tp": 10,
+          "fp": 0,
+          "tn": 6,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "validation": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "acc": 1.0
+        },
+        "held_out": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "acc": 1.0
+        }
+      }
+    }
+  },
+  "classification_breakdown": {
+    "LEGITIMATE_SPLIT": 5,
+    "SAME_UNITS_SAME_CLAIMANT": 5,
+    "ALLOCATION_CONFLICT": 10,
+    "CROSS_NAMESPACE": 4,
+    "INTERMEDIARY_ATTRIBUTION": 3,
+    "SAME_UNITS_RELATED_CLAIMANTS": 3,
+    "UNRESOLVED_BENEFICIARY": 4,
+    "DIFFERENT_UNITS_SAME_CLAIMANT": 2
+  },
+  "cases": [
+    {
+      "id": "REC-001",
+      "split": "development",
+      "category": "legitimate_splits",
+      "expected_overlap_type": "ADJACENT",
+      "predicted_overlap_type": "ADJACENT",
+      "expected_allocation_type": "LEGITIMATE_SPLIT",
+      "predicted_allocation_type": "LEGITIMATE_SPLIT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Legitimate split allocation in batch 18453: claimant 'Acme Industries Ltd' [1-500] (500 units) and claimant 'Beta Renewables LLC' [501-1,000] (500 units) hold distinct, non-overlapping unit ranges (adjacent)."
+    },
+    {
+      "id": "REC-002",
+      "split": "development",
+      "category": "legitimate_splits",
+      "expected_overlap_type": "DISJOINT",
+      "predicted_overlap_type": "DISJOINT",
+      "expected_allocation_type": "LEGITIMATE_SPLIT",
+      "predicted_allocation_type": "LEGITIMATE_SPLIT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Legitimate split allocation in batch 18453: claimant 'Shell PLC' [100-200] (101 units) and claimant 'Qantas Airways Limited' [300-400] (101 units) hold distinct, non-overlapping unit ranges (disjoint)."
+    },
+    {
+      "id": "REC-003",
+      "split": "validation",
+      "category": "legitimate_splits",
+      "expected_overlap_type": "ADJACENT",
+      "predicted_overlap_type": "ADJACENT",
+      "expected_allocation_type": "LEGITIMATE_SPLIT",
+      "predicted_allocation_type": "LEGITIMATE_SPLIT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Legitimate split allocation in batch 18453: claimant 'Siemens AG' [10,000-15,000] (5,001 units) and claimant 'Schneider Electric SE' [15,001-20,000] (5,000 units) hold distinct, non-overlapping unit ranges (adjacent)."
+    },
+    {
+      "id": "REC-004",
+      "split": "held_out",
+      "category": "legitimate_splits",
+      "expected_overlap_type": "DISJOINT",
+      "predicted_overlap_type": "DISJOINT",
+      "expected_allocation_type": "LEGITIMATE_SPLIT",
+      "predicted_allocation_type": "LEGITIMATE_SPLIT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Legitimate split allocation in batch 1904: claimant 'Northwind Foods' [50,000-60,000] (10,001 units) and claimant 'Arbor Logistics' [70,000-80,000] (10,001 units) hold distinct, non-overlapping unit ranges (disjoint)."
+    },
+    {
+      "id": "REC-005",
+      "split": "held_out",
+      "category": "legitimate_splits",
+      "expected_overlap_type": "ADJACENT",
+      "predicted_overlap_type": "ADJACENT",
+      "expected_allocation_type": "LEGITIMATE_SPLIT",
+      "predicted_allocation_type": "LEGITIMATE_SPLIT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Legitimate split allocation in batch GS1-1-100: claimant 'Delta Air Lines' [1-2,500] (2,500 units) and claimant 'United Airlines Holdings' [2,501-5,000] (2,500 units) hold distinct, non-overlapping unit ranges (adjacent)."
+    },
+    {
+      "id": "REC-006",
+      "split": "development",
+      "category": "exact_overlaps",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 101,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Duplicate claim or revision by the same claimant 'Acme Corp': 101 units (exact_overlap) match existing claim prior record. Affects 100.0% of candidate range and 100.0% of existing claim."
+    },
+    {
+      "id": "REC-007",
+      "split": "development",
+      "category": "exact_overlaps",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 501,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Duplicate claim or revision by the same claimant 'Acme Industries Ltd': 501 units (exact_overlap) match existing claim prior record. Affects 100.0% of candidate range and 100.0% of existing claim."
+    },
+    {
+      "id": "REC-008",
+      "split": "validation",
+      "category": "exact_overlaps",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 10000,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 10,000 units of VCS:18453 [896,309,560-896,319,559] are claimed by two unrelated entities ('Helios Apparel' vs 'Northwind Foods'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-009",
+      "split": "held_out",
+      "category": "exact_overlaps",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 491,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 491 units of GS:GS1-1-500 [10-500] are claimed by two unrelated entities ('Lumen Retail' vs 'Kestrel Media'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-010",
+      "split": "development",
+      "category": "partial_overlaps",
+      "expected_overlap_type": "PARTIAL_OVERLAP",
+      "predicted_overlap_type": "PARTIAL_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 4559,
+      "pct_candidate": 65.13,
+      "pct_existing": 45.59,
+      "explanation": "Potential double use: 4,559 units of VCS:18453 [896,315,001-896,319,559] are claimed by two unrelated entities ('Helios Apparel' vs 'Northwind Foods'). Affects 65.1% of candidate range."
+    },
+    {
+      "id": "REC-011",
+      "split": "development",
+      "category": "partial_overlaps",
+      "expected_overlap_type": "PARTIAL_OVERLAP",
+      "predicted_overlap_type": "PARTIAL_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 51,
+      "pct_candidate": 50.5,
+      "pct_existing": 33.77,
+      "explanation": "Duplicate claim or revision by the same claimant 'Siemens AG': 51 units (partial_overlap) match existing claim prior record. Affects 50.5% of candidate range and 33.8% of existing claim."
+    },
+    {
+      "id": "REC-012",
+      "split": "validation",
+      "category": "partial_overlaps",
+      "expected_overlap_type": "PARTIAL_OVERLAP",
+      "predicted_overlap_type": "PARTIAL_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 201,
+      "pct_candidate": 20.08,
+      "pct_existing": 28.67,
+      "explanation": "Potential double use: 201 units of VCS:18453 [1,800-2,000] are claimed by two unrelated entities ('Delta Air Lines' vs 'American Airlines Group'). Affects 20.1% of candidate range."
+    },
+    {
+      "id": "REC-013",
+      "split": "held_out",
+      "category": "partial_overlaps",
+      "expected_overlap_type": "PARTIAL_OVERLAP",
+      "predicted_overlap_type": "PARTIAL_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 501,
+      "pct_candidate": 25.04,
+      "pct_existing": 25.04,
+      "explanation": "Potential double use: 501 units of VCS:18453 [6,500-7,000] are claimed by two unrelated entities ('Acme Solar LLC' vs 'Acme Wind LLC'). Affects 25.0% of candidate range."
+    },
+    {
+      "id": "REC-014",
+      "split": "development",
+      "category": "containment_superset",
+      "expected_overlap_type": "CONTAINMENT",
+      "predicted_overlap_type": "CONTAINMENT",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 61,
+      "pct_candidate": 100.0,
+      "pct_existing": 60.4,
+      "explanation": "Potential double use: 61 units of VCS:18453 [120-180] are claimed by two unrelated entities ('Alpha Corp' vs 'Beta LLC'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-015",
+      "split": "development",
+      "category": "containment_superset",
+      "expected_overlap_type": "SUPERSET",
+      "predicted_overlap_type": "SUPERSET",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 101,
+      "pct_candidate": 50.25,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 101 units of VCS:18453 [100-200] are claimed by two unrelated entities ('Gamma Inc' vs 'Delta LLC'). Affects 50.2% of candidate range."
+    },
+    {
+      "id": "REC-016",
+      "split": "validation",
+      "category": "containment_superset",
+      "expected_overlap_type": "CONTAINMENT",
+      "predicted_overlap_type": "CONTAINMENT",
+      "expected_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 51,
+      "pct_candidate": 100.0,
+      "pct_existing": 50.5,
+      "explanation": "Duplicate claim or revision by the same claimant 'Shell PLC': 51 units (containment) match existing claim prior record. Affects 100.0% of candidate range and 50.5% of existing claim."
+    },
+    {
+      "id": "REC-017",
+      "split": "held_out",
+      "category": "containment_superset",
+      "expected_overlap_type": "SUPERSET",
+      "predicted_overlap_type": "SUPERSET",
+      "expected_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "SAME_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 601,
+      "pct_candidate": 60.1,
+      "pct_existing": 100.0,
+      "explanation": "Duplicate claim or revision by the same claimant 'Microsoft Corporation': 601 units (superset) match existing claim prior record. Affects 60.1% of candidate range and 100.0% of existing claim."
+    },
+    {
+      "id": "REC-018",
+      "split": "development",
+      "category": "cross_namespace_same_numbers",
+      "expected_overlap_type": "NO_OVERLAP",
+      "predicted_overlap_type": "NO_OVERLAP",
+      "expected_allocation_type": "CROSS_NAMESPACE",
+      "predicted_allocation_type": "CROSS_NAMESPACE",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Allocations belong to different namespaces (VCS:18453 vs VCS:99999). Serial units are distinct and non-conflicting."
+    },
+    {
+      "id": "REC-019",
+      "split": "development",
+      "category": "cross_namespace_same_numbers",
+      "expected_overlap_type": "NO_OVERLAP",
+      "predicted_overlap_type": "NO_OVERLAP",
+      "expected_allocation_type": "CROSS_NAMESPACE",
+      "predicted_allocation_type": "CROSS_NAMESPACE",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Allocations belong to different namespaces (VCS:18453 vs GS:18453). Serial units are distinct and non-conflicting."
+    },
+    {
+      "id": "REC-020",
+      "split": "validation",
+      "category": "cross_namespace_same_numbers",
+      "expected_overlap_type": "NO_OVERLAP",
+      "predicted_overlap_type": "NO_OVERLAP",
+      "expected_allocation_type": "CROSS_NAMESPACE",
+      "predicted_allocation_type": "CROSS_NAMESPACE",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Allocations belong to different namespaces (VCS:100 vs VCS:200). Serial units are distinct and non-conflicting."
+    },
+    {
+      "id": "REC-021",
+      "split": "held_out",
+      "category": "cross_namespace_same_numbers",
+      "expected_overlap_type": "NO_OVERLAP",
+      "predicted_overlap_type": "NO_OVERLAP",
+      "expected_allocation_type": "CROSS_NAMESPACE",
+      "predicted_allocation_type": "CROSS_NAMESPACE",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Allocations belong to different namespaces (GS:GS1-1-10 vs GS:GS1-1-20). Serial units are distinct and non-conflicting."
+    },
+    {
+      "id": "REC-022",
+      "split": "development",
+      "category": "intermediary_attributions",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "predicted_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 101,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 101 units (exact_overlap) between 'Lenovo' and intermediary/principal 'TBK Group on behalf of Lenovo'. Claimant matches the beneficial principal disclosed in the intermediary allocation ('Lenovo' via 'TBK Group')."
+    },
+    {
+      "id": "REC-023",
+      "split": "validation",
+      "category": "intermediary_attributions",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "predicted_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 301,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 301 units (exact_overlap) between 'Shopify Inc.' and intermediary/principal 'Patch Technologies - Client: Shopify Inc.'. Claimant matches the beneficial principal disclosed in the intermediary allocation ('Shopify Inc' via 'Patch Technologies')."
+    },
+    {
+      "id": "REC-024",
+      "split": "held_out",
+      "category": "intermediary_attributions",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "predicted_allocation_type": "INTERMEDIARY_ATTRIBUTION",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 1001,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 1,001 units (exact_overlap) between 'Telefonica Brazil' and intermediary/principal 'GP-31 - On behalf of Telefonica Brazil - 2021 emissions'. Claimant matches the beneficial principal disclosed in the intermediary allocation ('Telefonica Brazil' via 'GP-31')."
+    },
+    {
+      "id": "REC-025",
+      "split": "development",
+      "category": "parent_subsidiary_hierarchy",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "predicted_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 101,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Conflicting claim across related corporate entities: 101 units (exact_overlap) claimed by 'Microsoft Corporation' and related entity 'Microsoft Ireland Operations Ltd'. Likely parent/subsidiary or divisional relationship (score 65.4/100). Core brand matches; differing qualifier tokens: ['ireland', 'operations']."
+    },
+    {
+      "id": "REC-026",
+      "split": "validation",
+      "category": "parent_subsidiary_hierarchy",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "predicted_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 301,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Conflicting claim across related corporate entities: 301 units (exact_overlap) claimed by 'TotalEnergies SE' and related entity 'TotalEnergies Renewables USA LLC'. Likely parent/subsidiary or divisional relationship (score 69.8/100). Core brand matches; differing qualifier tokens: ['renewables', 'usa']."
+    },
+    {
+      "id": "REC-027",
+      "split": "held_out",
+      "category": "parent_subsidiary_hierarchy",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "predicted_allocation_type": "SAME_UNITS_RELATED_CLAIMANTS",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 501,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Conflicting claim across related corporate entities: 501 units (exact_overlap) claimed by 'Enel S.p.A.' and related entity 'Enel Green Power North America Inc.'. Likely parent/subsidiary or divisional relationship (score 55.5/100). Core brand matches; differing qualifier tokens: ['america', 'green', 'north', 'power']."
+    },
+    {
+      "id": "REC-028",
+      "split": "development",
+      "category": "unresolved_unknown_beneficiaries",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "predicted_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 101,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 101 units in batch 18453 involves an undisclosed or anonymous beneficiary. Double use cannot be ruled out without broker allocation records."
+    },
+    {
+      "id": "REC-029",
+      "split": "development",
+      "category": "unresolved_unknown_beneficiaries",
+      "expected_overlap_type": "DISJOINT",
+      "predicted_overlap_type": "DISJOINT",
+      "expected_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "predicted_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Non-overlapping allocation [500-600] in batch 18453, but beneficial ownership is undisclosed or ambiguous."
+    },
+    {
+      "id": "REC-030",
+      "split": "validation",
+      "category": "unresolved_unknown_beneficiaries",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "predicted_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 501,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 501 units in batch 18453 involves an undisclosed or anonymous beneficiary. Double use cannot be ruled out without broker allocation records."
+    },
+    {
+      "id": "REC-031",
+      "split": "held_out",
+      "category": "unresolved_unknown_beneficiaries",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "predicted_allocation_type": "UNRESOLVED_BENEFICIARY",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 1001,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Unit overlap of 1,001 units in batch 18453 involves an undisclosed or anonymous beneficiary. Double use cannot be ruled out without broker allocation records."
+    },
+    {
+      "id": "REC-032",
+      "split": "development",
+      "category": "contradictory_disclosures",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 401,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 401 units of VCS:18453 [100-500] are claimed by two unrelated entities ('Delta Air Lines Inc.' vs 'Delta Electronics Inc.'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-033",
+      "split": "validation",
+      "category": "contradictory_disclosures",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 1001,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 1,001 units of VCS:18453 [1,000-2,000] are claimed by two unrelated entities ('customer 10184' vs 'customer 10185'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-034",
+      "split": "held_out",
+      "category": "contradictory_disclosures",
+      "expected_overlap_type": "EXACT_OVERLAP",
+      "predicted_overlap_type": "EXACT_OVERLAP",
+      "expected_allocation_type": "ALLOCATION_CONFLICT",
+      "predicted_allocation_type": "ALLOCATION_CONFLICT",
+      "expected_is_conflict": true,
+      "predicted_is_conflict": true,
+      "overlap_units": 1001,
+      "pct_candidate": 100.0,
+      "pct_existing": 100.0,
+      "explanation": "Potential double use: 1,001 units of VCS:18453 [3,000-4,000] are claimed by two unrelated entities ('Acme Solar LLC' vs 'Acme Wind LLC'). Affects 100.0% of candidate range."
+    },
+    {
+      "id": "REC-035",
+      "split": "development",
+      "category": "same_claimant_multi_tranche",
+      "expected_overlap_type": "DISJOINT",
+      "predicted_overlap_type": "DISJOINT",
+      "expected_allocation_type": "DIFFERENT_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "DIFFERENT_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Same claimant 'Siemens AG' holds multiple distinct allocations in batch 18453 ([100-500] and [600-1,000], disjoint). Legitimate multi-tranche claim."
+    },
+    {
+      "id": "REC-036",
+      "split": "held_out",
+      "category": "same_claimant_multi_tranche",
+      "expected_overlap_type": "ADJACENT",
+      "predicted_overlap_type": "ADJACENT",
+      "expected_allocation_type": "DIFFERENT_UNITS_SAME_CLAIMANT",
+      "predicted_allocation_type": "DIFFERENT_UNITS_SAME_CLAIMANT",
+      "expected_is_conflict": false,
+      "predicted_is_conflict": false,
+      "overlap_units": 0,
+      "pct_candidate": 0.0,
+      "pct_existing": 0.0,
+      "explanation": "Same claimant 'Microsoft Corporation' holds multiple distinct allocations in batch 18453 ([1,000-1,999] and [2,000-2,999], adjacent). Legitimate multi-tranche claim."
+    }
+  ]
+}

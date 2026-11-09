@@ -3,8 +3,8 @@
 ## Repository
 | Item | Value |
 |---|---|
-| Directory | `~/Projects/ClimateChain` |
-| Remote | `origin` = https://github.com/Sidd927/ClimateChain.git (**private**) |
+| Directory | `~/Projects/OnceOnly-DataNova` |
+| Remote | `origin` = https://github.com/Sidd927/OnceOnly-DataNova.git |
 | Branch / HEAD | `main` at `159aabf` (Merge feature/final-polish) |
 | `main` vs `origin/main` | identical (`159aabfd04df…`) after `git fetch` |
 | Working tree | clean |

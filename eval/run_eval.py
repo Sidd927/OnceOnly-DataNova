@@ -44,19 +44,21 @@ CATEGORIES = {
 
 
 def pick_records(n: int) -> list[dict]:
-    """Real Verra retirement records with >= 400 units and distinct batches."""
-    ref = ROOT / "data/reference/registry_full.sqlite"
-    if not ref.exists():
-        sys.exit("Full registry index missing: run `make data` first.")
-    con = sqlite3.connect(ref)
-    con.row_factory = sqlite3.Row
-    rows = con.execute(
+    """Real Verra retirement records with >= 400 units and distinct batches (dual-mode)."""
+    from app.reference import Reference
+
+    ref = Reference.open()
+    if ref is None:
+        sys.exit("Registry reference index missing. Run `make data` or ensure demo_subset.csv.gz is present.")
+    rows = ref.con.execute(
         "SELECT * FROM records WHERE kind='retirement' AND registry='VCS' AND quantity >= 400 AND quantity <= 200000 "
         "GROUP BY batch_id ORDER BY batch_id"
     ).fetchall()
     rng = random.Random(SEED)
     rows = [dict(r) for r in rows]
     rng.shuffle(rows)
+    if len(rows) < n:
+        return [rng.choice(rows) for _ in range(n)]
     return rows[:n]
 
 
@@ -143,7 +145,6 @@ def baseline_numbers_only(existing: str, new: str) -> bool:
 
 
 def onceonly(existing: str, new: str) -> bool:
-    os.environ["ONCEONLY_REFERENCE_MODE"] = "full"
     from app import db, service
     from app.reference import Reference
 
@@ -283,11 +284,13 @@ def score_extraction(cases, extractor) -> dict:
 def main():
     t0 = time.time()
     global REF
-    os.environ["ONCEONLY_REFERENCE_MODE"] = "full"
-    os.environ.setdefault("ONCEONLY_LLM", "off")
+    os.environ.setdefault("ONCEONLY_LLM", "auto")
     from app.reference import Reference
 
     REF = Reference.open()
+    if REF is None:
+        sys.exit("Registry reference index missing. Run `make data` or ensure demo_subset.csv.gz is present.")
+    print(f"Registry reference loaded: {REF.scope} ({REF.path})")
     cases = build_cases()
     truth = [c["truth"] for c in cases]
     print(f"Double-use cases: {len(cases)}")
@@ -312,7 +315,9 @@ def main():
     ex_cases = extraction_cases()
     methods = {"parser": {"label": "Deterministic parser", **score_extraction(ex_cases, lambda t: deterministic_extract(t).blocks)}}
     if llm_available():
-        methods["parser_plus_llm"] = {"label": "Parser + AI extraction (cross-checked)", **score_extraction(ex_cases, lambda t: extract(t, use_llm=True).blocks)}
+        from app.extraction import is_mock_llm
+        label = "Parser + AI extraction (offline mock fixture)" if is_mock_llm() else "Parser + AI extraction (live Claude cross-checked)"
+        methods["parser_plus_llm"] = {"label": label, **score_extraction(ex_cases, lambda t: extract(t, use_llm=True).blocks)}
     else:
         methods["parser_plus_llm"] = {"label": "Parser + AI extraction (cross-checked)", "status": "not run (no ANTHROPIC_API_KEY)"}
 

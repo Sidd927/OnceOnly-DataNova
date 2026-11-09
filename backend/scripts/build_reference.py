@@ -22,6 +22,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend"))
+from app.normalization import normalize_date_iso, normalize_text_field  # noqa: E402
 from app.serials import SerialError, parse_serial  # noqa: E402
 
 SOURCE = {
@@ -79,10 +80,14 @@ def convert(df, kind, registry, sheet, qty_col, date_col, ben_col, reason_col, n
             q = None
         if q == b.quantity:
             audit["qty_consistent"] += 1
+        proj_name = normalize_text_field(_s(rec.get(name_col))).normalized_value
+        ben_val = normalize_text_field(_s(rec.get(ben_col))).normalized_value if ben_col else None
+        reason_val = normalize_text_field(_s(rec.get(reason_col))).normalized_value if reason_col else None
+        event_dt = normalize_date_iso(_date(rec.get(date_col))).normalized_value
         rows.append((
             kind, registry, b.batch_id, b.unit_start, b.unit_end, q if q is not None else b.quantity, b.serial,
-            b.project_id, _s(rec.get(name_col)), _s(rec.get(vintage_col)) or b.vintage, _s(rec.get(country_col)) or b.country,
-            _date(rec.get(date_col)), _s(rec.get(ben_col)) if ben_col else None, _s(rec.get(reason_col)) if reason_col else None,
+            b.project_id, proj_name, _s(rec.get(vintage_col)) or b.vintage, _s(rec.get(country_col)) or b.country,
+            event_dt, ben_val, reason_val,
             sheet, i + 2,  # +2: header row + 1-based
         ))
     return rows, audit

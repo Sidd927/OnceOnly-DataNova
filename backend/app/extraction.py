@@ -1,21 +1,30 @@
 """Evidence text extraction and structured fact extraction.
 
 Two independent extractors run on every document:
-  * deterministic: regex serial parser (always on, auditable, used for anchoring)
+  * deterministic: layout-aware & OCR-resilient serial parser (always on, auditable, used for anchoring)
   * llm (optional): Claude returns schema-validated JSON; every serial it reports is
     re-parsed by the deterministic parser before it can influence a claim.
+  * mock llm: deterministic simulation mode for offline zero-cost benchmark evaluation.
 """
 from __future__ import annotations
 
 import io
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 
 from pydantic import BaseModel, Field
 
 from .config import settings
-from .serials import SerialBlock, SerialError, find_serials, parse_serial
+from .normalization import normalize_beneficiary_name, normalize_date_iso
+from .serials import (
+    SerialBlock,
+    SerialError,
+    find_ambiguous_mentions,
+    find_serials,
+    parse_serial,
+)
 
 log = logging.getLogger("onceonly.extraction")
 
@@ -36,7 +45,11 @@ def document_text(filename: str, data: bytes) -> str:
 # ----------------------------------------------------------------- deterministic
 
 _QTY_RE = re.compile(r"(?:quantity|qty|amount|total)[^\d\n]{0,30}([\d][\d,\. ]{0,15}\d|\d)", re.I)
-_BEN_RE = re.compile(r"(?:beneficiary|beneficial owner|retired on behalf of|on behalf of|using entity)\s*[:\-]?\s*(.+)", re.I)
+_BEN_RE = re.compile(
+    r"(?:beneficiary|beneficial owner|retired on behalf of|on behalf of|using entity)\s*[:\-]?\s*(.+?)"
+    r"(?=\s*[.;]?(?:\s+(?:date|retirement date|vintage|quantity|project)\s*[:\-])|[;\n\r]|$)",
+    re.I,
+)
 _DATE_RE = re.compile(r"(?:retirement date|date of retirement|retired on)\s*[:\-]?\s*(\d{4}-\d{2}-\d{2}|\d{1,2}[/.]\d{1,2}[/.]\d{4}|\d{1,2} \w+ \d{4})", re.I)
 _U_REG = re.compile(r"\b(VCS|Verra|Gold Standard|GS)\b", re.I)
 _U_PID = re.compile(r"\b(?:project|GS ?ID|ID)\s*(?:ID)?\s*#?\s*(?:GS)?(\d{2,6})\b", re.I)
@@ -71,8 +84,9 @@ class Extraction:
     beneficiary: str | None = None
     retirement_date: str | None = None
     unserialized: list[UnserializedAssertion] = field(default_factory=list)
+    ambiguous_mentions: list[dict] = field(default_factory=list)
     llm_used: bool = False
-    llm_status: str = "not-configured"  # not-configured | ok | error | disabled
+    llm_status: str = "not-configured"  # not-configured | ok | error | disabled | mock
     llm_blocks: list[SerialBlock] = field(default_factory=list)
     llm_rejected: list[str] = field(default_factory=list)
     llm_fields: dict = field(default_factory=dict)
@@ -81,9 +95,19 @@ class Extraction:
 
 def deterministic_extract(text: str) -> Extraction:
     blocks = find_serials(text)
+    ambiguous = find_ambiguous_mentions(text)
     qty = _num(m.group(1)) if (m := _QTY_RE.search(text)) else None
-    ben = m.group(1).strip()[:200] if (m := _BEN_RE.search(text)) else None
-    date = m.group(1) if (m := _DATE_RE.search(text)) else None
+
+    # Beneficiary normalization
+    raw_ben = m.group(1).strip()[:200] if (m := _BEN_RE.search(text)) else None
+    ben_rec, ben_kind = normalize_beneficiary_name(raw_ben)
+    ben = ben_rec.normalized_value if ben_kind == "named" else raw_ben
+
+    # Date normalization
+    raw_date = m.group(1) if (m := _DATE_RE.search(text)) else None
+    date_rec = normalize_date_iso(raw_date)
+    date = date_rec.normalized_value or raw_date
+
     uns = []
     if not blocks:
         # heuristic: registry, project, vintage and quantity mentioned in the same sentence, any order
@@ -92,8 +116,14 @@ def deterministic_extract(text: str) -> Extraction:
             if r and p and v and q and _num(q.group(1)):
                 reg = "GS" if r.group(1).upper() in ("GS", "GOLD STANDARD") else "VCS"
                 uns.append(UnserializedAssertion(reg, p.group(1), v.group(1), _num(q.group(1)), sent.strip()[:200]))
+
     return Extraction(
-        blocks=blocks, stated_quantity=qty, beneficiary=ben, retirement_date=date, unserialized=uns,
+        blocks=blocks,
+        stated_quantity=qty,
+        beneficiary=ben,
+        retirement_date=date,
+        unserialized=uns,
+        ambiguous_mentions=ambiguous,
         parser_keys={_key(b) for b in blocks},
     )
 
@@ -122,11 +152,44 @@ SYSTEM_PROMPT = (
 )
 
 
+def is_mock_llm() -> bool:
+    return os.environ.get("ONCEONLY_MOCK_LLM") == "1" or settings.llm_model == "mock"
+
+
 def llm_available() -> bool:
-    return settings.llm_enabled and bool(settings.anthropic_api_key)
+    return is_mock_llm() or (settings.llm_enabled and bool(settings.anthropic_api_key))
+
+
+def mock_llm_extract(text: str) -> LlmExtraction:
+    """Deterministic offline mock extraction fixture for testing and CI without live API credentials."""
+    blocks = find_serials(text)
+    qty = _num(m.group(1)) if (m := _QTY_RE.search(text)) else None
+    raw_ben = m.group(1).strip()[:200] if (m := _BEN_RE.search(text)) else None
+    ben_rec, _ = normalize_beneficiary_name(raw_ben)
+    raw_date = m.group(1) if (m := _DATE_RE.search(text)) else None
+    date_rec = normalize_date_iso(raw_date)
+
+    llm_blks = [
+        LlmBlock(
+            serial=b.serial,
+            quantity=b.quantity,
+            project_id=b.project_id,
+            vintage=b.vintage,
+        )
+        for b in blocks
+    ]
+    return LlmExtraction(
+        beneficiary=ben_rec.normalized_value or raw_ben,
+        retirement_date=date_rec.normalized_value or raw_date,
+        total_quantity=qty,
+        blocks=llm_blks,
+    )
 
 
 def llm_extract(text: str) -> LlmExtraction:
+    if is_mock_llm():
+        return mock_llm_extract(text)
+
     import anthropic
 
     # Explicit key and base URL: never inherit unrelated credentials from the environment.
@@ -156,14 +219,14 @@ def extract(text: str, use_llm: bool | None = None) -> Extraction:
         ex.llm_status = "error"
         ex.llm_fields = {"error": type(e).__name__}
         return ex
-    ex.llm_used, ex.llm_status = True, "ok"
+    ex.llm_used, ex.llm_status = True, ("mock" if is_mock_llm() else "ok")
     ex.llm_fields = out.model_dump()
     for b in out.blocks:
         if not b.serial:
             ex.llm_rejected.append("(range described without a serial)")
             continue
         try:
-            ex.llm_blocks.append(parse_serial(b.serial))
+            ex.llm_blocks.append(parse_serial(b.serial, heal_ocr=True))
         except SerialError:
             ex.llm_rejected.append(b.serial[:120])
     # Merge: blocks only the LLM found are kept but tagged for review downstream.
