@@ -1,5 +1,19 @@
 import { type ReactNode } from "react";
-import { AlertTriangle, AlertOctagon, CheckCircle2, HelpCircle, Info, ShieldAlert, Sparkles, Layers } from "lucide-react";
+import {
+  AlertTriangle,
+  AlertOctagon,
+  CheckCircle2,
+  HelpCircle,
+  Info,
+  ShieldAlert,
+  Sparkles,
+  Layers,
+  Flame,
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from "lucide-react";
 import type {
   EvidenceSeverity,
   EvidenceStrength,
@@ -259,6 +273,122 @@ export function ProjectCorrelationCategoryBadge({ category }: { category: string
       return (
         <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-2 py-0.5 font-mono text-[11px] font-medium text-muted" title="Insufficient Evidence: sparse metadata prevents confident categorization">
           Insufficient Evidence
+        </span>
+      );
+  }
+}
+
+export function ConcentrationTierBadge({ tier }: { tier: string }) {
+  const t = (tier || "").toUpperCase();
+  switch (t) {
+    case "SINGLE_LABEL_DOMINANCE":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/50 bg-crimson-wash px-2 py-0.5 font-mono text-[11px] font-bold text-crimson" title="Single Label Dominance: one entity holds >= 99% of disclosed volume">
+          <AlertOctagon size={12} aria-hidden />
+          Single-Label Dominance
+        </span>
+      );
+    case "HIGH_CONCENTRATION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/40 bg-crimson-wash px-2 py-0.5 font-mono text-[11px] font-bold text-crimson" title="High Concentration: HHI > 2500 indicates significant buyer concentration">
+          <AlertTriangle size={12} aria-hidden />
+          High Concentration (HHI &gt; 2500)
+        </span>
+      );
+    case "MODERATE_CONCENTRATION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-ochre/40 bg-ochre-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-ochre" title="Moderate Concentration: 1500 <= HHI <= 2500">
+          Moderate Concentration
+        </span>
+      );
+    case "BROAD_DISTRIBUTION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-glacier/30 bg-glacier-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-glacier" title="Broad Distribution: 500 <= HHI < 1500">
+          Broad Distribution
+        </span>
+      );
+    case "HIGH_DISPERSION":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-lichen/40 bg-lichen-wash px-2 py-0.5 font-mono text-[11px] font-semibold text-lichen" title="High Dispersion: HHI < 500 across broad claimant pool">
+          High Dispersion (HHI &lt; 500)
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-2 py-0.5 font-mono text-[11px] font-medium text-muted">
+          Not Classified
+        </span>
+      );
+  }
+}
+
+export function BurstTypeBadge({ burstType }: { burstType: string }) {
+  const bt = (burstType || "").toUpperCase();
+  switch (bt) {
+    case "VOLUME":
+    case "TONNES":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/40 bg-crimson-wash px-1.5 py-0.5 font-mono text-[10.5px] font-bold text-crimson" title="Volume Burst: anomalous volume exceeds 3× MAD threshold">
+          <Flame size={11} aria-hidden />
+          Volume Burst
+        </span>
+      );
+    case "RECORD_COUNT":
+    case "RECORDS":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-ochre/40 bg-ochre-wash px-1.5 py-0.5 font-mono text-[10.5px] font-bold text-ochre" title="Frequency Burst: anomalous transaction frequency exceeds 3× MAD threshold">
+          <Activity size={11} aria-hidden />
+          Frequency Burst
+        </span>
+      );
+    case "DUAL":
+    case "BOTH":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/50 bg-crimson-wash px-1.5 py-0.5 font-mono text-[10.5px] font-bold text-crimson" title="Dual Burst: simultaneous volume and transaction count surges">
+          <Flame size={11} aria-hidden />
+          Dual Burst
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-muted">
+          Normal Baseline
+        </span>
+      );
+  }
+}
+
+export function TrendDirectionBadge({ direction }: { direction: string }) {
+  const d = (direction || "").toLowerCase();
+  switch (d) {
+    case "increasing":
+    case "accelerating":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-crimson/30 bg-crimson-wash px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-crimson" title="Increasing: rolling liquidation velocity accelerating">
+          <TrendingUp size={11} aria-hidden />
+          Increasing
+        </span>
+      );
+    case "decreasing":
+    case "decelerating":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-glacier/30 bg-glacier-wash px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-glacier" title="Decreasing: rolling liquidation velocity decelerating">
+          <TrendingDown size={11} aria-hidden />
+          Decreasing
+        </span>
+      );
+    case "stable":
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-rule-strong bg-fog px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-ink-soft" title="Stable: pacing within normal historical bounds">
+          <Minus size={11} aria-hidden />
+          Stable
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center gap-1 rounded-token border border-slate/30 bg-slate-wash px-1.5 py-0.5 font-mono text-[10.5px] font-medium text-muted" title="Insufficient History: < 4 prior periods">
+          <HelpCircle size={11} aria-hidden />
+          Insufficient History
         </span>
       );
   }

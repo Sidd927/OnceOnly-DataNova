@@ -37,22 +37,64 @@ export interface ConcentrationMetrics {
   total_units: number;
   disclosed_units: number;
   unresolved_units: number;
-  hhi: number;
-  top_claimants: [string, number][];
-  tier: ConcentrationTier;
-  entropy?: number | null;
-  lorenz_curve?: [number, number][];
+  beneficiary_coverage_ratio: number;
+  unresolved_share: number;
+  unique_disclosed_beneficiaries: number;
+  hhi_disclosed: number;
+  hhi_normalized: number;
+  entropy_shannon_disclosed: number;
+  entropy_normalized: number;
+  dominant_disclosed_beneficiary?: string | null;
+  dominant_disclosed_share: number;
+  top3_disclosed_share: number;
+  tier: ConcentrationTier | string;
+  disclosed_shares: Record<string, number>;
+  disclaimer: string;
+}
+
+export interface BatchIntervalStructure {
+  total_intervals: number;
+  min_unit_start?: number | null;
+  max_unit_end?: number | null;
+  interval_span?: number | null;
+  interval_density: number;
+  exact_duplicate_intervals_count: number;
+  overlapping_intervals_count: number;
+  pairwise_overlap_count: number;
+  contiguous_intervals_count: number;
+  disjoint_gaps_count: number;
+  has_invalid_intervals: boolean;
 }
 
 export interface FragmentationMetrics {
-  total_units: number;
   total_events: number;
-  interval_count: number;
+  total_units: number;
+  gini_coefficient: number;
+  gini_sample_corrected: number;
+  mean_event_size: number;
+  median_event_size: number;
+  min_event_size: number;
+  max_event_size: number;
+  p25_event_size: number;
+  p75_event_size: number;
+  std_dev_event_size: number;
+  iqr_event_size: number;
   micro_claim_count: number;
-  micro_claim_volume: number;
-  micro_claim_ratio: number;
-  mean_interval_span: number;
-  coverage_density: number;
+  micro_claim_units: number;
+  micro_claim_record_share: number;
+  micro_claim_quantity_share: number;
+  micro_claim_threshold_used: number;
+  small_tranche_count: number;
+  small_tranche_units: number;
+  small_tranche_record_share: number;
+  small_tranche_quantity_share: number;
+  small_tranche_threshold_used: number;
+  classification_counts: Record<string, number>;
+  classification_quantities: Record<string, number>;
+  classification_record_shares: Record<string, number>;
+  classification_quantity_shares: Record<string, number>;
+  distinct_disclosed_beneficiaries: number;
+  intervals?: BatchIntervalStructure | null;
 }
 
 export interface BatchAnalyticsResult {
@@ -61,7 +103,7 @@ export interface BatchAnalyticsResult {
   project_id?: string | null;
   project_name?: string | null;
   country?: string | null;
-  vintage?: string | null;
+  vintage?: number | string | null;
   total_quantity: number;
   total_events: number;
   concentration: ConcentrationMetrics;
@@ -70,12 +112,25 @@ export interface BatchAnalyticsResult {
 }
 
 export interface PopulationAnalyticsSummary {
-  coverage: DualTrackCoverage;
-  concentration: ConcentrationMetrics;
-  fragmentation: FragmentationMetrics;
-  total_projects: number;
+  total_retirement_records: number;
+  total_retirement_quantity: number;
   total_batches: number;
-  generated_at: string;
+  coverage: DualTrackCoverage;
+  overall_concentration: ConcentrationMetrics;
+  batch_record_counts: Record<string, number>;
+  batch_quantities: Record<string, number>;
+  batch_gini_distribution: Record<string, number>;
+  pooled_allocation_count: number;
+  pooled_allocation_quantity: number;
+  pooled_allocation_mean_size: number;
+  pooled_allocation_gini: number;
+  batches_with_micro_claims: number;
+  batches_with_small_tranches: number;
+  batches_with_overlaps: number;
+  single_record_batches: number;
+  multi_record_batches: number;
+  batch_gini_interpretation: string;
+  computed_at: string;
 }
 
 export interface ConcentrationRequest {
@@ -105,7 +160,9 @@ export const analyticsApi = {
   getPopulationSummary: () =>
     request<PopulationAnalyticsSummary>("/api/analytics/population/summary"),
   getBatchAnalytics: (registry: string, batchId: string) =>
-    request<BatchAnalyticsResult>(`/api/analytics/batches/${encodeURIComponent(registry)}/${encodeURIComponent(batchId)}`),
+    request<BatchAnalyticsResult>(
+      `/api/analytics/batches/${encodeURIComponent(registry)}/${encodeURIComponent(batchId)}`
+    ),
   analyzeConcentration: (req: ConcentrationRequest) =>
     request<ConcentrationMetrics>("/api/analytics/concentration", json(req)),
   analyzeFragmentation: (req: BatchFragmentationRequest) =>

@@ -3,110 +3,139 @@ import { request } from "./client";
 export type AggregationPeriod = "daily" | "weekly" | "monthly";
 
 export type TrendDirection =
-  | "ACCELERATING"
-  | "DECELERATING"
-  | "STABLE"
-  | "INSUFFICIENT_HISTORY";
+  | "increasing"
+  | "decreasing"
+  | "stable"
+  | "INSUFFICIENT_HISTORY"
+  | string;
 
 export type BurstType =
-  | "VOLUME_SPIKE"
-  | "FREQUENCY_SPIKE"
-  | "DUAL_BURST"
-  | "NO_BURST";
+  | "VOLUME"
+  | "RECORD_COUNT"
+  | "DUAL"
+  | "BOTH"
+  | "NONE"
+  | string;
 
 export type GapClassification =
-  | "MONITORING_INACTIVITY_INTERVAL"
-  | "DATA_COLLECTION_COVERAGE_GAP"
-  | "NORMAL_PACING"
-  | "INSUFFICIENT_OBSERVATION_SPAN";
+  | "EXTENDED_INACTIVITY_INTERVAL"
+  | "INTERMITTENT_ZERO_ACTIVITY_INTERVAL"
+  | "SUSTAINED_ZERO_ACTIVITY_INTERVAL"
+  | string;
 
-export interface TemporalPeriodActivity {
+export interface TemporalActivityPeriod {
+  period_start: string;
+  period_end: string;
   period_label: string;
-  start_date: string;
-  end_date: string;
-  total_units: number;
   record_count: number;
-  active_days: number;
+  total_tonnes: number;
+  average_tonnes_per_record: number;
+  records_with_usable_dates: number;
+  records_with_missing_or_invalid_dates: number;
+  usable_date_quantity: number;
+  excluded_date_quantity: number;
 }
 
 export interface TemporalActivityResponse {
   registry?: string | null;
   project_id?: string | null;
-  period_type: AggregationPeriod;
-  timeline: TemporalPeriodActivity[];
-  summary: {
-    total_units: number;
-    total_records: number;
-    total_periods: number;
-    active_periods: number;
-    earliest_date?: string | null;
-    latest_date?: string | null;
-  };
+  period_type: AggregationPeriod | string;
+  total_periods: number;
+  total_records: number;
+  total_tonnes: number;
+  active_periods_count: number;
+  zero_activity_periods_count: number;
+  earliest_date_observed?: string | null;
+  latest_date_observed?: string | null;
+  disclaimer: string;
+  periods: TemporalActivityPeriod[];
 }
 
 export interface TemporalTrendPeriod {
+  period_start: string;
+  period_end: string;
   period_label: string;
-  current_units: number;
-  rolling_avg: number;
-  change_pct: number;
+  record_count: number;
+  total_tonnes: number;
+  average_tonnes_per_record: number;
+  rolling_average_records?: number | null;
+  rolling_average_tonnes?: number | null;
+  record_count_change?: number | null;
+  tonne_quantity_change?: number | null;
+  record_count_pct_change?: number | null;
+  tonne_quantity_pct_change?: number | null;
   direction: TrendDirection;
+  has_sufficient_history: boolean;
+  data_coverage_status: string;
 }
 
 export interface TemporalTrendsResponse {
   registry?: string | null;
   project_id?: string | null;
-  period_type: AggregationPeriod;
-  window_size: number;
+  period_type: AggregationPeriod | string;
+  rolling_window: number;
+  direction_threshold_pct: number;
+  total_periods: number;
+  sufficient_history_periods: number;
+  insufficient_history_periods: number;
+  disclaimer: string;
   trends: TemporalTrendPeriod[];
-  summary: {
-    overall_direction: TrendDirection;
-    mean_volume: number;
-    std_volume: number;
-  };
 }
 
 export interface TemporalBurstPeriod {
+  period_start: string;
+  period_end: string;
   period_label: string;
-  units: number;
-  records: number;
+  observed_records: number;
+  baseline_median_records: number;
+  baseline_mad_records: number;
+  record_burst_threshold: number;
+  record_burst_flag: boolean;
+  record_dispersion_method: string;
+  observed_tonnes: number;
+  baseline_median_tonnes: number;
+  baseline_mad_tonnes: number;
+  tonne_burst_threshold: number;
+  tonne_burst_flag: boolean;
+  tonne_dispersion_method: string;
   burst_type: BurstType;
-  mad_multiplier: number;
   is_burst: boolean;
+  has_sufficient_history: boolean;
   explanation: string;
 }
 
 export interface TemporalBurstsResponse {
   registry?: string | null;
   project_id?: string | null;
+  period_type: AggregationPeriod | string;
   sensitivity: number;
-  baseline_mad: number;
+  baseline_window: number;
+  total_periods_evaluated: number;
+  burst_periods_count: number;
+  disclaimer: string;
   bursts: TemporalBurstPeriod[];
-  summary: {
-    total_bursts: number;
-    burst_periods: string[];
-    max_mad_multiplier: number;
-  };
 }
 
 export interface TemporalGapItem {
   gap_start: string;
   gap_end: string;
   gap_duration_days: number;
-  prior_units: number;
-  classification: GapClassification;
-  explanation: string;
+  gap_duration_periods: number;
+  previous_activity_period: TemporalActivityPeriod;
+  next_activity_period: TemporalActivityPeriod;
+  gap_classification: GapClassification;
+  coverage_limitation_note: string;
 }
 
 export interface TemporalGapsResponse {
   registry?: string | null;
   project_id?: string | null;
-  period_type: AggregationPeriod;
+  period_type: AggregationPeriod | string;
+  total_gaps_count: number;
+  max_gap_duration_days: number;
+  mean_gap_duration_days: number;
+  disclaimer: string;
   gaps: TemporalGapItem[];
-  summary: {
-    total_gaps: number;
-    longest_gap_days: number;
-    total_gap_days: number;
-  };
 }
 
 export const temporalApi = {

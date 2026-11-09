@@ -354,3 +354,103 @@ test.describe("Sprint 3.3 cross-registry project and entity intelligence workspa
     await expect(page.getByText("Apple Inc.")).toBeVisible();
   });
 });
+
+test.describe("Sprint 3.4 market population & temporal dynamics observatory", () => {
+  test("population census overview renders dual-track disclosure and registry distributions", async ({ page }) => {
+    await page.goto("/observatory");
+    await expect(page.getByRole("heading", { name: "Market Population & Temporal Dynamics Observatory" })).toBeVisible();
+
+    // Verify census tiles
+    await expect(page.getByText("Retirement Population Volume")).toBeVisible();
+    await expect(page.getByText("Issuance Batches Surveyed")).toBeVisible();
+    await expect(page.getByText("Beneficiary Record Disclosure")).toBeVisible();
+    await expect(page.getByText("Beneficiary Volume Disclosure")).toBeVisible();
+
+    // Verify registry breakdown
+    await expect(page.getByText("Verra (VCS) Registry Population")).toBeVisible();
+    await expect(page.getByText("Gold Standard (GS) Registry Population")).toBeVisible();
+
+    // Verify dual-track classification categories
+    await expect(page.getByText("Non-Placeholder Disclosed")).toBeVisible();
+    await expect(page.getByText("Explicitly Undisclosed")).toBeVisible();
+    await expect(page.getByText("Invalid or Placeholder")).toBeVisible();
+    await expect(page.getByText(/Methodological Principle/)).toBeVisible();
+  });
+
+  test("beneficiary concentration track displays HHI, inequality duality, and interactive Lorenz curve", async ({ page }) => {
+    await page.goto("/observatory");
+    // Switch to Concentration & Lorenz track
+    await page.getByRole("tab", { name: /Concentration & Lorenz/ }).click();
+
+    // Verify HHI and inequality tiles
+    await expect(page.getByText("Herfindahl-Hirschman Index (HHI)")).toBeVisible();
+    await expect(page.getByText("High Dispersion (HHI < 500)")).toBeVisible();
+    await expect(page.getByText("Pooled Allocation Gini (Macro Inequality)")).toBeVisible();
+    await expect(page.getByText("Across-Batch Mean Gini (Micro Uniformity)")).toBeVisible();
+
+    // Verify Lorenz curve component
+    await expect(page.getByRole("region", { name: "Portfolio Beneficiary Allocation Lorenz Curve" })).toBeVisible();
+    await expect(page.getByText(/Gini: 0.9605/)).toBeVisible();
+
+    // Toggle decile table
+    await page.getByRole("button", { name: "Decile Table" }).click();
+    await expect(page.getByText(/Empirical Decile Distribution Breakdown/)).toBeVisible();
+    await page.getByRole("button", { name: "Hide Deciles" }).click();
+    await expect(page.getByText(/Empirical Decile Distribution Breakdown/)).toBeHidden();
+
+    // Verify top disclosed beneficiaries ranking table
+    await expect(page.getByText("Top Disclosed Beneficiaries by Claimed Volume")).toBeVisible();
+    await expect(page.getByText("Telstra Corporation Limited")).toBeVisible();
+    await expect(page.getByText("Shell")).toBeVisible();
+  });
+
+  test("batch fragmentation explorer inspects batches, micro-claims, and interval topologies", async ({ page }) => {
+    await page.goto("/observatory");
+    // Switch to Batch Fragmentation track
+    await page.getByRole("tab", { name: /Batch Fragmentation/ }).click();
+    await expect(page.getByText("Batch Fragmentation & Interval Structure Inspector")).toBeVisible();
+
+    // Inspect default/first preset (VCS 10918)
+    await expect(page.getByText("Within-Batch Gini Coefficient")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/Absolute Micro-Claims/)).toBeVisible();
+    await expect(page.getByText(/Relative Small Tranches/)).toBeVisible();
+
+    // Verify interval topology
+    await expect(page.getByText("Batch Interval Topology & Integrity Check")).toBeVisible();
+    await expect(page.getByText("0 Overlaps")).toBeVisible();
+
+    // Click Istanbul Landfill preset (GS GS1-1-TR-GS707-21-2016-20993)
+    await page.getByRole("button", { name: /Istanbul Landfill/ }).click();
+    await expect(page.getByText("LANDFILL GAS EXTRACTION")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("432,388 t")).toBeVisible();
+  });
+
+  test("temporal dynamics track toggles monthly, weekly, and daily timelines, bursts, and gaps", async ({ page }) => {
+    await page.goto("/observatory");
+    // Switch to Temporal Dynamics track
+    await page.getByRole("tab", { name: /Temporal Dynamics/ }).click();
+
+    // Verify Temporal Activity Chart
+    await expect(page.getByRole("region", { name: "Temporal Activity & Velocity Trends" })).toBeVisible();
+    await expect(page.getByText("Observed Window Volume")).toBeVisible();
+
+    // Toggle to weekly
+    await page.getByRole("button", { name: "weekly" }).click();
+    await expect(page.getByRole("button", { name: "weekly" })).toHaveAttribute("aria-pressed", "true");
+
+    // Toggle to daily
+    await page.getByRole("button", { name: "daily" }).click();
+    await expect(page.getByRole("button", { name: "daily" })).toHaveAttribute("aria-pressed", "true");
+
+    // Toggle back to monthly
+    await page.getByRole("button", { name: "monthly" }).click();
+
+    // Verify MAD-based bursts inspector
+    await expect(page.getByText("MAD-Based Liquidation Bursts")).toBeVisible();
+    await expect(page.getByText(/Anomaly Periods Detected/)).toBeVisible();
+
+    // Verify Zero-Activity Gaps Inspector
+    await expect(page.getByText("Reporting Inactivity Intervals")).toBeVisible();
+    await expect(page.getByText(/Gaps \(Mean:/)).toBeVisible();
+  });
+});

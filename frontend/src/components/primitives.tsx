@@ -179,6 +179,9 @@ export {
   EvidenceStrengthBadge,
   CategoryBadge,
   ProjectCorrelationCategoryBadge,
+  ConcentrationTierBadge,
+  BurstTypeBadge,
+  TrendDirectionBadge,
   SourceStageBadge,
   MetricTile,
 } from "./AnalyticalPrimitives";
