@@ -46,12 +46,18 @@ type NavItem = { to: string; label: string; match?: (p: string) => boolean };
 
 const APP_NAV: NavItem[] = [
   { to: "/overview", label: "Overview" },
-  { to: "/claims", label: "Claims", match: (p) => p === "/claims" || (/^\/claims\/\d+/.test(p)) },
+  { to: "/claims", label: "Claims", match: (p) => p === "/claims" || /^\/claims\/\d+/.test(p) || p === "/claims/new" },
+  { to: "/cross-registry", label: "Cross-Registry", match: (p) => p.startsWith("/cross-registry") },
+  { to: "/observatory", label: "Observatory", match: (p) => p.startsWith("/observatory") },
+  { to: "/assessment", label: "Assessment", match: (p) => p.startsWith("/assessment") },
   { to: "/verify", label: "Verify" },
   { to: "/evidence", label: "Evidence" },
 ];
 const SITE_NAV: NavItem[] = [
   { to: "/#how", label: "How it works" },
+  { to: "/cross-registry", label: "Cross-Registry" },
+  { to: "/observatory", label: "Observatory" },
+  { to: "/assessment", label: "Assessment" },
   { to: "/evidence", label: "Evidence" },
   { to: "/verify", label: "Verify" },
 ];
@@ -62,7 +68,7 @@ function MobileMenu({ items, night }: { items: NavItem[]; night?: boolean }) {
   useEffect(() => { ref.current?.close(); }, [loc.pathname, loc.hash]);
   return (
     <>
-      <button type="button" onClick={() => ref.current?.showModal()} className={`press inline-flex h-9 w-9 items-center justify-center rounded-[7px] border md:hidden ${night ? "border-night-line text-white" : "border-rule-strong text-ink"}`} aria-label="Open menu" aria-haspopup="dialog">
+      <button type="button" onClick={() => ref.current?.showModal()} className={`press inline-flex h-9 w-9 items-center justify-center rounded-[7px] border lg:hidden ${night ? "border-night-line text-white" : "border-rule-strong text-ink"}`} aria-label="Open menu" aria-haspopup="dialog">
         <Menu size={18} aria-hidden />
       </button>
       <dialog ref={ref} aria-label="Site menu" className="my-0 mr-0 ml-auto h-dvh max-h-dvh w-[min(20rem,88vw)] max-w-none bg-sheet p-0 text-ink shadow-[var(--shadow-float)]">
@@ -84,7 +90,7 @@ function MobileMenu({ items, night }: { items: NavItem[]; night?: boolean }) {
 function NavLinks({ items, night }: { items: NavItem[]; night?: boolean }) {
   const { pathname } = useLocation();
   return (
-    <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+    <nav aria-label="Primary" className="hidden items-center gap-0.5 xl:gap-1 lg:flex">
       {items.map((n) => {
         const isHash = n.to.includes("#");
         const active = n.match ? n.match(pathname) : !isHash && pathname === n.to;
@@ -94,7 +100,7 @@ function NavLinks({ items, night }: { items: NavItem[]; night?: boolean }) {
             key={n.to}
             to={n.to}
             aria-current={active ? "page" : undefined}
-            className={`relative rounded-[6px] px-3 py-1.5 text-sm transition-colors ${night
+            className={`relative rounded-[6px] px-2.5 xl:px-3 py-1.5 text-[13px] xl:text-sm transition-colors whitespace-nowrap ${night
               ? active ? "text-white" : "text-night-text hover:text-white"
               : active ? "bg-fog-2 font-semibold text-ink" : "text-ink-soft hover:bg-fog hover:text-ink"}`}
           >
@@ -159,7 +165,16 @@ export function SiteFooter({ night = false }: { night?: boolean }) {
           Registry data: Berkeley Carbon Trading Project, Voluntary Registry Offsets Database v2026-08 (CC BY 4.0). Every claimant in the demo is fictional.
         </p>
         <nav aria-label="Footer" className="flex flex-wrap content-start gap-x-5 gap-y-2 sm:justify-end">
-          {[["/", "Story"], ["/overview", "Overview"], ["/claims", "Claims"], ["/claims/new", "Check a claim"], ["/verify", "Verify"], ["/evidence", "Evidence"]].map(([to, l]) => (
+          {[
+            ["/", "Story"],
+            ["/overview", "Overview"],
+            ["/claims", "Claims"],
+            ["/cross-registry", "Cross-Registry"],
+            ["/observatory", "Observatory"],
+            ["/assessment", "Assessment"],
+            ["/verify", "Verify"],
+            ["/evidence", "Evidence"],
+          ].map(([to, l]) => (
             <Link viewTransition key={to} to={to} className="underline decoration-transparent underline-offset-4 hover:decoration-current">{l}</Link>
           ))}
         </nav>

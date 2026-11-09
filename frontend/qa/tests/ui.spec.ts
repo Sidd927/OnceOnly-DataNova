@@ -202,7 +202,9 @@ test.describe("navigation and layout", () => {
     await page.getByRole("button", { name: "Open menu" }).click();
     const menu = page.getByRole("dialog", { name: "Site menu" });
     await expect(menu).toBeVisible();
-    for (const label of ["Overview", "Claims", "Verify", "Evidence", "Check a claim"]) await expect(menu.getByRole("link", { name: label, exact: true })).toBeVisible();
+    for (const label of ["Overview", "Claims", "Cross-Registry", "Observatory", "Assessment", "Verify", "Evidence", "Check a claim"]) {
+      await expect(menu.getByRole("link", { name: label, exact: true })).toBeVisible();
+    }
     await page.keyboard.press("Escape");
     await expect(menu).toBeHidden();
     await ctx.close();
@@ -212,7 +214,7 @@ test.describe("navigation and layout", () => {
     const ctx = await browser.newContext({ viewport: { width: 320, height: 640 } });
     const page = await ctx.newPage();
     const helios = await claimId(page, "Helios");
-    for (const path of ["/", "/overview", "/claims", "/claims/new", `/claims/${helios.id}`, "/verify", "/evidence"]) {
+    for (const path of ["/", "/overview", "/claims", "/claims/new", `/claims/${helios.id}`, "/cross-registry", "/observatory", "/assessment", "/verify", "/evidence"]) {
       await page.goto(path);
       const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
       expect(sw, `${path} scrollWidth`).toBeLessThanOrEqual(cw);
@@ -225,5 +227,48 @@ test.describe("navigation and layout", () => {
     await expect(page).toHaveURL(/\/evidence$/);
     await page.goto("/no-such-page");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page isn't on the ledger.");
+  });
+});
+
+test.describe("Stage 4 unified assessment and reconciliation workflows", () => {
+  test("assessment console executes evaluation and renders explainable scorecard", async ({ page }) => {
+    await page.goto("/assessment");
+    await expect(page.getByRole("heading", { name: "Unified Risk Assessment Console" })).toBeVisible();
+    // Click demo preset for VCS Project 1904
+    await page.getByRole("button", { name: "VCS Project 1904" }).click();
+    // Scorecard should render
+    await expect(page.getByText("Assessment Target:")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Triggered Rules")).toBeVisible();
+    await expect(page.getByText("Evidence Items & Cluster Analysis")).toBeVisible();
+  });
+
+  test("rules catalog modal opens, filters, and displays deterministic rule definitions", async ({ page }) => {
+    await page.goto("/assessment");
+    await page.getByRole("button", { name: "Rules Catalog" }).click();
+    const modal = page.getByRole("dialog", { name: "Deterministic Risk Rules Catalog" });
+    await expect(modal).toBeVisible();
+    await expect(page.getByText("16 Versioned Evaluation Rules")).toBeVisible();
+    // Search for a specific rule
+    await page.getByPlaceholder(/Search by rule ID/).fill("RULE-INT-001");
+    await expect(page.getByText("RULE-INT-001").first()).toBeVisible();
+    // Close modal
+    await page.getByRole("button", { name: "Close Catalog" }).click();
+    await expect(modal).toBeHidden();
+  });
+
+  test("claim page tabs switch between Ruler, Assessment, and Allocation Reconciliation", async ({ page }) => {
+    const helios = await claimId(page, "Helios");
+    await page.goto(`/claims/${helios.id}`);
+    await expect(page.getByRole("tab", { name: "Unit Intervals & Ruler" })).toBeVisible();
+
+    // Switch to Unified Risk Assessment tab
+    await page.getByRole("tab", { name: /Unified Risk Assessment/ }).click();
+    await expect(page.getByRole("heading", { name: "Unified Risk Assessment Scorecard" })).toBeVisible();
+
+    // Switch to Allocation Reconciliation tab
+    await page.getByRole("tab", { name: /Allocation Reconciliation/ }).click();
+    await expect(page.getByRole("heading", { name: "Allocation-Aware Interval Reconciliation" })).toBeVisible();
+    // In Helios claim, interval collision with Equinox is flagged
+    await expect(page.getByText("Direct Interval Overlap Conflict")).toBeVisible();
   });
 });

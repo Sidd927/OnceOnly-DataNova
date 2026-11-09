@@ -10,6 +10,9 @@ const NewClaim = lazy(() => import("./pages/NewClaim"));
 const ClaimPage = lazy(() => import("./pages/ClaimPage"));
 const Verify = lazy(() => import("./pages/Verify"));
 const Evidence = lazy(() => import("./pages/Evidence"));
+const AssessmentConsole = lazy(() => import("./pages/AssessmentConsole"));
+const CrossRegistry = lazy(() => import("./pages/CrossRegistry"));
+const Observatory = lazy(() => import("./pages/Observatory"));
 
 const TITLES: [RegExp, string][] = [
   [/^\/$/, "OnceOnly — every retired tonne, claimed once"],
@@ -17,6 +20,9 @@ const TITLES: [RegExp, string][] = [
   [/^\/claims\/new/, "Check a claim · OnceOnly"],
   [/^\/claims\/\d+/, "Claim · OnceOnly"],
   [/^\/claims/, "Claims ledger · OnceOnly"],
+  [/^\/cross-registry/, "Cross-Registry Intelligence · OnceOnly"],
+  [/^\/observatory/, "Observatory · OnceOnly"],
+  [/^\/assessment/, "Unified Risk Assessment · OnceOnly"],
   [/^\/verify/, "Verify · OnceOnly"],
   [/^\/evidence/, "Evidence · OnceOnly"],
 ];
@@ -52,6 +58,9 @@ export default function App() {
           <Route path="/claims" element={<Claims />} />
           <Route path="/claims/new" element={<NewClaim />} />
           <Route path="/claims/:id" element={<ClaimPage />} />
+          <Route path="/cross-registry" element={<CrossRegistry />} />
+          <Route path="/observatory" element={<Observatory />} />
+          <Route path="/assessment" element={<AssessmentConsole />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/evidence" element={<Evidence />} />
           <Route path="/evaluation" element={<Navigate to="/evidence" replace />} />

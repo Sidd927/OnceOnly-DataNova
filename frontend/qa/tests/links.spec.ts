@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 /** Crawl internal links from the main pages; every one must resolve to a real page or API resource,
  *  with no failed API requests and no console errors along the way. */
-const START = ["/", "/overview", "/claims", "/claims/new", "/verify", "/evidence"];
+const START = ["/", "/overview", "/claims", "/claims/new", "/cross-registry", "/observatory", "/assessment", "/verify", "/evidence"];
 
 test("every internal link resolves; no failed API requests or console errors", async ({ page }) => {
   test.setTimeout(120_000);

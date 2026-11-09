@@ -171,3 +171,15 @@ export function Reveal({ children, className = "", as: Tag = "div" }: { children
     </Tag>
   );
 }
+
+export {
+  SeverityBadge,
+  PriorityBadge,
+  AssessmentStatusBadge,
+  EvidenceStrengthBadge,
+  CategoryBadge,
+  SourceStageBadge,
+  MetricTile,
+} from "./AnalyticalPrimitives";
+
+

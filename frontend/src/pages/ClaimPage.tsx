@@ -1,9 +1,36 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Blocks, FileText, Link2, Server, Stamp } from "lucide-react";
-import { ApiError, api, fmt, short, type ClaimDetail, type Finding } from "../api";
+import { ArrowRight, Blocks, FileText, Link2, Server, Stamp, CheckCircle2, AlertOctagon } from "lucide-react";
+import {
+  ApiError,
+  api,
+  fmt,
+  short,
+  type ClaimDetail,
+  type Finding,
+  type RiskAssessmentResponse,
+  type ClaimReconciliationReport,
+} from "../api";
 import { ConfirmDialog } from "../components/ConfirmDialog";
-import { Button, CopyValue, Disclosure, ErrorBox, LinkButton, Mono, OutcomeToken, SectionHeader, StatusPill, SyntheticTag } from "../components/primitives";
+import {
+  Button,
+  CopyValue,
+  Disclosure,
+  ErrorBox,
+  LinkButton,
+  Mono,
+  OutcomeToken,
+  SectionHeader,
+  StatusPill,
+  SyntheticTag,
+  PriorityBadge,
+  AssessmentStatusBadge,
+  SeverityBadge,
+  EvidenceStrengthBadge,
+  CategoryBadge,
+  SourceStageBadge,
+  MetricTile,
+} from "../components/primitives";
 import { Ruler } from "../components/Ruler";
 import { SerialAnatomy } from "../components/SerialAnatomy";
 import { findingOutcome, type Outcome } from "../lib/outcomes";
@@ -52,9 +79,49 @@ export default function ClaimPage() {
   const [lastChain, setLastChain] = useState<any>(null);
   const [justAnchored, setJustAnchored] = useState<any>(null);
 
+  // Tab state
+  const [activeTab, setActiveTab] = useState<"intervals" | "assessment" | "reconciliation">("intervals");
+  const [assessment, setAssessment] = useState<RiskAssessmentResponse | null>(null);
+  const [assessmentLoading, setAssessmentLoading] = useState(false);
+  const [assessmentErr, setAssessmentErr] = useState<unknown>(null);
+
+  const [reconciliation, setReconciliation] = useState<ClaimReconciliationReport | null>(null);
+  const [reconLoading, setReconLoading] = useState(false);
+  const [reconErr, setReconErr] = useState<unknown>(null);
+
   const publicDemo = usePublicDemo();
   const load = useCallback(() => api.claim(id!).then((x) => { setC(x); setErr(null); }).catch(setErr), [id]);
   useEffect(() => { load(); }, [load]);
+
+  const handleTabChange = (tab: "intervals" | "assessment" | "reconciliation") => {
+    setActiveTab(tab);
+    if (tab === "assessment" && !assessment && !assessmentLoading && id) {
+      setAssessmentLoading(true);
+      setAssessmentErr(null);
+      api.assessment
+        .assessRisk({ scope: "CLAIM", claim_id: parseInt(id, 10) })
+        .then((res) => {
+          setAssessment(res);
+          setAssessmentLoading(false);
+        })
+        .catch((e) => {
+          setAssessmentErr(e);
+          setAssessmentLoading(false);
+        });
+    } else if (tab === "reconciliation" && !reconciliation && !reconLoading && id) {
+      setReconLoading(true);
+      setReconErr(null);
+      api.reconciliation(id)
+        .then((res) => {
+          setReconciliation(res);
+          setReconLoading(false);
+        })
+        .catch((e) => {
+          setReconErr(e);
+          setReconLoading(false);
+        });
+    }
+  };
 
   const run = async (key: Pending, fn: () => Promise<{ result: any; claim: ClaimDetail }>) => {
     setBusy(key);
@@ -224,6 +291,59 @@ export default function ClaimPage() {
           <Fact k="Registry match" v={c.blocks.length ? `${regPass} of ${c.blocks.length} confirmed` : "Not checkable"} />
           <Fact k="Ledger" v={c.chain_claim_id ? `Claim #${c.chain_claim_id} · block ${c.block_number}` : rejections.length ? `Not anchored · ${rejections.length} rejected attempt${rejections.length > 1 ? "s" : ""}` : "Not anchored"} />
         </dl>
+
+        {/* Analytical dimension tabs */}
+        <div className="flex border-b border-rule gap-1 overflow-x-auto text-sm pt-2" role="tablist" aria-label="Claim analysis dimensions">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "intervals"}
+            onClick={() => handleTabChange("intervals")}
+            className={`press px-4 py-2.5 font-semibold border-b-2 transition-colors whitespace-nowrap ${
+              activeTab === "intervals"
+                ? "border-ink text-ink bg-sheet/60 rounded-t"
+                : "border-transparent text-muted hover:text-ink hover:border-rule-strong"
+            }`}
+          >
+            Unit Intervals & Ruler
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "assessment"}
+            onClick={() => handleTabChange("assessment")}
+            className={`press px-4 py-2.5 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
+              activeTab === "assessment"
+                ? "border-ink text-ink bg-sheet/60 rounded-t"
+                : "border-transparent text-muted hover:text-ink hover:border-rule-strong"
+            }`}
+          >
+            Unified Risk Assessment
+            {assessment && assessment.triggered_rule_ids.length > 0 && (
+              <span className="rounded-full bg-crimson px-1.5 py-0.2 text-[10px] text-white font-bold">
+                {assessment.triggered_rule_ids.length}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "reconciliation"}
+            onClick={() => handleTabChange("reconciliation")}
+            className={`press px-4 py-2.5 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${
+              activeTab === "reconciliation"
+                ? "border-ink text-ink bg-sheet/60 rounded-t"
+                : "border-transparent text-muted hover:text-ink hover:border-rule-strong"
+            }`}
+          >
+            Allocation Reconciliation
+            {reconciliation && reconciliation.has_conflicts && (
+              <span className="rounded-full bg-crimson px-1.5 py-0.2 text-[10px] text-white font-bold">
+                {reconciliation.conflicts.length}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem]">
@@ -236,7 +356,9 @@ export default function ClaimPage() {
 
         {/* ------------------------------------------------------- main column */}
         <div className="min-w-0 space-y-12">
-          <section aria-labelledby="units-h">
+          {activeTab === "intervals" && (
+            <>
+              <section aria-labelledby="units-h">
             <SectionHeader id="units-h" title="Claimed units" aside={c.blocks.length ? `${fmt(c.total_units)} units in ${c.blocks.length} block${c.blocks.length === 1 ? "" : "s"}` : undefined} />
             {strips.length === 0 ? (
               <div className="rounded-panel border border-dashed border-ochre/50 bg-sheet p-5 text-sm text-ink-soft">
@@ -317,6 +439,289 @@ export default function ClaimPage() {
               )}
             </div>
           </section>
+          </>
+          )}
+
+          {activeTab === "assessment" && (
+            <div className="space-y-8 fade-in">
+              <section aria-labelledby="claim-assess-h" className="space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <SectionHeader
+                    id="claim-assess-h"
+                    title="Unified Risk Assessment Scorecard"
+                    aside="Stage 4 Multi-Phase Evidence Synthesis"
+                  />
+                  <Link
+                    to={`/assessment?scope=CLAIM&claim_id=${c.id}`}
+                    className="press inline-flex items-center gap-1.5 text-xs font-semibold text-glacier hover:underline"
+                  >
+                    Open in Full Assessment Console <ArrowRight size={13} aria-hidden />
+                  </Link>
+                </div>
+
+                <ErrorBox error={assessmentErr} title="Could not evaluate claim risk assessment" />
+
+                {assessmentLoading ? (
+                  <div className="rounded-panel border border-rule bg-sheet p-8 text-center text-xs text-muted">
+                    Evaluating Stage 4 deterministic rules for Claim #{c.id}...
+                  </div>
+                ) : !assessment ? (
+                  <div className="rounded-panel border border-dashed border-rule bg-sheet p-8 text-center text-xs text-muted">
+                    Click to run assessment for this claim.
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Synthesis header */}
+                    <div className="rounded-sheet border border-rule bg-sheet p-5 space-y-4 shadow-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-rule pb-4">
+                        <div>
+                          <div className="text-xs text-muted font-mono uppercase tracking-wider">
+                            Assessment Status
+                          </div>
+                          <h3 className="text-lg font-bold text-ink mt-1">
+                            {assessment.target.description || `Evaluation for Claim #${c.id}`}
+                          </h3>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <AssessmentStatusBadge status={assessment.overall_status} size="sm" />
+                          <PriorityBadge priority={assessment.review_priority} size="sm" />
+                        </div>
+                      </div>
+
+                      <div className="rounded-panel border border-rule bg-fog-2/30 p-3.5 text-xs text-ink leading-relaxed">
+                        <span className="font-bold text-ink-soft uppercase text-[10px] block mb-0.5">
+                          Triage Justification
+                        </span>
+                        {assessment.priority_explanation}
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-3">
+                        <MetricTile
+                          label="Triggered Rules"
+                          value={assessment.triggered_rule_ids.length}
+                          subtext="Out of 16 rules"
+                          token={
+                            assessment.triggered_rule_ids.length > 0 ? (
+                              <SeverityBadge severity="HIGH" size="sm" />
+                            ) : (
+                              <SeverityBadge severity="INFORMATIONAL" size="sm" />
+                            )
+                          }
+                        />
+                        <MetricTile
+                          label="Independent Clusters"
+                          value={assessment.independent_evidence_count}
+                          subtext="Distinct root causes"
+                        />
+                        <MetricTile
+                          label="Evidence Items"
+                          value={assessment.evidence_items.length}
+                          subtext="Structured findings"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Evidence findings */}
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-bold text-ink">
+                        Detected Evidence Items ({assessment.evidence_items.length})
+                      </h4>
+                      {assessment.evidence_items.length === 0 ? (
+                        <p className="rounded-panel border border-dashed border-rule-strong bg-sheet p-5 text-xs text-muted">
+                          No elevated risk findings detected for this claim under the versioned ruleset.
+                        </p>
+                      ) : (
+                        assessment.evidence_items.map((item) => (
+                          <div
+                            key={item.id}
+                            className={`rounded-panel border bg-sheet p-4 space-y-2.5 ${
+                              item.severity === "CRITICAL"
+                                ? "border-crimson/50"
+                                : item.severity === "HIGH"
+                                ? "border-crimson/30"
+                                : "border-rule"
+                            }`}
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-mono text-xs font-bold bg-fog px-2 py-0.5 rounded border border-rule">
+                                  {item.rule_id}
+                                </span>
+                                <span className="font-bold text-sm text-ink">{item.title}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <EvidenceStrengthBadge strength={item.evidence_strength} />
+                                <SeverityBadge severity={item.severity} />
+                              </div>
+                            </div>
+
+                            <p className="text-xs text-ink-soft leading-relaxed">
+                              {item.explanation}
+                            </p>
+
+                            {item.recommended_action && (
+                              <div className="rounded border border-lichen/30 bg-lichen-wash/30 p-2.5 text-xs text-ink">
+                                <span className="font-bold text-lichen text-[10.5px] uppercase block mb-0.5">
+                                  Recommended Action
+                                </span>
+                                {item.recommended_action}
+                              </div>
+                            )}
+
+                            <div className="flex flex-wrap items-center gap-2 pt-1">
+                              <CategoryBadge category={item.category} />
+                              <SourceStageBadge stage={item.source_stage} />
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+
+          {activeTab === "reconciliation" && (
+            <div className="space-y-8 fade-in">
+              <section aria-labelledby="recon-h" className="space-y-4">
+                <SectionHeader
+                  id="recon-h"
+                  title="Allocation-Aware Interval Reconciliation"
+                  aside="Phase 2B Continuous Unit Sequences & Split Allocations"
+                />
+
+                <ErrorBox error={reconErr} title="Could not load reconciliation report" />
+
+                {reconLoading ? (
+                  <div className="rounded-panel border border-rule bg-sheet p-8 text-center text-xs text-muted">
+                    Reconciling unit intervals against active ledger claims...
+                  </div>
+                ) : !reconciliation ? (
+                  <div className="rounded-panel border border-dashed border-rule bg-sheet p-8 text-center text-xs text-muted">
+                    No reconciliation data available.
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Macro metrics */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <MetricTile
+                        label="Total Claim Blocks"
+                        value={reconciliation.total_blocks}
+                        subtext="Intervals in claim"
+                      />
+                      <MetricTile
+                        label="Total Claim Units"
+                        value={fmt(reconciliation.total_units)}
+                        subtext="Total volume checked"
+                      />
+                      <MetricTile
+                        label="Active Ledger Ranges"
+                        value={reconciliation.active_ranges_evaluated}
+                        subtext="Candidate comparisons"
+                      />
+                      <MetricTile
+                        label="Conflicting Units"
+                        value={fmt(reconciliation.conflict_units)}
+                        subtext={reconciliation.has_conflicts ? "Double-claim detected" : "Zero conflicts"}
+                        token={
+                          reconciliation.has_conflicts ? (
+                            <SeverityBadge severity="CRITICAL" size="sm" />
+                          ) : (
+                            <SeverityBadge severity="INFORMATIONAL" size="sm" />
+                          )
+                        }
+                      />
+                    </div>
+
+                    {/* Conflict breakdown if present */}
+                    {reconciliation.has_conflicts ? (
+                      <div className="rounded-panel border border-crimson/40 bg-crimson-wash p-4 space-y-3">
+                        <div className="flex items-center gap-2 font-bold text-sm text-crimson">
+                          <AlertOctagon size={16} aria-hidden />
+                          Direct Interval Overlap Conflict
+                        </div>
+                        <p className="text-xs text-ink leading-relaxed">
+                          The unit intervals in this claim directly intersect with another active or anchored claim in the same registry issuance namespace.
+                        </p>
+
+                        <div className="overflow-x-auto rounded border border-crimson/30 bg-sheet">
+                          <table className="w-full text-left text-xs min-w-[560px]">
+                            <thead className="border-b border-rule bg-fog-2/40 text-muted">
+                              <tr>
+                                <th className="p-2.5 font-semibold">Candidate Range</th>
+                                <th className="p-2.5 font-semibold">Conflicting Claim</th>
+                                <th className="p-2.5 font-semibold">Conflicting Range</th>
+                                <th className="p-2.5 font-semibold text-right">Overlapping Units</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-rule font-mono">
+                              {reconciliation.conflicts.map((conf, idx) => (
+                                <tr key={idx} className="hover:bg-fog/20">
+                                  <td className="p-2.5 text-ink">
+                                    {fmt(conf.candidate.unit_start)}–{fmt(conf.candidate.unit_end)}
+                                  </td>
+                                  <td className="p-2.5 font-sans">
+                                    <div className="font-semibold text-ink">
+                                      {conf.existing.claimant}
+                                    </div>
+                                    <div className="font-mono text-[11px] text-muted">
+                                      {conf.existing.claim_ref || (conf.existing.claim_id ? `Claim #${conf.existing.claim_id}` : "Existing claim")}
+                                    </div>
+                                  </td>
+                                  <td className="p-2.5 text-ink">
+                                    {fmt(conf.existing.unit_start)}–{fmt(conf.existing.unit_end)}
+                                  </td>
+                                  <td className="p-2.5 text-right font-bold text-crimson">
+                                    {fmt(conf.overlap.overlap_quantity)}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-panel border border-lichen/40 bg-lichen-wash p-4 flex items-center gap-3">
+                        <CheckCircle2 size={18} className="text-lichen shrink-0" aria-hidden />
+                        <div className="text-xs text-ink">
+                          <span className="font-bold text-lichen block">Disjoint Ranges Confirmed</span>
+                          Every unit range cited by this claim is completely disjoint from all other active ledger claims.
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Split allocations */}
+                    {reconciliation.splits.length > 0 && (
+                      <div className="rounded-panel border border-rule bg-sheet p-4 space-y-3">
+                        <h4 className="text-xs font-bold text-ink uppercase tracking-wider">
+                          Legitimate Split Allocations in Same Issuance Batch ({reconciliation.splits.length})
+                        </h4>
+                        <p className="text-xs text-muted">
+                          These non-overlapping allocations originate from the same issuance namespace but claim disjoint unit sub-ranges.
+                        </p>
+                        <div className="divide-y divide-rule font-mono text-xs">
+                          {reconciliation.splits.map((split, idx) => (
+                            <div key={idx} className="py-2 flex flex-wrap items-center justify-between gap-2">
+                              <div>
+                                <span className="font-sans font-medium text-ink">{split.existing.claimant}: </span>
+                                <span className="text-muted">
+                                  {fmt(split.existing.unit_start)}–{fmt(split.existing.unit_end)}
+                                </span>
+                              </div>
+                              <span className="font-sans text-[11px] text-lichen font-semibold bg-lichen-wash px-2 py-0.5 rounded">
+                                Non-Overlapping
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
 
           <div className="lg:hidden">{onChain}</div>
 
