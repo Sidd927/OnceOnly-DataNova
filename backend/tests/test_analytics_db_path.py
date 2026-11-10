@@ -33,3 +33,18 @@ def test_missing_population_db_is_a_clear_503(tmp_env, monkeypatch):
         engine.resolve_analytics_db_path()
     r = TestClient(app).get("/api/analytics/population/summary")
     assert r.status_code == 503 and r.json()["detail"]["code"] == "ANALYTICS_DB_UNAVAILABLE"
+
+
+def test_read_only_analytics_responses_are_memoized_and_identical(tmp_env):
+    from app.main import app
+
+    c = TestClient(app)
+    url = "/api/analytics/temporal/activity?period=weekly"
+    first, second = c.get(url), c.get(url)
+    assert first.status_code == second.status_code == 200
+    assert first.headers["x-onceonly-cache"] == "miss" and second.headers["x-onceonly-cache"] == "hit"
+    assert first.content == second.content
+    # Writes and non-analytics routes are never cached; errors are not cached either.
+    assert "x-onceonly-cache" not in c.get("/api/claims").headers
+    bad = c.get("/api/analytics/temporal/activity?period=hourly")
+    assert bad.status_code == 422 and "x-onceonly-cache" not in bad.headers

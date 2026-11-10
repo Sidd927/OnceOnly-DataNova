@@ -9,12 +9,14 @@ import { chromium } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { BEATS, SCENE_TITLES } from "./beats.mjs";
 
 const BASE = process.env.BASE_URL ?? "http://127.0.0.1:5173";
 const VOICE = process.env.VOICE ?? "Daniel";
 const RATE = process.env.RATE ?? "155";
-const OUT = join(import.meta.dirname, "..", "..", "..", "exports", "demo_reference");
+// BEATS=./beats_datanova.mjs DEMO_NAME=demo_datanova records the DATANOVA storyline (seeded stack, read-only).
+const { BEATS, SCENE_TITLES } = await import(process.env.BEATS ?? "./beats.mjs");
+const NAME = process.env.DEMO_NAME ?? "demo_reference";
+const OUT = join(import.meta.dirname, "..", "..", "..", "exports", NAME);
 const GAP = 1100; // ms of breathing room after each beat
 
 rmSync(OUT, { recursive: true, force: true });
@@ -131,7 +133,7 @@ writeFileSync(join(OUT, "captions.srt"), srt);
 sh("ffmpeg", ["-y", "-loglevel", "error", "-i", raw, "-i", join(OUT, "voiceover.wav"),
   "-c:v", "copy",
   "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart",
-  "-metadata", "title=OnceOnly - reference demo (synthetic narration)",
+  "-metadata", `title=OnceOnly - ${NAME} (synthetic narration)`,
   "-metadata", "comment=Real OnceOnly UI recorded with Playwright against a local stack. Narration: synthetic macOS text-to-speech (Daniel). Pointer drawn by a recording overlay.",
-  join(OUT, "demo_reference.mp4")]);
-console.log(`\nwrote ${join(OUT, "demo_reference.mp4")}  (${(total / 1000).toFixed(1)} s recorded)`);
+  join(OUT, `${NAME}.mp4`)]);
+console.log(`\nwrote ${join(OUT, `${NAME}.mp4`)}  (${(total / 1000).toFixed(1)} s recorded)`);

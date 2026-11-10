@@ -4,12 +4,14 @@ from __future__ import annotations
 import html
 import json
 import logging
+import threading
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from pydantic import BaseModel, model_validator
 
 from . import db, service
@@ -55,6 +57,46 @@ async def _svc_err(_: Request, e: service.ServiceError):
 
 
 from .analytics.engine import AnalyticsDatabaseUnavailable  # noqa: E402
+
+
+# Read-only analytics responses depend only on the request and the reference DB, which does not change while
+# the process runs, so successful GET responses are memoized. Aborted browser requests otherwise leave seconds
+# of CPU-bound recomputation queued (measured during release QA). Errors are never cached.
+_CACHEABLE_PREFIXES = (
+    "/api/analytics/population/summary", "/api/analytics/batches/", "/api/analytics/temporal/",
+    "/api/cross-registry/projects/correlations", "/api/cross-registry/retirements/",
+)
+_response_cache: "OrderedDict[tuple, bytes]" = OrderedDict()
+_response_cache_lock = threading.Lock()
+_RESPONSE_CACHE_MAX = 256
+
+
+def _reference_stamp() -> tuple:
+    p = settings.reference_demo
+    return (str(p), p.stat().st_mtime_ns if p.exists() else None)
+
+
+@app.middleware("http")
+async def _analytics_response_cache(request: Request, call_next):
+    if request.method != "GET" or not request.url.path.startswith(_CACHEABLE_PREFIXES):
+        return await call_next(request)
+    key = (request.url.path, request.url.query, _reference_stamp())
+    with _response_cache_lock:
+        body = _response_cache.get(key)
+        if body is not None:
+            _response_cache.move_to_end(key)
+    if body is not None:
+        return Response(content=body, media_type="application/json", headers={"x-onceonly-cache": "hit"})
+    resp = await call_next(request)
+    if resp.status_code != 200:
+        return resp
+    body = b"".join([chunk async for chunk in resp.body_iterator])
+    key = (request.url.path, request.url.query, _reference_stamp())  # the request may have materialized the DB
+    with _response_cache_lock:
+        _response_cache[key] = body
+        while len(_response_cache) > _RESPONSE_CACHE_MAX:
+            _response_cache.popitem(last=False)
+    return Response(content=body, media_type="application/json", headers={"x-onceonly-cache": "miss"})
 
 
 @app.exception_handler(AnalyticsDatabaseUnavailable)

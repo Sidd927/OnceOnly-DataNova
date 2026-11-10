@@ -444,18 +444,18 @@ export default function Observatory() {
               <MetricTile
                 label="Herfindahl-Hirschman Index (HHI)"
                 value={fmt(Math.round(conc.hhi_disclosed))}
-                subtext={`Scale: 0 to 10,000 · ${conc.unique_disclosed_beneficiaries} unique entities`}
+                subtext={`Scale 0–10,000 · ${fmt(conc.unique_disclosed_beneficiaries)} distinct disclosed labels (not resolved to legal entities)`}
                 token={<ConcentrationTierBadge tier={conc.tier} />}
               />
               <MetricTile
-                label="Dominant Entity Share"
+                label="Largest Disclosed Label"
                 value={pct(conc.dominant_disclosed_share)}
                 subtext={conc.dominant_disclosed_beneficiary || "None"}
               />
               <MetricTile
                 label="Combined Top 3 Share"
                 value={pct(conc.top3_disclosed_share)}
-                subtext="Share of disclosed volume held by 3 largest entities"
+                subtext="Share of disclosed volume held by the 3 largest labels"
               />
               <MetricTile
                 label="Shannon Equitability"
