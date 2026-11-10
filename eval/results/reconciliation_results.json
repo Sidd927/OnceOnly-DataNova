@@ -1,7 +1,7 @@
 {
   "benchmark_file": "reconciliation_benchmark.json",
   "total_test_cases": 36,
-  "evaluation_timestamp": "2026-11-09T07:26:11Z",
+  "evaluation_timestamp": "2026-11-10T07:56:38Z",
   "elapsed_seconds": 0.006,
   "models": {
     "Baseline (Exact Interval)": {

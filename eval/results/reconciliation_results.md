@@ -1,6 +1,6 @@
 # OnceOnly Allocation-Aware Reconciliation Benchmark Evaluation
 
-**Evaluation Date:** 2026-11-09T07:26:11Z  
+**Evaluation Date:** 2026-11-10T07:56:38Z  
 **Benchmark Dataset:** `reconciliation_benchmark.json` (36 curated cases)  
 **Evaluation Runtime:** 0.006s  
 

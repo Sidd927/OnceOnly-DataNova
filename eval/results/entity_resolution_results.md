@@ -1,8 +1,8 @@
 # OnceOnly Entity Resolution Benchmark Evaluation
 
-**Evaluation Date:** 2026-11-09T07:26:11Z  
+**Evaluation Date:** 2026-11-10T07:56:38Z  
 **Benchmark Dataset:** `entity_resolution_benchmark.json` (124 curated pairs)  
-**Evaluation Runtime:** 0.021s  
+**Evaluation Runtime:** 0.02s  
 
 ## 1. Overall Model Comparison
 

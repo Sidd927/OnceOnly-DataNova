@@ -1,8 +1,8 @@
 {
   "benchmark_file": "entity_resolution_benchmark.json",
   "total_test_cases": 124,
-  "evaluation_timestamp": "2026-11-09T07:26:11Z",
-  "elapsed_seconds": 0.021,
+  "evaluation_timestamp": "2026-11-10T07:56:38Z",
+  "elapsed_seconds": 0.02,
   "models": {
     "Baseline (Exact String)": {
       "total_pairs": 124,

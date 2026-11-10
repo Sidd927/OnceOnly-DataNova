@@ -1,6 +1,6 @@
 # OnceOnly evaluation results
 
-Generated 2026-11-08T20:16:57Z (seed 20261019, 1.7 s). Reproduce with `make eval`.
+Generated 2026-11-10T07:56:25Z (seed 20261019, 7.0 s). Reproduce with `make eval`.
 
 ## A. Double-use detection
 
@@ -9,21 +9,23 @@ Generated 2026-11-08T20:16:57Z (seed 20261019, 1.7 s). Reproduce with `make eval
 | Method | Precision | Recall | TP | FP | FN | TN |
 |---|---|---|---|---|---|---|
 | OnceOnly rules engine (DUP-001/002) | 1.000 | 1.000 | 180 | 0 | 0 | 90 |
-| ClaimLedger contract (revert on 2nd registration) | skipped (no local chain on 127.0.0.1:8545; run `make chain`) | | | | | |
+| ClaimLedger contract (revert on 2nd registration) | 1.000 | 1.000 | 180 | 0 | 0 | 90 |
 | Baseline: exact serial string / document hash | 1.000 | 0.333 | 60 | 0 | 120 | 90 |
 | Ablation: interval overlap ignoring batch | 0.857 | 1.000 | 180 | 30 | 0 | 60 |
 
 | Case type | n | Truth | OnceOnly | Contract | Baseline | Numbers-only |
 |---|---|---|---|---|---|---|
-| Same serial, same units | 30 | double use | 30/30 | — | 30/30 | 30/30 |
-| Same units, serial reformatted (line break, spaces, dashes) | 30 | double use | 30/30 | — | 0/30 | 30/30 |
-| Partial overlap, different serial strings | 30 | double use | 30/30 | — | 0/30 | 30/30 |
-| New range inside an existing claim | 30 | double use | 30/30 | — | 0/30 | 30/30 |
-| New range contains an existing claim | 30 | double use | 30/30 | — | 0/30 | 30/30 |
-| Same evidence document resubmitted | 30 | double use | 30/30 | — | 30/30 | 30/30 |
-| Adjacent ranges, no shared unit | 30 | not double use | 30/30 | — | 30/30 | 30/30 |
-| Same batch, disjoint ranges | 30 | not double use | 30/30 | — | 30/30 | 30/30 |
-| Same unit numbers in a different batch | 30 | not double use | 30/30 | — | 30/30 | 0/30 |
+| Same serial, same units | 30 | double use | 30/30 | 30/30 | 30/30 | 30/30 |
+| Same units, serial reformatted (line break, spaces, dashes) | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
+| Partial overlap, different serial strings | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
+| New range inside an existing claim | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
+| New range contains an existing claim | 30 | double use | 30/30 | 30/30 | 0/30 | 30/30 |
+| Same evidence document resubmitted | 30 | double use | 30/30 | 30/30 | 30/30 | 30/30 |
+| Adjacent ranges, no shared unit | 30 | not double use | 30/30 | 30/30 | 30/30 | 30/30 |
+| Same batch, disjoint ranges | 30 | not double use | 30/30 | 30/30 | 30/30 | 30/30 |
+| Same unit numbers in a different batch | 30 | not double use | 30/30 | 30/30 | 30/30 | 0/30 |
+
+Contract and rules engine agree on 100.0% of cases. Median gas for a single-range registration: 333,102.
 
 ## B. Serial extraction
 
