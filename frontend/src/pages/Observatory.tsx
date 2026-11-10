@@ -97,19 +97,15 @@ export default function Observatory() {
   // Load initial population summary and registry census
   useEffect(() => {
     let alive = true;
-    Promise.all([
-      api.analytics.getPopulationSummary().catch(() => null),
-      api.crossRegistry.getRetirementSummary().catch(() => null),
-    ])
-      .then(([p, r]) => {
-        if (!alive) return;
-        if (p) setPop(p);
-        if (r) setRegistrySummary(r);
-      })
-      .catch((e) => {
-        if (!alive) return;
-        setPopErr(e);
-      });
+    // Each request reports its own failure; a failed request never leaves the page silently empty.
+    api.analytics
+      .getPopulationSummary()
+      .then((p) => { if (alive) setPop(p); })
+      .catch((e) => { if (alive) setPopErr(e); });
+    api.crossRegistry
+      .getRetirementSummary()
+      .then((r) => { if (alive) setRegistrySummary(r); })
+      .catch((e) => { if (alive) setPopErr((prev: unknown) => prev ?? e); });
     return () => {
       alive = false;
     };

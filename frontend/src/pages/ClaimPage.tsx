@@ -339,7 +339,7 @@ export default function ClaimPage() {
             Allocation Reconciliation
             {reconciliation && reconciliation.has_conflicts && (
               <span className="rounded-full bg-crimson px-1.5 py-0.2 text-[10px] text-white font-bold">
-                {reconciliation.conflicts.length}
+                {reconciliation.conflict_count}
               </span>
             )}
           </button>
@@ -616,14 +616,14 @@ export default function ClaimPage() {
                         subtext="Total volume checked"
                       />
                       <MetricTile
-                        label="Active Ledger Ranges"
-                        value={reconciliation.active_ranges_evaluated}
-                        subtext="Candidate comparisons"
+                        label="Conflicting Pairs"
+                        value={reconciliation.conflict_count}
+                        subtext="Overlaps with locked claims"
                       />
                       <MetricTile
-                        label="Conflicting Units"
-                        value={fmt(reconciliation.conflict_units)}
-                        subtext={reconciliation.has_conflicts ? "Double-claim detected" : "Zero conflicts"}
+                        label="Shared Units"
+                        value={fmt(reconciliation.items.reduce((acc, it) => acc + it.overlap.overlap_units, 0))}
+                        subtext={reconciliation.has_conflicts ? "Potential double use" : "No shared units"}
                         token={
                           reconciliation.has_conflicts ? (
                             <SeverityBadge severity="CRITICAL" size="sm" />
@@ -642,44 +642,27 @@ export default function ClaimPage() {
                           Direct Interval Overlap Conflict
                         </div>
                         <p className="text-xs text-ink leading-relaxed">
-                          The unit intervals in this claim directly intersect with another active or anchored claim in the same registry issuance namespace.
+                          Unit ranges in this claim intersect a locked (anchored or challenged) claim in the same registry batch. This is a potential double use for review, not a finding of fraud: the reconciler also classifies the parties' relationship (for example a broker acting for a disclosed principal, or related companies).
                         </p>
-
-                        <div className="overflow-x-auto rounded border border-crimson/30 bg-sheet">
-                          <table className="w-full text-left text-xs min-w-[560px]">
-                            <thead className="border-b border-rule bg-fog-2/40 text-muted">
-                              <tr>
-                                <th className="p-2.5 font-semibold">Candidate Range</th>
-                                <th className="p-2.5 font-semibold">Conflicting Claim</th>
-                                <th className="p-2.5 font-semibold">Conflicting Range</th>
-                                <th className="p-2.5 font-semibold text-right">Overlapping Units</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-rule font-mono">
-                              {reconciliation.conflicts.map((conf, idx) => (
-                                <tr key={idx} className="hover:bg-fog/20">
-                                  <td className="p-2.5 text-ink">
-                                    {fmt(conf.candidate.unit_start)}–{fmt(conf.candidate.unit_end)}
-                                  </td>
-                                  <td className="p-2.5 font-sans">
-                                    <div className="font-semibold text-ink">
-                                      {conf.existing.claimant}
-                                    </div>
-                                    <div className="font-mono text-[11px] text-muted">
-                                      {conf.existing.claim_ref || (conf.existing.claim_id ? `Claim #${conf.existing.claim_id}` : "Existing claim")}
-                                    </div>
-                                  </td>
-                                  <td className="p-2.5 text-ink">
-                                    {fmt(conf.existing.unit_start)}–{fmt(conf.existing.unit_end)}
-                                  </td>
-                                  <td className="p-2.5 text-right font-bold text-crimson">
-                                    {fmt(conf.overlap.overlap_quantity)}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
+                        <ul className="space-y-3">
+                          {reconciliation.items.map((it, idx) => (
+                            <li key={idx} className="rounded border border-crimson/30 bg-sheet p-3 text-xs space-y-2">
+                              <div className="grid gap-2 sm:grid-cols-3 font-mono">
+                                <div><div className="font-sans text-[11px] text-muted">This claim · {it.namespace}</div>{fmt(it.candidate_range[0])}–{fmt(it.candidate_range[1])}</div>
+                                <div><div className="font-sans text-[11px] text-muted">{it.prior_claim_ref ?? (it.prior_claim_id ? `Claim #${it.prior_claim_id}` : "Locked claim")} · {it.prior_claimant}{it.prior_status ? ` · ${it.prior_status}` : ""}</div>{fmt(it.prior_range[0])}–{fmt(it.prior_range[1])}</div>
+                                <div><div className="font-sans text-[11px] text-muted">Shared units ({it.overlap.overlap_type.replaceAll("_", " ").toLowerCase()})</div><span className="font-bold text-crimson">{fmt(it.overlap.overlap_units)}</span> <span className="text-muted">({it.overlap.pct_of_candidate}% of this claim)</span></div>
+                              </div>
+                              <div className="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                                <span className="rounded border border-crimson/40 px-1.5 py-0.5 text-crimson">{it.allocation_type}</span>
+                                <span className="rounded border border-rule px-1.5 py-0.5 text-ink-soft">entities: {it.entity_relationship}</span>
+                                <span className="rounded border border-rule px-1.5 py-0.5 text-ink-soft">match tier: {it.entity_match_tier}</span>
+                              </div>
+                              <p className="text-ink leading-relaxed">{it.explanation}</p>
+                              <p className="text-ink-soft"><span className="font-semibold">Next step:</span> {it.audit_recommendation}</p>
+                              {it.prior_claim_id && <Link to={`/claims/${it.prior_claim_id}`} className="text-glacier underline underline-offset-2">Open the locked claim</Link>}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     ) : (
                       <div className="rounded-panel border border-lichen/40 bg-lichen-wash p-4 flex items-center gap-3">
@@ -692,21 +675,21 @@ export default function ClaimPage() {
                     )}
 
                     {/* Split allocations */}
-                    {reconciliation.splits.length > 0 && (
+                    {reconciliation.split_allocations.length > 0 && (
                       <div className="rounded-panel border border-rule bg-sheet p-4 space-y-3">
                         <h4 className="text-xs font-bold text-ink uppercase tracking-wider">
-                          Legitimate Split Allocations in Same Issuance Batch ({reconciliation.splits.length})
+                          Legitimate Split Allocations in Same Issuance Batch ({reconciliation.split_allocations.length})
                         </h4>
                         <p className="text-xs text-muted">
-                          These non-overlapping allocations originate from the same issuance namespace but claim disjoint unit sub-ranges.
+                          These locked claims cite the same issuance batch but disjoint unit sub-ranges, which is how one retirement is normally divided among buyers.
                         </p>
                         <div className="divide-y divide-rule font-mono text-xs">
-                          {reconciliation.splits.map((split, idx) => (
+                          {reconciliation.split_allocations.map((split, idx) => (
                             <div key={idx} className="py-2 flex flex-wrap items-center justify-between gap-2">
                               <div>
-                                <span className="font-sans font-medium text-ink">{split.existing.claimant}: </span>
+                                <span className="font-sans font-medium text-ink">{split.prior_claimant}: </span>
                                 <span className="text-muted">
-                                  {fmt(split.existing.unit_start)}–{fmt(split.existing.unit_end)}
+                                  {fmt(split.prior_range[0])}–{fmt(split.prior_range[1])}
                                 </span>
                               </div>
                               <span className="font-sans text-[11px] text-lichen font-semibold bg-lichen-wash px-2 py-0.5 rounded">

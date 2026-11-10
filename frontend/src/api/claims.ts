@@ -116,46 +116,45 @@ export interface Sample {
   synthetic: boolean;
 }
 
+/** Mirrors backend/app/reconciliation/models.py ReconciliationItem.to_dict(). */
 export interface AllocationReconciliationItem {
-  candidate: {
-    registry: string;
-    batch_id: string;
-    unit_start: number;
-    unit_end: number;
-    claimant: string;
-    claim_id?: number;
-    claim_ref?: string;
-  };
-  existing: {
-    registry: string;
-    batch_id: string;
-    unit_start: number;
-    unit_end: number;
-    claimant: string;
-    claim_id?: number;
-    claim_ref?: string;
-  };
+  candidate_block_idx: number;
+  candidate_range: [number, number];
+  candidate_claimant: string;
+  prior_claim_id: number | null;
+  prior_claim_ref: string | null;
+  prior_claimant: string;
+  prior_range: [number, number];
+  prior_status: string | null;
+  namespace: string;
   overlap: {
-    has_overlap: boolean;
-    overlap_start?: number;
-    overlap_end?: number;
-    overlap_quantity: number;
+    overlap_type: string;
+    overlap_start: number | null;
+    overlap_end: number | null;
+    overlap_units: number;
+    candidate_units: number;
+    existing_units: number;
+    pct_of_candidate: number;
+    pct_of_existing: number;
     is_conflict: boolean;
-    conflict_reason?: string;
   };
+  allocation_type: string;
+  entity_match_tier: string;
+  entity_relationship: string;
+  explanation: string;
+  audit_recommendation: string;
 }
 
+/** Mirrors backend/app/reconciliation/models.py ClaimReconciliationReport.to_dict(). */
 export interface ClaimReconciliationReport {
   claim_id: number;
   claimant: string;
   total_blocks: number;
   total_units: number;
-  active_ranges_evaluated: number;
-  conflicts: AllocationReconciliationItem[];
-  splits: AllocationReconciliationItem[];
   has_conflicts: boolean;
-  conflict_units: number;
-  reconciled_at: string;
+  conflict_count: number;
+  items: AllocationReconciliationItem[];
+  split_allocations: AllocationReconciliationItem[];
 }
 
 export const claimsApi = {

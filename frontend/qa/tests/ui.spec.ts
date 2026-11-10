@@ -156,12 +156,17 @@ test.describe("verify", () => {
     await page.goto(`/verify?ref=${nw.ref}`);
     await page.locator('input[type="file"]').setInputFiles({ name: "northwind.pdf", mimeType: "application/pdf", buffer: original });
     await page.getByRole("button", { name: "Verify", exact: true }).click();
-    await expect(page.getByText("Fingerprint matches")).toBeVisible();
+    await expect(page.getByText("Matches the on-chain commitment")).toBeVisible();
+    await expect(page.locator('[data-document-status="ONCHAIN_ROOT_MATCH"]')).toBeVisible();
+    await expect(page.locator('[data-check="DEPLOYMENT_CODE"][data-status="PASS"]')).toBeVisible();
+    await expect(page.locator('[data-check="EVIDENCE_COMMITMENT"][data-status="PASS"]')).toBeVisible();
+    await expect(page.locator('[data-check="CLAIMANT"][data-status="NOT_PERFORMED"]')).toBeVisible();
     const tampered = Buffer.concat([original, Buffer.from(" ")]);
     await page.getByRole("button", { name: /Remove northwind.pdf/ }).click();
     await page.locator('input[type="file"]').setInputFiles({ name: "northwind-edited.pdf", mimeType: "application/pdf", buffer: tampered });
     await page.getByRole("button", { name: "Verify", exact: true }).click();
-    await expect(page.getByText("Fingerprint differs")).toBeVisible();
+    await expect(page.getByText("Not a committed document")).toBeVisible();
+    await expect(page.locator('[data-check="DOCUMENT"][data-status="FAIL"]')).toBeVisible();
   });
 
   test("unknown reference is reported as not on the ledger", async ({ page }) => {
@@ -249,8 +254,8 @@ test.describe("Stage 4 unified assessment and reconciliation workflows", () => {
     await expect(modal).toBeVisible();
     await expect(page.getByText("16 Versioned Evaluation Rules")).toBeVisible();
     // Search for a specific rule
-    await page.getByPlaceholder(/Search by rule ID/).fill("RULE-INT-001");
-    await expect(page.getByText("RULE-INT-001").first()).toBeVisible();
+    await page.getByPlaceholder(/Search by rule ID/).fill("RULE-REC-001");
+    await expect(modal.getByText("RULE-REC-001").first()).toBeVisible();
     // Close modal
     await page.getByRole("button", { name: "Close Catalog" }).click();
     await expect(modal).toBeHidden();
@@ -268,8 +273,11 @@ test.describe("Stage 4 unified assessment and reconciliation workflows", () => {
     // Switch to Allocation Reconciliation tab
     await page.getByRole("tab", { name: /Allocation Reconciliation/ }).click();
     await expect(page.getByRole("heading", { name: "Allocation-Aware Interval Reconciliation" })).toBeVisible();
-    // In Helios claim, interval collision with Equinox is flagged
+    // Helios (claim 2) overlaps Northwind (OO-2026-0001): 4,559 shared units, classified, with a next step
     await expect(page.getByText("Direct Interval Overlap Conflict")).toBeVisible();
+    await expect(page.getByText("OO-2026-0001 · Northwind Foods (SYNTHETIC) · anchored")).toBeVisible();
+    await expect(page.getByText("4,559", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("ALLOCATION_CONFLICT")).toBeVisible();
   });
 });
 
@@ -301,7 +309,7 @@ test.describe("Sprint 3.3 cross-registry project and entity intelligence workspa
     await expect(page.getByRole("tab", { name: /Correlation Explorer/ })).toBeVisible();
 
     // Verify candidate pairs are rendered
-    await expect(page.getByText("Name Similarity").first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Name Similarity", { exact: true }).first()).toBeVisible({ timeout: 10_000 });
 
     // Open pairwise inspection modal
     await page.getByRole("button", { name: "Inspect Pair" }).first().click();
@@ -344,14 +352,14 @@ test.describe("Sprint 3.3 cross-registry project and entity intelligence workspa
     // Run Entity Resolution
     await page.getByRole("button", { name: "Compare Entity Names" }).click();
     await expect(page.getByText("Resolution Scorecard")).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText("Canonical Variant")).toBeVisible();
+    await expect(page.getByText("CANONICAL VARIANT", { exact: true })).toBeVisible();
 
     // Run Intermediary Extraction
     await page.getByRole("button", { name: "Extract Intermediary Structure" }).click();
     await expect(page.getByText("Structured Extraction")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText("Delegated Retirement")).toBeVisible();
-    await expect(page.getByText("South Pole Carbon Asset Management Ltd")).toBeVisible();
-    await expect(page.getByText("Apple Inc.")).toBeVisible();
+    await expect(page.getByText("South Pole Carbon Asset Management Ltd").first()).toBeVisible();
+    await expect(page.getByText("Apple Inc.").first()).toBeVisible();
   });
 });
 
@@ -371,9 +379,9 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
     await expect(page.getByText("Gold Standard (GS) Registry Population")).toBeVisible();
 
     // Verify dual-track classification categories
-    await expect(page.getByText("Non-Placeholder Disclosed")).toBeVisible();
-    await expect(page.getByText("Explicitly Undisclosed")).toBeVisible();
-    await expect(page.getByText("Invalid or Placeholder")).toBeVisible();
+    await expect(page.getByText("Non-Placeholder Disclosed", { exact: true })).toBeVisible();
+    await expect(page.getByText("Explicitly Undisclosed", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("Invalid or Placeholder", { exact: true }).first()).toBeVisible();
     await expect(page.getByText(/Methodological Principle/)).toBeVisible();
   });
 
@@ -389,8 +397,11 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
     await expect(page.getByText("Across-Batch Mean Gini (Micro Uniformity)")).toBeVisible();
 
     // Verify Lorenz curve component
-    await expect(page.getByRole("region", { name: "Portfolio Beneficiary Allocation Lorenz Curve" })).toBeVisible();
-    await expect(page.getByText(/Gini: 0.9605/)).toBeVisible();
+    // The curve plots all 9,933 disclosed labels; its Gini is that distribution's, not the pooled allocation Gini.
+    const lorenz = page.getByRole("region", { name: "Disclosed Beneficiary Lorenz Curve" });
+    await expect(lorenz).toBeVisible();
+    await expect(lorenz.getByText("Gini: 0.9748")).toBeVisible();
+    await expect(lorenz.getByText("9,933").first()).toBeVisible();
 
     // Toggle decile table
     await page.getByRole("button", { name: "Decile Table" }).click();
@@ -400,8 +411,9 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
 
     // Verify top disclosed beneficiaries ranking table
     await expect(page.getByText("Top Disclosed Beneficiaries by Claimed Volume")).toBeVisible();
-    await expect(page.getByText("Telstra Corporation Limited")).toBeVisible();
-    await expect(page.getByText("Shell")).toBeVisible();
+    await expect(page.getByText("Telstra Corporation Limited").first()).toBeVisible();
+    await expect(page.getByText("3,766,034 t")).toBeVisible();
+    await expect(page.getByText("Shell", { exact: true }).first()).toBeVisible();
   });
 
   test("batch fragmentation explorer inspects batches, micro-claims, and interval topologies", async ({ page }) => {
@@ -420,7 +432,7 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
     await expect(page.getByText("0 Overlaps")).toBeVisible();
 
     // Click Istanbul Landfill preset (GS GS1-1-TR-GS707-21-2016-20993)
-    await page.getByRole("button", { name: /Istanbul Landfill/ }).click();
+    await page.getByRole("button", { name: /GS1-1-TR-GS707-21-2016-20993/ }).click();
     await expect(page.getByText("LANDFILL GAS EXTRACTION")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText("432,388 t")).toBeVisible();
   });
@@ -452,5 +464,39 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
     // Verify Zero-Activity Gaps Inspector
     await expect(page.getByText("Reporting Inactivity Intervals")).toBeVisible();
     await expect(page.getByText(/Gaps \(Mean:/)).toBeVisible();
+  });
+});
+
+test.describe("final release regressions", () => {
+  test("assessment presets target the seeded claims", async ({ page }) => {
+    await page.goto("/assessment");
+    await expect(page.getByText("Equinox")).toHaveCount(0);
+    await page.getByRole("button", { name: /Helios · claim 2/ }).click();
+    await expect(page.getByText(/Helios Apparel/).first()).toBeVisible({ timeout: 15_000 });
+  });
+
+  test("verify portal one-click tamper check fails the document check only", async ({ page }) => {
+    await page.goto("/verify?ref=OO-2026-0001");
+    await page.getByRole("button", { name: "Tampered copy" }).click();
+    await expect(page.locator('[data-document-status="NO_MATCH"]')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('[data-check="ONCHAIN_RECORD"][data-status="PASS"]')).toBeVisible();
+    await expect(page.getByText(/local Hardhat development chain/).first()).toBeVisible();
+  });
+
+  test("evidence page states provenance, in-sample extraction and curated benchmarks", async ({ page }) => {
+    await page.goto("/evidence");
+    await expect(page.getByRole("heading", { name: "Evidence and methodology" })).toBeVisible();
+    await expect(page.getByText("Registry records are real.")).toBeVisible();
+    await expect(page.getByText("In-sample", { exact: true })).toBeVisible();
+    await expect(page.getByText(/Entity resolution: 124 curated name pairs/)).toBeVisible();
+    await expect(page.getByText(/36\/36 scenarios receive the expected class/)).toBeVisible();
+    await expect(page.getByText(/fails on tables/)).toHaveCount(0);
+  });
+
+  test("observatory shows an error state instead of numbers when the API fails", async ({ page }) => {
+    await page.route("**/api/analytics/population/summary", (r) => r.fulfill({ status: 500, body: JSON.stringify({ error: "simulated failure" }) }));
+    await page.goto("/observatory");
+    await expect(page.getByText("Could not load population intelligence")).toBeVisible();
+    await expect(page.getByText("0.4924")).toHaveCount(0);
   });
 });

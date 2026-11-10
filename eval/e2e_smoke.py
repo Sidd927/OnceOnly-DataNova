@@ -7,13 +7,14 @@ Note: it writes to the running app's ledger; run `make reset` afterwards for a c
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
 import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
-API = "http://127.0.0.1:8000"
+API = os.environ.get("ONCEONLY_API", "http://127.0.0.1:8000")
 DEMO = ROOT / "data/demo"
 
 
