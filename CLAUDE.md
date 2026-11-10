@@ -63,11 +63,19 @@ data/      real VROD demo subset (38,004 rows) · synthetic claimants · curated
 - Name similarity, parent/subsidiary links and intermediary disclosures are **not** legal identity. An undisclosed beneficiary is **not** misconduct.
 - The ledger runs on a local chain with a trusted registrar key. Multi-document verification relies on the off-chain evidence index. Do not claim public-chain or purely cryptographic verification.
 
-## Current status and pending work (as of 2026-11-10, HEAD `bf08180`)
+## Current status (2026-11-10, final completion mission)
 
-- Done: backend Phases 0, 1, 1.1, 2A, 2B and 2C Stages 1–4 (single commit `2997c44`), and frontend Sprints 3.2 (`b9c091f`), 3.3 (`d52e78a`) and 3.4 (`bf08180`).
-- **Next: Sprint 3.4.1, an independent metrics reconciliation audit.** The frozen Stage 1 population metrics (HHI 245.6410, entropy 7.5166 bits, equitability 0.5661, Telstra 3,766,034 t) conflict with the Sprint 3.4 report (215.17, 9.37 bits, 0.706, 3,767,118 t). **Do not pick one set, change methodology, or edit either report.** Investigate read-only and report.
-- Then Sprint 3.5: evolve the existing `/verify` and `/evidence` pages into the Public Verification Portal and Forensic Evidence Ledger.
-- Then Phase 4: E2E validation, demo scenarios, Docker/analytics-path check, docs and submission.
-- Known defects awaiting approval to fix: see master context §9.2–§9.5. They include the hard-coded `"0.4924"` fallback, the "Equinox" preset labels, the analytics DB path, and stale README and Evidence copy.
-- The DATANOVA deadline is **unverified**. Ask the owner; do not assume one.
+- Done: backend phases 0–2C Stage 4; frontend Sprints 3.2–3.4; the Sprint 3.4.1 metrics audit; the verification trust-boundary rework; the analytics DB path fix; product polish; the submission package (deck, video, runbook, script, form text).
+- Release evidence: [`docs/FINAL_RELEASE_QA_REPORT.md`](docs/FINAL_RELEASE_QA_REPORT.md). Progress log: [`docs/FINAL_COMPLETION_EXECUTION_LOG.md`](docs/FINAL_COMPLETION_EXECUTION_LOG.md).
+- Baselines:
+
+  | Suite | Result |
+  |---|---|
+  | Backend | 271 passed |
+  | Contracts | 24 passing |
+  | Playwright | 45 passed |
+  | E2E | 13/13 |
+  | Demo fingerprint | `c544f589…6483b` |
+
+- Population metrics are pinned by `backend/tests/test_population_metrics_reconciliation.py`. Do not change them without approval.
+- Owner actions only: public deployment (Render), DATANOVA form fields (track, team), merging into `main`.

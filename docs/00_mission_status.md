@@ -1,3 +1,5 @@
+> **HISTORICAL (IEEE ClimateChain, October 2026).** This file describes the pre-DATANOVA product and is no longer the source of truth. Current status: [`PROJECT_MASTER_CONTEXT.md`](PROJECT_MASTER_CONTEXT.md), [`FINAL_RELEASE_QA_REPORT.md`](FINAL_RELEASE_QA_REPORT.md) and the root [`README.md`](../README.md).
+
 # 00 — Mission Status (single source of truth)
 
 **Updated:** 2026-10-19 20:05 IST

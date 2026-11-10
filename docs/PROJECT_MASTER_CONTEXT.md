@@ -450,7 +450,10 @@ Reported canonical fingerprint: `c544f5897354081cf1d20efb366b951f14d2b8ffa69bcb8
 
 ## 9. Known limitations, defects and unresolved discrepancies
 
-### 9.1 OPEN: Stage 1 vs Sprint 3.4 population metrics (blocks Sprint 3.5)
+> **Status update (2026-11-10, final completion mission).** Items 9.1–9.6 were resolved. Details are in [`FINAL_COMPLETION_EXECUTION_LOG.md`](FINAL_COMPLETION_EXECUTION_LOG.md) and [`FINAL_RELEASE_QA_REPORT.md`](FINAL_RELEASE_QA_REPORT.md). The verification trust boundary in §4.2 also changed: a database match no longer counts as an on-chain match, and multi-document membership is proven by recomputing the commitment. The original findings are kept below for traceability. §9.7 still applies.
+
+
+### 9.1 RESOLVED: Stage 1 vs Sprint 3.4 population metrics (Stage 1 confirmed; see the [Sprint 3.4.1 audit](DATANOVA_PHASE_3_SPRINT_3_4_1_METRICS_RECONCILIATION_AUDIT.md))
 
 | Metric | Frozen Stage 1 ([final audit §4](DATANOVA_PHASE_2C_STAGE_1_FINAL_ACCEPTANCE_AUDIT.md)) | Sprint 3.4 report |
 |---|---|---|
@@ -472,11 +475,11 @@ Facts established by inspection only. The audit itself has not been performed:
 
 **Do not choose either set, change methodology, or edit the Sprint 3.4 report until Sprint 3.4.1 establishes the facts.** See [`DEVELOPMENT_ROADMAP.md`](DEVELOPMENT_ROADMAP.md).
 
-### 9.2 Hard-coded metric fallback
+### 9.2 RESOLVED: Hard-coded metric fallback
 
 `frontend/src/pages/Observatory.tsx:498` renders `pop.batch_gini_distribution.mean?.toFixed(4) ?? "0.4924"`. If the API omits the value, the UI shows a constant as if it were live data. This conflicts with the no-fabricated-metrics principle.
 
-### 9.3 Analytics DB path is hard-coded (deployment risk, unverified)
+### 9.3 RESOLVED: Analytics DB path now follows `ONCEONLY_REFERENCE_DEMO_DB`; Docker verified
 
 `backend/app/analytics/engine.py:51` fixes `DEFAULT_DB_PATH` to `<repo>/var/registry_demo.sqlite`. It ignores `ONCEONLY_REFERENCE_DEMO_DB` and `ONCEONLY_REFERENCE_MODE`.
 
@@ -485,11 +488,11 @@ Facts established by inspection only. The audit itself has not been performed:
 
 This has **not been tested**. It must be verified in Phase 4.
 
-### 9.4 Assessment Console preset labels
+### 9.4 RESOLVED: Assessment Console preset labels
 
 `frontend/src/pages/AssessmentConsole.tsx` (around lines 227–237) labels claim 1 "Helios Claim #1" and claim 2 "Equinox Claim #2". In the seeded story (`backend/scripts/seed_demo.py`), claim 1 is **Northwind** and claim 2 is **Helios**. No "Equinox" claimant exists. The Sprint 3.2 report and the frontend audit repeat "Helios vs Equinox". The `RulesCatalogModal.tsx` placeholder and the frontend audit cite `RULE-INT-001`, which is not in the 16-rule catalog.
 
-### 9.5 Stale documentation and UI copy
+### 9.5 RESOLVED: Stale documentation and UI copy (README rewritten; Evidence page rewritten; historical docs labelled)
 
 | Item | What is stale |
 |---|---|
@@ -501,7 +504,7 @@ This has **not been tested**. It must be verified in Phase 4.
 | [`DATANOVA_UPGRADE_ROADMAP.md`](DATANOVA_UPGRADE_ROADMAP.md) | Strategy doc with promotional language ("unbeatable"). It proposes items, such as `docs/DATANOVA_SUBMISSION.md`, a public-demo simulation mode and a `/market` page, that were not built |
 | [`docs/submission/`](submission/) | IEEE ClimateChain submission package (official requirements, deadline 25 Oct 2026). Repo URLs were updated in Phase 0. **There is no DATANOVA-specific submission package or verified DATANOVA requirements document** |
 
-### 9.6 Conflicting definitions of Sprint 3.5
+### 9.6 RESOLVED: Conflicting definitions of Sprint 3.5 (the owner's definition was delivered)
 
 | Source | Sprint 3.5 scope |
 |---|---|
