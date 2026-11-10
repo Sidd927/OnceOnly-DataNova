@@ -200,13 +200,13 @@ export default function Observatory() {
     <div className="space-y-8">
       <PageHeader
         title="Market Population & Temporal Dynamics Observatory"
-        lede="Observe market-wide concentration, dual-track disclosure transparency, batch fragmentation, and temporal velocity dynamics across voluntary carbon offset registries."
+        lede="Beneficiary concentration, disclosure coverage, batch fragmentation and retirement timing, computed live from real Verra and Gold Standard retirement records in the committed demo subset. The figures describe this sample, not the whole voluntary carbon market."
       />
 
       <ErrorBox error={popErr} title="Could not load population intelligence" />
 
       {/* Top Track Navigation Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-rule pb-3">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-rule pb-3">
         <SectionHeader
           id="observatory-tracks-h"
           title="Observatory Intelligence Feeds"
@@ -216,7 +216,7 @@ export default function Observatory() {
         <div
           role="tablist"
           aria-label="Observatory Feeds"
-          className="inline-flex rounded-panel border border-rule-strong bg-fog p-0.5 text-xs font-semibold"
+          className="inline-flex max-w-full flex-wrap xl:flex-nowrap xl:shrink-0 rounded-panel border border-rule-strong bg-fog p-0.5 text-xs font-semibold"
         >
           <button
             type="button"

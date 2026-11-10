@@ -14,6 +14,17 @@ const CHAIN_EVENT: Record<string, string> = {
   withdrawn: "Withdrawn",
 };
 
+const WORKFLOW = [
+  { to: "/claims/new", title: "Check a claim", text: "Upload a statement; serials become unit ranges reconciled with registry retirements." },
+  { to: "/claims/2", title: "Inspect an overlap", text: "Helios shares 4,559 units with Northwind's anchored claim: the Ruler, findings and allocation class." },
+  { to: "/assessment", title: "Assess a target", text: "Sixteen deterministic rules across claims, batches, projects and entities, with counterevidence." },
+  { to: "/cross-registry", title: "Compare registries", text: "Candidate Verra and Gold Standard project pairs, entity names and broker delegations." },
+  { to: "/observatory", title: "Read the population", text: "Disclosure coverage, beneficiary concentration, batch fragmentation and retirement timing." },
+  { to: "/verify", title: "Verify independently", text: "Each on-chain and off-chain check reported separately, with the arithmetic to redo it." },
+  { to: "/evidence", title: "Check the evidence", text: "Data provenance, methodology, benchmark results and their limits." },
+  { to: "/claims", title: "Browse the ledger", text: "All claims, their status and every transaction the contract accepted or refused." },
+];
+
 export default function Overview() {
   const [o, setO] = useState<any>(null);
   const [claims, setClaims] = useState<ClaimSummary[] | null>(null);
@@ -31,8 +42,24 @@ export default function Overview() {
 
   return (
     <div>
-      <PageHeader title="Overview" lede="The current state of the claims ledger, the registry reference and the contract it writes to." actions={<LinkButton to="/claims" variant="secondary">Open the claims ledger</LinkButton>} />
+      <PageHeader title="Overview" lede="Registries stop a credit from being retired twice; nothing stops two public claims from citing the same retired units. OnceOnly reconciles claims with real registry records, explains every signal with its evidence and limits, and anchors accepted claims on a contract that refuses overlapping units." actions={<LinkButton to="/claims" variant="secondary">Open the claims ledger</LinkButton>} />
       <ErrorBox error={err} title="Could not load the overview" />
+
+      <section aria-labelledby="flow-h" className="mb-10">
+        <SectionHeader id="flow-h" title="Investigation workflow" aside="Registry records are real (Berkeley VROD 2026-08 demo subset) · claimants are synthetic · local development chain" />
+        <ol className="grid gap-px overflow-hidden rounded-sheet border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
+          {WORKFLOW.map((w, i) => (
+            <li key={w.to} className="bg-sheet">
+              <Link viewTransition to={w.to} className="flex h-full flex-col gap-1 p-4 hover:bg-fog">
+                <span className="font-mono text-xs text-muted">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-sm font-semibold">{w.title}</span>
+                <span className="text-xs leading-relaxed text-ink-soft">{w.text}</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-2 text-xs text-muted">Signals are investigative indicators for human review, not findings of fraud. <Link to="/evidence" className="underline underline-offset-2">What the evidence does and does not show</Link>.</p>
+      </section>
 
       <dl className="mb-10 grid grid-cols-2 gap-px overflow-hidden rounded-sheet border border-rule bg-rule md:grid-cols-4">
         {[

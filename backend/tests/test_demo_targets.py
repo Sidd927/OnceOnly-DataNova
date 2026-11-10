@@ -44,3 +44,20 @@ def test_frontend_has_no_phantom_demo_names_or_rules():
     src = "\n".join(p.read_text() for p in (ROOT / "frontend/src").rglob("*.ts*"))
     assert "Equinox" not in src
     assert "RULE-INT-001" not in src
+
+
+def test_claim_assessment_target_reports_claimed_units(tmp_env):
+    """Regression: the CLAIM-scope target label read a non-existent claims.total_units column and always showed 0."""
+    from fastapi.testclient import TestClient
+
+    from app import db, service
+    from app.main import app
+    from app.reference import Reference
+
+    con = db.connect()
+    serial = "18453-896309560-896319559-VCS-VCU-1507-VER-IN-1-1904-01092024-31122024-0"
+    cid = service.create_claim(con, Reference.open(), claimant="Northwind Foods (SYNTHETIC)", claim_date=None, period="FY2025",
+                               statement=None, pasted_text=f"Serial Number: {serial}\nQuantity: 10,000", uploads=[])
+    r = TestClient(app).post("/api/analytics/assessment", json={"scope": "CLAIM", "claim_id": cid})
+    assert r.status_code == 200, r.text
+    assert "10,000 units" in r.json()["target"]["description"]

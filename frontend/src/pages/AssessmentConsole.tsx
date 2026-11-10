@@ -166,7 +166,7 @@ export default function AssessmentConsole() {
     <div className="space-y-8">
       <PageHeader
         title="Unified Risk Assessment Console"
-        lede="Synthesize multi-phase signals (allocation conflicts, beneficiary concentration, batch fragmentation, temporal bursts, and cross-registry collisions) into a single, explainable investigator assessment."
+        lede="Combine allocation conflicts, beneficiary concentration, batch fragmentation, timing anomalies and cross-registry signals into one explainable assessment. Every finding shows its rule, threshold, evidence, counterevidence and missing information. A review priority is a triage aid for an investigator; it is not a determination of fraud or of who holds a valid claim."
         actions={
           <div className="flex items-center gap-2">
             <Button

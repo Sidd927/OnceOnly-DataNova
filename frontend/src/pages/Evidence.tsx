@@ -288,7 +288,7 @@ const METHODS = [
 
 function BenchmarkTable({ title, models, note }: { title: string; models?: Record<string, any>; note?: string }) {
   return (
-    <div className="space-y-2">
+    <div className="min-w-0 space-y-2">
       <div className="text-sm font-semibold">{title}</div>
       <div className="overflow-x-auto rounded-panel border border-rule bg-sheet">
         <table className="w-full min-w-[420px] text-sm">

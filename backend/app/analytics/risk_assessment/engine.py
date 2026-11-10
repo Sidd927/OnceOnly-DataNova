@@ -297,7 +297,7 @@ class RiskAssessmentEngine:
             target = AssessmentTarget(
                 scope=AssessmentScope.CLAIM,
                 claim_id=cid,
-                description=f"Claim #{cid} ('{claim.get('ref')}', claimant='{claimant}', {claim.get('total_units', 0):,} units)",
+                description=f"Claim #{cid} ('{claim.get('ref')}', claimant='{claimant}', {sum(int(b['unit_end']) - int(b['unit_start']) + 1 for b in blocks):,} units)",
             )
 
             return cls._synthesize_assessment(target, all_evidence, stages_consulted)
