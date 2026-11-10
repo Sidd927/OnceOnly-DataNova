@@ -40,7 +40,7 @@ These were checked against the seeded stack on 2026-11-10.
 | Contract rejection | `RangeOverlap` with units 896,315,001–896,319,559 already belonging to ledger claim #1 |
 | Reconciliation | `ALLOCATION_CONFLICT`, entities `DIFFERENT_ENTITIES`, partial overlap, 65.1 % of the candidate range |
 | Assessment (claim 2) | Review Recommended, high priority; `RULE-REC-002` partial overlap of 4,559 units; concentration rules grouped |
-| Observatory | 37,335 retirements; HHI 246; equitability 0.566; top-3 share 23.1 %; Lorenz Gini 0.9748 over 9,933 labels |
+| Observatory | 37,335 retirements; HHI 246; equitability 0.566; top-3 share 23.1 %; Lorenz Gini 0.9748 over 9,931 labels |
 | Verify, original | 6 of 7 checks pass; claimant check not performed; document `ONCHAIN_ROOT_MATCH` |
 | Verify, tampered | 5 of 7 pass; document **Fail** (`NO_MATCH`) |
 

@@ -61,3 +61,44 @@ A resumable log of the final DATANOVA completion mission. Update it after each m
 
   A crawler over 14 routes, every tab and every preset found 0 page errors, 0 failed API calls and 0 `NaN`/`undefined` text.
 - Local stack used API port 8010, because port 8000 is held by a local `ssh` process that was left untouched.
+
+## Milestones 4–7: Product polish, validation, submission package, release (done)
+
+- **Product.**
+  - Overview gained an investigation-workflow panel.
+  - Scope-accurate copy on the landing page and Observatory; Assessment has a not-a-fraud-determination statement.
+  - Mobile overflow fixed; label wording corrected ("distinct disclosed labels").
+  - The CLAIM-scope "0 units" label is fixed.
+- **Performance and reliability.** Read-only analytics responses are memoized. Aborted requests had queued seconds of work, and the temporal Playwright test failed 7 of 8 repeats; it now passes 8 of 8.
+- **Reference snapshot.**
+  - The local and earlier-audit DB predated the Phase 1 normalization (9,933 vs 9,931 labels).
+  - A build stamp plus automatic rebuild was added, and the tests now run hermetically.
+  - Audit §8 records both snapshots. Every headline figure except K and entropy (7.5166 → 7.5165) is unchanged.
+- **Evaluation.**
+  - `run_eval.py` re-run with the contract replay measured (P = R = 1.000).
+  - The DATANOVA benchmarks reproduce identically.
+- **Submission package.**
+  - 10-slide PPTX and PDF (`docs/submission/make_presentation.py` regenerates them).
+  - 2:33 demo video and captions, recorded from the real app.
+  - `FINAL_DEMO_RUNBOOK.md`, `FINAL_DEMO_SCRIPT.md` and `FINAL_DEVPOST_SUBMISSION_CONTENT.md`.
+  - README rewritten; IEEE-era docs labelled historical.
+- **Final gates.**
+
+  | Gate | Result |
+  |---|---|
+  | Backend | 274 passed |
+  | Contracts | 24 passing |
+  | Lint, build | Clean |
+  | E2E | 13/13 |
+  | Demo fingerprint | Canonical |
+  | Playwright, dev stack | 45/45 |
+  | Playwright, container | 44 passed + 1 skipped by design |
+  | Crawler | 0 problems |
+  | Docker | Builds; ready in 4 s; 279 MiB |
+  | Secret scan | Clean |
+
+  Details: `docs/FINAL_RELEASE_QA_REPORT.md`.
+- **Blocked on the owner.**
+  - Public URL (Render account): steps in the runbook §F.
+  - Track, team and originality fields in the form.
+  - Merging into `main`.

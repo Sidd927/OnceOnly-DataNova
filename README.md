@@ -202,7 +202,7 @@ make demo-check          # fingerprint c544f5897354081cf1d20efb366b951f14d2b8ffa
 
 | Command | What it runs | Last result |
 |---|---|---|
-| `make test-backend` | pytest: parser, normalization, reference, entity resolution, reconciliation, analytics, assessment, verification trust, demo targets | 271 passed |
+| `make test-backend` | pytest: parser, normalization, reference, entity resolution, reconciliation, analytics, assessment, verification trust, demo targets | 274 passed |
 | `make test-contracts` | Hardhat: invariants, adversarial hints, gas | 24 passing |
 | `cd frontend && npm run lint && npm run build` | oxlint, TypeScript, Vite | Clean |
 | `make e2e` | 13-step lifecycle on a fresh ledger (submit, reconcile, anchor, contract rejection, verify, challenge, re-anchor) | 13/13 |

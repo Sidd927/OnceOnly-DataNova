@@ -71,7 +71,7 @@ data/      real VROD demo subset (38,004 rows) · synthetic claimants · curated
 
   | Suite | Result |
   |---|---|
-  | Backend | 271 passed |
+  | Backend | 274 passed |
   | Contracts | 24 passing |
   | Playwright | 45 passed |
   | E2E | 13/13 |

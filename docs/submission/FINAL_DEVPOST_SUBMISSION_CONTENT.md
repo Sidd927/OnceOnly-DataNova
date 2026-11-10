@@ -127,7 +127,7 @@ Tests run for this release:
 
 | Suite | Result |
 |---|---|
-| Backend (pytest) | 271 passed |
+| Backend (pytest) | 274 passed |
 | Contracts (Hardhat) | 24 passing |
 | Browser (Playwright, including axe WCAG A/AA and keyboard tests) | 45 passed |
 | End-to-end lifecycle | 13/13 checks |
@@ -143,7 +143,7 @@ Tests run for this release:
 
 **Statistics.** HHI and Shannon entropy are computed over disclosed volume only. Concentration bands are descriptive (no antitrust labels). Pooled and within-batch Gini are reported separately. Absolute micro-claims (≤ 10 t) are kept separate from relative small allocations (≤ 1 % of a batch). Bursts use a leave-one-out MAD baseline (k = 3). Zero-activity intervals describe the sample, not market dormancy.
 
-**Reproducibility.** Every population figure in the Observatory was reproduced by an independent SQL computation. The audit found and fixed a serialization defect that dropped 6,307 of 9,933 beneficiary shares from the Lorenz curve, plus several display errors; an earlier report received a dated erratum.
+**Reproducibility.** Every population figure in the Observatory was reproduced by an independent SQL computation. The audit found and fixed a serialization defect that dropped 6,307 of 9,931 beneficiary shares from the Lorenz curve, plus several display errors; an earlier report received a dated erratum. It also found that earlier audits had run on a database built before the Phase 1 encoding repairs. The system now stamps each materialization and rebuilds a stale one automatically, so a fresh clone, the container and the tests all use the same population.
 
 ## Validation and evaluation
 

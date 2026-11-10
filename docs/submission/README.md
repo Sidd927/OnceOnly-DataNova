@@ -4,7 +4,7 @@
 
 | File | Purpose |
 |---|---|
-| `OnceOnly_DATANOVA_Final_Presentation.pptx` / `.pdf` | The PPT deliverable (10 slides) |
+| `OnceOnly_DATANOVA_Final_Presentation.pptx` / `.pdf` | The PPT deliverable (10 slides); regenerate with `make_presentation.py` (python-pptx) and LibreOffice |
 | `OnceOnly_DATANOVA_Demo_720p.mp4` (+ `_captions.srt`) | Optional video, 2:33, recorded from the real app (synthetic narration) |
 | [`FINAL_DEVPOST_SUBMISSION_CONTENT.md`](FINAL_DEVPOST_SUBMISSION_CONTENT.md) | Copy-ready form text; owner-specific fields marked |
 | [`FINAL_DEMO_SCRIPT.md`](FINAL_DEMO_SCRIPT.md) | Narration and click path |

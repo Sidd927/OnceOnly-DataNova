@@ -11,6 +11,8 @@ The DB SHA-256 is for the materialized SQLite file on this machine. The file's b
 
 ## 1. Verdict
 
+> **See §8.** The figures in §1–§2 were computed on a pre-normalization snapshot of the reference DB. The canonical build, used by fresh clones, Docker and the pinned tests, has 9,931 labels and entropy 7.5165 bits. Every other population figure is unchanged.
+
 **The frozen Stage 1 figures are correct.** They are reproduced exactly by:
 
 - the current engine;
@@ -125,3 +127,22 @@ No threshold, formula, population definition or classification was changed. The 
 - the frontend's labelling and presentation (D2–D5).
 
 The frozen Stage 1 values remain authoritative and are now pinned by `backend/tests/test_population_metrics_reconciliation.py`.
+
+## 8. Addendum (same day): two reference snapshots
+
+Release QA ran the same Observatory against the Docker image and found **9,931** distinct disclosed labels, against **9,933** in the local run above. The two runs read different snapshots of the reference DB, not different code.
+
+| Snapshot | How it was built | Labels K | HHI | Entropy | Equitability | Telstra | Top-3 | Pooled Gini | Mean batch Gini |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Local `var/registry_demo.sqlite` dated 2026-11-08 22:14, used by the Stage 1 audits and §2 above | Materialized **before** the Phase 1 normalization (no `normalized` flag in `meta`); labels such as `1. FC K√∂ln…` unrepaired | 9,933 | 245.641004 | 7.516582 | 0.566092 | 3,766,034 | 23.129 % | 0.960471 | 0.492445 |
+| **Canonical**: materialized by the committed code from the committed CSV, as in a fresh clone or the Docker image | Phase 1 normalization: mojibake repaired (`1. FC Köln…`), which merges two pairs of variant labels | **9,931** | 245.641028 | **7.516503** | 0.566099 | 3,766,034 | 23.129 % | 0.960471 | 0.492445 |
+
+**Conclusion.** At the reported precision only K (9,933 → 9,931) and entropy (7.5166 → 7.5165 bits) change. HHI 245.6410, equitability 0.5661, the Telstra volume, the top-3 share and both Ginis are identical. The Stage 1 methodology is unaffected; the earlier audits measured a stale materialization. The 6,307 shares zeroed by the old serializer and the label-level Lorenz Gini 0.9748 are the same in both snapshots.
+
+**Corrections made:**
+
+- `build_demo_db` writes a build stamp (source CSV SHA-256 and builder version) into `meta`.
+- `ensure_demo_db` rebuilds any materialization whose stamp is missing or different. Both the Reference loader and the analytics path call it, so a pre-normalization DB can no longer be used silently.
+- The pinned tests now run on a fresh materialization (`tmp_env`) and pin the canonical values (K = 9,931, entropy 7.516503).
+- New tests: a stale DB is rebuilt before use, and the canonical build contains the repaired labels.
+- The local stale DB was rebuilt by the new check. The Docker image and a fresh clone already produced the canonical values.

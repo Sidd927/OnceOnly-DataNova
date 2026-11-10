@@ -397,11 +397,11 @@ test.describe("Sprint 3.4 market population & temporal dynamics observatory", ()
     await expect(page.getByText("Across-Batch Mean Gini (Micro Uniformity)")).toBeVisible();
 
     // Verify Lorenz curve component
-    // The curve plots all 9,933 disclosed labels; its Gini is that distribution's, not the pooled allocation Gini.
+    // The curve plots all 9,931 disclosed labels; its Gini is that distribution's, not the pooled allocation Gini.
     const lorenz = page.getByRole("region", { name: "Disclosed Beneficiary Lorenz Curve" });
     await expect(lorenz).toBeVisible();
     await expect(lorenz.getByText("Gini: 0.9748")).toBeVisible();
-    await expect(lorenz.getByText("9,933").first()).toBeVisible();
+    await expect(lorenz.getByText("9,931").first()).toBeVisible();
 
     // Toggle decile table
     await page.getByRole("button", { name: "Decile Table" }).click();

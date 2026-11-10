@@ -11,110 +11,110 @@ But a retirement is where the claims begin.
 Companies cite retired units in reports and product labels, often through brokers who split one retirement among many buyers.
 
 4
-00:00:15,624 --> 00:00:19,747
+00:00:15,451 --> 00:00:19,574
 If two claims cite the same units, each one looks fine on its own.
 
 5
-00:00:19,747 --> 00:00:25,995
+00:00:19,574 --> 00:00:25,822
 And because they quote different serial strings in different documents, comparing hashes misses it.
 
 6
-00:00:27,272 --> 00:00:30,538
+00:00:27,102 --> 00:00:30,368
 OnceOnly turns this into an investigation workflow.
 
 7
-00:00:30,538 --> 00:00:35,917
+00:00:30,368 --> 00:00:35,747
 The registry records are real, from Berkeley's Voluntary Registry Offsets Database.
 
 8
-00:00:35,917 --> 00:00:38,095
+00:00:35,747 --> 00:00:37,925
 The five companies are synthetic.
 
 9
-00:00:39,275 --> 00:00:43,696
+00:00:39,104 --> 00:00:43,525
 Helios Apparel claims seven thousand units from a real Verra retirement.
 
 10
-00:00:43,696 --> 00:00:47,320
+00:00:43,525 --> 00:00:47,149
 Each serial becomes an interval inside its registry batch.
 
 11
-00:00:48,505 --> 00:00:54,620
+00:00:48,334 --> 00:00:54,449
 Four thousand, five hundred and fifty-nine of those units already back Northwind's anchored claim.
 
 12
-00:00:54,620 --> 00:00:59,114
+00:00:54,449 --> 00:00:58,943
 When the registration was forced, the smart contract itself refused it.
 
 13
-00:01:00,290 --> 00:01:02,839
+00:01:00,117 --> 00:01:02,666
 The reconciliation explains the overlap.
 
 14
-00:01:02,839 --> 00:01:13,803
+00:01:02,666 --> 00:01:13,630
 It is classified as an allocation conflict between different entities: not a broker acting for a disclosed client, not a parent and subsidiary, and not a legitimate split.
 
 15
-00:01:13,803 --> 00:01:16,417
+00:01:13,630 --> 00:01:16,244
 It ends with a next step, not a verdict.
 
 16
-00:01:17,603 --> 00:01:21,305
+00:01:17,426 --> 00:01:21,128
 The assessment console applies sixteen deterministic rules.
 
 17
-00:01:21,305 --> 00:01:25,949
+00:01:21,128 --> 00:01:25,772
 Each finding shows its metrics, its limitations and a recommended action.
 
 18
-00:01:25,949 --> 00:01:30,279
+00:01:25,772 --> 00:01:30,102
 Correlated signals are grouped, so they cannot inflate the priority.
 
 19
-00:01:31,470 --> 00:01:34,266
+00:01:31,268 --> 00:01:34,064
 Projects can appear on more than one registry.
 
 20
-00:01:34,266 --> 00:01:44,601
+00:01:34,064 --> 00:01:44,399
 The cross-registry workspace ranks candidate Verra and Gold Standard pairs, and treats an identical project ID on two registries as a collision, never as the same asset.
 
 21
-00:01:45,788 --> 00:01:51,204
+00:01:45,566 --> 00:01:50,982
 The observatory describes the population: thirty-seven thousand real retirements.
 
 22
-00:01:51,204 --> 00:01:55,885
+00:01:50,982 --> 00:01:55,663
 Most name no beneficiary, which is a disclosure fact, not misconduct.
 
 23
-00:01:55,885 --> 00:01:59,497
+00:01:55,663 --> 00:01:59,275
 Every population figure was reproduced independently.
 
 24
-00:02:00,685 --> 00:02:02,986
+00:02:00,461 --> 00:02:02,762
 Finally, anyone can verify a claim.
 
 25
-00:02:02,986 --> 00:02:07,655
+00:02:02,762 --> 00:02:07,431
 Northwind's original statement matches the commitment stored on chain.
 
 26
-00:02:08,842 --> 00:02:11,494
+00:02:08,619 --> 00:02:11,271
 A copy with a single flipped bit does not.
 
 27
-00:02:11,494 --> 00:02:19,201
+00:02:11,271 --> 00:02:18,978
 Each check is reported separately, and the network is stated plainly: a local development chain, not a public blockchain.
 
 28
-00:02:20,380 --> 00:02:23,048
+00:02:20,160 --> 00:02:22,828
 OnceOnly flags evidence for human review.
 
 29
-00:02:23,048 --> 00:02:28,774
+00:02:22,828 --> 00:02:28,554
 It does not decide who is right, and its benchmarks are labelled for what they measure.
 
 30
-00:02:28,774 --> 00:02:31,052
+00:02:28,554 --> 00:02:30,832
 Every retired tonne, claimed once.
 

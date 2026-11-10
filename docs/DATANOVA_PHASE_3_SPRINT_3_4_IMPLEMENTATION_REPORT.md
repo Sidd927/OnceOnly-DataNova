@@ -177,7 +177,7 @@ Some figures in §2.2 and §2.3 above do not match the application's output. The
 | Figure in this report | Correct value |
 |---|---|
 | HHI 215.17 | 245.64 |
-| Entropy 9.37 bits | 7.5166 bits |
+| Entropy 9.37 bits | 7.5165 bits (7.5166 on the pre-normalization snapshot used by the Stage 1 audit; see audit §8) |
 | Equitability 0.706 | 0.5661 |
 | Telstra 3,767,118 t | 3,766,034 t |
 | Top 1 % of labels holds 48.2 % | 74.56 % |

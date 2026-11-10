@@ -63,15 +63,14 @@ DEFAULT_DB_PATH = str(settings.reference_demo)
 
 def resolve_analytics_db_path() -> str:
     """Return the analytics reference DB path, materializing it from the committed subset if needed."""
-    from ..reference import build_demo_db, validate_reference_db
+    from ..reference import ensure_demo_db, validate_reference_db
 
     path = settings.reference_demo
-    if not path.exists():
-        if not settings.reference_subset_csv.exists():
-            raise AnalyticsDatabaseUnavailable(
-                f"Analytics reference database not found at {path} and the demo subset "
-                f"{settings.reference_subset_csv} is missing, so it cannot be materialized.")
-        build_demo_db(settings.reference_subset_csv, path)
+    if not path.exists() and not settings.reference_subset_csv.exists():
+        raise AnalyticsDatabaseUnavailable(
+            f"Analytics reference database not found at {path} and the demo subset "
+            f"{settings.reference_subset_csv} is missing, so it cannot be materialized.")
+    ensure_demo_db(path, settings.reference_subset_csv)  # rebuilds stale (pre-normalization) snapshots
     ok, err = validate_reference_db(path)
     if not ok:
         raise AnalyticsDatabaseUnavailable(f"Analytics reference database at {path} is invalid: {err}")

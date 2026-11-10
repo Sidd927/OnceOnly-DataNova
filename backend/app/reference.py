@@ -7,7 +7,9 @@ Supports dual-mode execution:
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import threading
 import logging
 import os
 import sqlite3
@@ -71,6 +73,54 @@ def validate_reference_db(path: Path) -> tuple[bool, str | None]:
         return False, f"Database corruption or SQLite error: {e}"
 
 
+# Bump when build_demo_db's transformation changes, so stale materializations are rebuilt instead of silently used.
+DEMO_DB_BUILD_VERSION = 1
+_build_lock = threading.Lock()
+_csv_digest_cache: dict[tuple, str] = {}
+
+
+def _csv_sha256(csv_path: Path) -> str:
+    st = csv_path.stat()
+    key = (str(csv_path), st.st_mtime_ns, st.st_size)
+    if key not in _csv_digest_cache:
+        _csv_digest_cache[key] = hashlib.sha256(csv_path.read_bytes()).hexdigest()
+    return _csv_digest_cache[key]
+
+
+def demo_build_stamp(csv_path: Path) -> dict:
+    return {"csv_sha256": _csv_sha256(csv_path), "builder_version": DEMO_DB_BUILD_VERSION}
+
+
+def demo_db_is_current(db_path: Path, csv_path: Path) -> bool:
+    """True if db_path was materialized from exactly this CSV by the current builder."""
+    if not db_path.exists():
+        return False
+    try:
+        con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            row = con.execute("SELECT value FROM meta WHERE key='build'").fetchone()
+        finally:
+            con.close()
+    except sqlite3.DatabaseError:
+        return False
+    return bool(row) and json.loads(row[0]) == demo_build_stamp(csv_path)
+
+
+def ensure_demo_db(db_path: Path, csv_path: Path) -> None:
+    """Materialize the demo DB if it is missing or was built from another CSV or an older builder.
+
+    A pre-normalization materialization (e.g. one built before Phase 1) yields different beneficiary labels,
+    so it must never be used silently; see the Sprint 3.4.1 audit."""
+    if not csv_path.exists():
+        return
+    with _build_lock:
+        if demo_db_is_current(db_path, csv_path):
+            return
+        if db_path.exists():
+            log.warning("Demo reference DB at %s is stale (no matching build stamp); rebuilding from %s", db_path, csv_path)
+        build_demo_db(csv_path, db_path)
+
+
 def build_demo_db(csv_path: Path, out: Path) -> None:
     """Materialize the committed demo subset CSV into a SQLite index with idempotent normalization."""
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -124,6 +174,7 @@ def build_demo_db(csv_path: Path, out: Path) -> None:
     }
     con.execute("INSERT INTO meta VALUES ('source', ?)", (json.dumps(src),))
     con.execute("INSERT INTO meta VALUES ('scope', ?)", (json.dumps("demo-subset"),))
+    con.execute("INSERT INTO meta VALUES ('build', ?)", (json.dumps(demo_build_stamp(csv_path)),))
     con.commit()
     con.close()
     tmp.replace(out)
@@ -150,8 +201,7 @@ class Reference:
             return None
 
         # 2. Mode demo or auto fallback: ensure demo db is materialized
-        if not settings.reference_demo.exists() and settings.reference_subset_csv.exists():
-            build_demo_db(settings.reference_subset_csv, settings.reference_demo)
+        ensure_demo_db(settings.reference_demo, settings.reference_subset_csv)
 
         if settings.reference_demo.exists():
             valid, err = validate_reference_db(settings.reference_demo)
