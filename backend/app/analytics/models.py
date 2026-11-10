@@ -135,7 +135,9 @@ class ConcentrationMetrics(BaseModel):
             "dominant_disclosed_share": round(self.dominant_disclosed_share, 4),
             "top3_disclosed_share": round(self.top3_disclosed_share, 4),
             "tier": self.tier,
-            "disclosed_shares": {k: round(v, 6) for k, v in self.disclosed_shares.items()},
+            # Unrounded: at 6 decimals, 6,307 of the 9,933 population labels serialized as 0.0 and were
+            # dropped by Lorenz consumers (Sprint 3.4.1 audit). Shares are display inputs, not headline metrics.
+            "disclosed_shares": dict(self.disclosed_shares),
             "disclaimer": self.disclaimer,
         }
 

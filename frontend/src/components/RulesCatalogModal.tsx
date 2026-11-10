@@ -141,7 +141,7 @@ export function RulesCatalogModal({
               <Search size={16} className="absolute left-3 top-2.5 text-muted" aria-hidden />
               <input
                 type="text"
-                placeholder="Search by rule ID (e.g. RULE-INT-001), name, or keyword..."
+                placeholder="Search by rule ID (e.g. RULE-REC-001), name, or keyword..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-panel border border-rule-strong bg-sheet py-2 pl-9 pr-3 text-sm focus:border-ink focus:outline-none"

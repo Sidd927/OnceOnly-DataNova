@@ -167,3 +167,27 @@ The repository is now ready for **Sprint 3.5: Public Verification Portal (`/veri
 
 ---
 *End of Sprint 3.4 Implementation Report.*
+
+---
+
+### Erratum (added 2026-11-10, Sprint 3.4.1)
+
+Some figures in §2.2 and §2.3 above do not match the application's output. The original text is left unchanged for the record. The figures were checked against the engine, the API and an independent SQL recomputation (see [`DATANOVA_PHASE_3_SPRINT_3_4_1_METRICS_RECONCILIATION_AUDIT.md`](DATANOVA_PHASE_3_SPRINT_3_4_1_METRICS_RECONCILIATION_AUDIT.md)).
+
+| Figure in this report | Correct value |
+|---|---|
+| HHI 215.17 | 245.64 |
+| Entropy 9.37 bits | 7.5166 bits |
+| Equitability 0.706 | 0.5661 |
+| Telstra 3,767,118 t | 3,766,034 t |
+| Top 1 % of labels holds 48.2 % | 74.56 % |
+| Istanbul batch Gini 0.8872 | 0.9260 |
+| Kinnaur batch Gini 0.9654 | 0.8383 |
+| DDWL batch Gini 0.7410 | 0.9036 |
+
+The audit also corrected these Observatory presentation defects:
+
+- the Lorenz chart Gini label;
+- shares zeroed by serialization;
+- a hard-coded fallback value;
+- hard-coded preset statistics.

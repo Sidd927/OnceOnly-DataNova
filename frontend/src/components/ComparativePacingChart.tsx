@@ -183,7 +183,7 @@ export function ComparativePacingChart({
             Pure Retirements
           </div>
           <div className="text-[11px] text-muted">
-            669 issuances strictly excluded
+            Issuance records excluded
           </div>
         </div>
       </div>

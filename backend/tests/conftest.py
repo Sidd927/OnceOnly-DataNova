@@ -16,8 +16,13 @@ def tmp_env(tmp_path, monkeypatch):
     monkeypatch.setenv("ONCEONLY_REFERENCE_DEMO_DB", str(tmp_path / "ref_demo.sqlite"))
     monkeypatch.setenv("CHAIN_RPC_URL", "http://127.0.0.1:1")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "")
-    for m in [m for m in sys.modules if m.startswith("app")]:
+    # Settings are read at import time, so the app is re-imported under the isolated environment.
+    # On teardown the original module objects are restored (not merely deleted): tests that imported
+    # app modules at collection time must keep seeing one consistent set of classes.
+    saved = {m: mod for m, mod in sys.modules.items() if m.startswith("app")}
+    for m in saved:
         del sys.modules[m]
     yield tmp_path
     for m in [m for m in sys.modules if m.startswith("app")]:
         del sys.modules[m]
+    sys.modules.update(saved)

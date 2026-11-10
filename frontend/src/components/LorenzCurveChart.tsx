@@ -78,8 +78,9 @@ export function LorenzCurveChart({
     // Compute deciles (10%, 20%, ..., 90%, 99%)
     const decileThresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99];
     const decileList = decileThresholds.map((targetP) => {
-      const targetIdx = Math.min(n - 1, Math.floor(targetP * n));
-      const cumVol = vals.slice(0, targetIdx + 1).reduce((acc, x) => acc + x, 0);
+      // Bottom floor(p·n) observations; the previous slice included one extra observation.
+      const count = Math.min(n, Math.floor(targetP * n));
+      const cumVol = vals.slice(0, count).reduce((acc, x) => acc + x, 0);
       return {
         populationShare: targetP,
         volumeShare: total > 0 ? cumVol / total : 0,
@@ -93,6 +94,13 @@ export function LorenzCurveChart({
       totalObservations: n,
     };
   }, [shares, giniOverride]);
+
+  // Displays "—" when there are no observations instead of a fabricated 0 %.
+  const shareAt = (p: number, top = false) => {
+    const d = deciles.find((x) => x.populationShare === p);
+    if (!d || totalObservations === 0) return "—";
+    return pct(top ? 1 - d.volumeShare : d.volumeShare, 2);
+  };
 
   // SVG Geometry
   const width = 500;
@@ -313,7 +321,7 @@ export function LorenzCurveChart({
             </span>
             <div className="space-y-1.5 font-mono text-ink-soft">
               <div className="flex justify-between border-b border-rule/60 pb-1">
-                <span className="text-muted">Total Entities:</span>
+                <span className="text-muted">Labels plotted:</span>
                 <span className="font-bold text-ink">{totalObservations.toLocaleString()}</span>
               </div>
               <div className="flex justify-between border-b border-rule/60 pb-1">
@@ -323,19 +331,19 @@ export function LorenzCurveChart({
               <div className="flex justify-between border-b border-rule/60 pb-1">
                 <span className="text-muted">Bottom 50% Share:</span>
                 <span className="font-bold text-ink">
-                  {pct(deciles.find((d) => d.populationShare === 0.5)?.volumeShare ?? 0, 2)}
+                  {shareAt(0.5)}
                 </span>
               </div>
               <div className="flex justify-between border-b border-rule/60 pb-1">
                 <span className="text-muted">Bottom 90% Share:</span>
                 <span className="font-bold text-ink">
-                  {pct(deciles.find((d) => d.populationShare === 0.9)?.volumeShare ?? 0, 2)}
+                  {shareAt(0.9)}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted">Top 1% Share:</span>
                 <span className="font-bold text-crimson">
-                  {pct(1 - (deciles.find((d) => d.populationShare === 0.99)?.volumeShare ?? 0), 2)}
+                  {shareAt(0.99, true)}
                 </span>
               </div>
             </div>

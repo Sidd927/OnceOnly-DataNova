@@ -36,29 +36,30 @@ import { TemporalActivityChart } from "../components/TemporalActivityChart";
 
 type ObservatoryTrack = "census" | "concentration" | "fragmentation" | "temporal";
 
-// Verified Batch Inspection Presets from reference database
+// Batch inspection presets: identifiers only. Every figure shown after selection comes from
+// GET /api/analytics/batches/{registry}/{batch_id}; no metric values are hard-coded here.
 const BATCH_PRESETS = [
   {
-    label: "VCS 10918 (Uruguay Forest Plantations)",
-    desc: "2,448 allocations · High micro-claim fragmentation (2,425 claims <= 10 tonnes) · Gini 0.9545",
+    label: "VCS 10918",
+    desc: "Guanaré forest plantations, Uruguay: many small retail-scale retirements",
     registry: "VCS",
     batchId: "10918",
   },
   {
-    label: "GS GS1-1-TR-GS707-21-2016-20993 (Istanbul Landfill)",
-    desc: "2,271 allocations · 432,388 tonnes · Large municipal project with multi-claimant distribution · Gini 0.8872",
+    label: "GS GS1-1-TR-GS707-21-2016-20993",
+    desc: "Landfill gas extraction and electricity generation, Istanbul, Turkey",
     registry: "GS",
     batchId: "GS1-1-TR-GS707-21-2016-20993",
   },
   {
-    label: "VCS 5972 (Kinnaur Hydroelectric India)",
-    desc: "397 allocations · 500,000 tonnes · Large industrial batch with concentrated tranches · Gini 0.9654",
+    label: "VCS 5972",
+    desc: "Hydroelectric project, Kinnaur District, Himachal Pradesh, India",
     registry: "VCS",
     batchId: "5972",
   },
   {
-    label: "GS GS1-1-IN-GS5673-12-2021-22771 (DDWL Renewable Energy)",
-    desc: "936 allocations · 47,225 tonnes · Mid-size renewable distributed retirements · Gini 0.7410",
+    label: "GS GS1-1-IN-GS5673-12-2021-22771",
+    desc: "Renewable energy power project (DDWL), India",
     registry: "GS",
     batchId: "GS1-1-IN-GS5673-12-2021-22771",
   },
@@ -213,7 +214,7 @@ export default function Observatory() {
         <SectionHeader
           id="observatory-tracks-h"
           title="Observatory Intelligence Feeds"
-          aside="Comprehensive market analytics grounded in 37,335 verified retirement records"
+          aside={pop ? `Computed live from ${fmt(pop.total_retirement_records)} retirement records in the demo reference subset` : undefined}
         />
 
         <div
@@ -317,7 +318,7 @@ export default function Observatory() {
               <SectionHeader
                 id="reg-breakdown-h"
                 title="Registry-Level Population Breakdown"
-                aside="Pure retirement events (669 issuance records strictly excluded)"
+                aside="Retirement events only; issuance records are excluded from every denominator"
               />
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Verra VCS */}
@@ -495,7 +496,7 @@ export default function Observatory() {
                   Across-Batch Mean Gini (Micro Uniformity)
                 </span>
                 <div className="text-2xl font-bold text-ink">
-                  {pop.batch_gini_distribution.mean?.toFixed(4) ?? "0.4924"}
+                  {typeof pop.batch_gini_distribution?.mean === "number" ? pop.batch_gini_distribution.mean.toFixed(4) : <span className="text-base text-muted">Unavailable</span>}
                 </div>
                 <p className="text-muted text-[11px] leading-snug">
                   Reports the average of within-batch Gini coefficients across all <strong>{fmt(pop.total_batches)}</strong> issuance batches, measuring allocation uniformity within individual project distributions.
@@ -513,9 +514,8 @@ export default function Observatory() {
           {conc.disclosed_shares && (
             <LorenzCurveChart
               shares={conc.disclosed_shares}
-              giniOverride={pop.pooled_allocation_gini}
-              title="Portfolio Beneficiary Allocation Lorenz Curve"
-              subtitle="Empirical cumulative distribution of 9,933 disclosed entities against total retired volume."
+              title="Disclosed Beneficiary Lorenz Curve"
+              subtitle={`Cumulative share of ${fmt(conc.unique_disclosed_beneficiaries)} disclosed beneficiary labels against cumulative share of disclosed retired volume (${fmt(conc.disclosed_units)} t). Undisclosed volume is excluded. The Gini shown is computed from this plotted distribution; it is not the pooled allocation Gini above.`}
             />
           )}
 
@@ -762,9 +762,8 @@ export default function Observatory() {
               {batchData.concentration.disclosed_shares && Object.keys(batchData.concentration.disclosed_shares).length > 1 && (
                 <LorenzCurveChart
                   shares={batchData.concentration.disclosed_shares}
-                  giniOverride={batchData.fragmentation.gini_coefficient}
-                  title={`Batch ${batchData.batch_id} Allocation Lorenz Curve`}
-                  subtitle={`Empirical allocation distribution among ${batchData.fragmentation.distinct_disclosed_beneficiaries} disclosed beneficiaries in this batch.`}
+                  title={`Batch ${batchData.batch_id} Disclosed Beneficiary Lorenz Curve`}
+                  subtitle={`Disclosed volume across ${batchData.fragmentation.distinct_disclosed_beneficiaries} disclosed beneficiary labels in this batch. The Gini shown is computed from this plotted distribution; the allocation-size Gini above covers every retirement event in the batch.`}
                   label={`Batch ${batchData.batch_id}`}
                 />
               )}

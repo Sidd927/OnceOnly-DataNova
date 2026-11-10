@@ -314,13 +314,13 @@ export default function CrossRegistry() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricTile
               label="Verra VCS Retired Volume"
-              value={`${fmt(vcsStats?.total_retired_tonnes ?? 0)} t`}
-              subtext={`${fmt(vcsStats?.total_retirement_records ?? 0)} records · ${vcsStats?.active_projects_count ?? 0} projects · ${pct((vcsStats?.beneficiary_record_disclosure_rate_pct ?? 0) / 100)} beneficiary disclosure`}
+              value={vcsStats ? `${fmt(vcsStats.total_retired_tonnes)} t` : "Unavailable"}
+              subtext={vcsStats ? `${fmt(vcsStats.total_retirement_records)} records · ${vcsStats.active_projects_count} projects · ${pct(vcsStats.beneficiary_record_disclosure_rate_pct / 100)} beneficiary disclosure` : "No statistics returned for this registry"}
             />
             <MetricTile
               label="Gold Standard Retired Volume"
-              value={`${fmt(gsStats?.total_retired_tonnes ?? 0)} t`}
-              subtext={`${fmt(gsStats?.total_retirement_records ?? 0)} records · ${gsStats?.active_projects_count ?? 0} projects · ${pct((gsStats?.beneficiary_record_disclosure_rate_pct ?? 0) / 100)} beneficiary disclosure`}
+              value={gsStats ? `${fmt(gsStats.total_retired_tonnes)} t` : "Unavailable"}
+              subtext={gsStats ? `${fmt(gsStats.total_retirement_records)} records · ${gsStats.active_projects_count} projects · ${pct(gsStats.beneficiary_record_disclosure_rate_pct / 100)} beneficiary disclosure` : "No statistics returned for this registry"}
             />
             <MetricTile
               label="Combined Retired Volume"

@@ -48,9 +48,34 @@ from .temporal import (
     detect_temporal_bursts,
 )
 
-DEFAULT_DB_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "..", "var", "registry_demo.sqlite")
-)
+from ..config import settings
+
+
+class AnalyticsDatabaseUnavailable(RuntimeError):
+    """The analytics reference population could not be located or materialized."""
+
+
+# The analytics population is the curated VROD demo subset on which every Stage 1-4 figure was accepted.
+# Its location is ONCEONLY_REFERENCE_DEMO_DB (default var/registry_demo.sqlite), the same setting the claim
+# pipeline's Reference loader and the Docker image use. It is never silently swapped for the full index.
+DEFAULT_DB_PATH = str(settings.reference_demo)
+
+
+def resolve_analytics_db_path() -> str:
+    """Return the analytics reference DB path, materializing it from the committed subset if needed."""
+    from ..reference import build_demo_db, validate_reference_db
+
+    path = settings.reference_demo
+    if not path.exists():
+        if not settings.reference_subset_csv.exists():
+            raise AnalyticsDatabaseUnavailable(
+                f"Analytics reference database not found at {path} and the demo subset "
+                f"{settings.reference_subset_csv} is missing, so it cannot be materialized.")
+        build_demo_db(settings.reference_subset_csv, path)
+    ok, err = validate_reference_db(path)
+    if not ok:
+        raise AnalyticsDatabaseUnavailable(f"Analytics reference database at {path} is invalid: {err}")
+    return str(path)
 
 
 class AnalyticsEngine:
@@ -65,7 +90,7 @@ class AnalyticsEngine:
     @staticmethod
     def get_connection(db_path: Optional[str] = None) -> sqlite3.Connection:
         """Establish a read-only SQLite connection to the registry database."""
-        path = db_path or DEFAULT_DB_PATH
+        path = db_path or resolve_analytics_db_path()
         if not os.path.exists(path):
             raise FileNotFoundError(f"Registry reference database not found at: {path}")
         # Open in URI read-only mode to prevent unintended database writes

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useId } from "react";
+import demoTargets from "../lib/demoTargets.json";
 import { useSearchParams } from "react-router-dom";
 import {
   Play,
@@ -38,7 +39,7 @@ export default function AssessmentConsole() {
 
   // Query parameter pre-fills
   const initialScope = (searchParams.get("scope") as AssessmentScope) || "PROJECT";
-  const initialProjectId = searchParams.get("project_id") || "1904";
+  const initialProjectId = searchParams.get("project_id") || demoTargets.project.project_id;
   const initialRegistry = searchParams.get("registry") || "VCS";
   const initialClaimId = searchParams.get("claim_id") || "";
 
@@ -217,25 +218,22 @@ export default function AssessmentConsole() {
             <span className="text-muted font-medium">Demo Targets:</span>
             <button
               type="button"
-              onClick={() => handlePreset("PROJECT", "VCS", "1904")}
+              onClick={() => handlePreset("PROJECT", demoTargets.project.registry, demoTargets.project.project_id)}
               className="press rounded border border-rule-strong bg-fog px-2 py-1 font-mono hover:border-ink hover:bg-sheet text-[11px]"
             >
-              VCS Project 1904
+              {demoTargets.project.label}
             </button>
-            <button
-              type="button"
-              onClick={() => handlePreset("CLAIM", "VCS", "1")}
-              className="press rounded border border-rule-strong bg-fog px-2 py-1 font-mono hover:border-ink hover:bg-sheet text-[11px]"
-            >
-              Helios Claim #1
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePreset("CLAIM", "VCS", "2")}
-              className="press rounded border border-rule-strong bg-fog px-2 py-1 font-mono hover:border-ink hover:bg-sheet text-[11px]"
-            >
-              Equinox Claim #2
-            </button>
+            {demoTargets.claims.map((t) => (
+              <button
+                key={t.claim_id}
+                type="button"
+                onClick={() => handlePreset("CLAIM", "VCS", String(t.claim_id))}
+                className="press rounded border border-rule-strong bg-fog px-2 py-1 font-mono hover:border-ink hover:bg-sheet text-[11px]"
+                title={`Seeded synthetic claim ${t.ref}`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
         </div>
 

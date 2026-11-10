@@ -173,7 +173,7 @@ export const claimsApi = {
     request<{ result: any; claim: ClaimDetail }>(`/api/claims/${id}/resolve`, json({ upheld, note })),
   withdraw: (id: number) =>
     request<{ result: any; claim: ClaimDetail }>(`/api/claims/${id}/withdraw`, { method: "POST" }),
-  verify: (form: FormData) => request<any>("/api/verify", { method: "POST", body: form }),
+  verify: (form: FormData) => request<VerifyResult>("/api/verify", { method: "POST", body: form }),
   samples: () => request<Sample[]>("/api/samples"),
   sampleFile: async (name: string) => {
     const res = await fetch(`/api/samples/${encodeURIComponent(name)}`);
@@ -196,3 +196,60 @@ export const claimsApi = {
   reconciliation: (claimId: number | string) =>
     request<ClaimReconciliationReport>(`/api/claims/${claimId}/reconciliation`),
 };
+
+/* ------------------------------------------------------------ verification */
+
+export type VerifyCheckStatus = "PASS" | "FAIL" | "WARN" | "NOT_PERFORMED";
+export type DocumentStatus = "ONCHAIN_ROOT_MATCH" | "ONCHAIN_MEMBERSHIP_PROVEN" | "OFFCHAIN_RECORD_ONLY" | "NO_MATCH";
+
+export interface VerifyCheck {
+  id: "NETWORK" | "DEPLOYMENT_CODE" | "ONCHAIN_RECORD" | "RANGES_RECONCILE" | "EVIDENCE_COMMITMENT" | "DOCUMENT" | "CLAIMANT";
+  label: string;
+  status: VerifyCheckStatus;
+  detail: string;
+}
+
+export interface VerifyChainInfo {
+  rpc_url: string;
+  chain_id: number;
+  network: string | null;
+  public_network: boolean;
+  network_kind: "LOCAL_DEVELOPMENT_CHAIN" | "NON_LOCAL_CHAIN";
+  deployment_chain_id: number;
+  address: string;
+  deploy_tx: string | null;
+  deploy_block: number | null;
+  block_number: number;
+  claim_count: number;
+  registrar: string;
+}
+
+export interface VerifyDocument {
+  filename: string;
+  sha256: string;
+  status: DocumentStatus;
+  matches_onchain_commitment: boolean;
+  offchain_record_match: boolean;
+  explanation: string;
+  does_not_prove: string;
+  proof: { scheme: string; leaves: string[]; recomputed_root: string | null; onchain_root: string; recomputed_matches_onchain: boolean | null };
+}
+
+export interface VerifyResult {
+  found: boolean;
+  message?: string;
+  chain?: VerifyChainInfo;
+  code_verification?: { status: "CODE_MATCHES_ARTIFACT" | "CODE_DIFFERS_FROM_ARTIFACT" | "ARTIFACT_UNAVAILABLE"; runtime_code_keccak: string; artifact: string };
+  onchain?: {
+    claim_id: number; ref_hash: string; claimant_commitment: string; evidence_hash: string; report_hash: string;
+    registrar: string; registered_at: number; status: string;
+    ranges: { namespace: string; unit_start: number; unit_end: number }[];
+  };
+  checks?: VerifyCheck[];
+  commitment_scheme?: string;
+  local?: { id: number; ref: string; tx_hash: string | null; block_number: number | null; synthetic: boolean };
+  evidence_documents?: number;
+  document?: VerifyDocument;
+  claimant_check?: { matches: boolean };
+  limitations?: string[];
+}

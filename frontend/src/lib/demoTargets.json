@@ -1,0 +1,10 @@
+{
+  "_comment": "Assessment Console demo targets. Claim ids follow the submission order in backend/scripts/seed_demo.py and are checked by backend/tests/test_demo_targets.py.",
+  "project": { "registry": "VCS", "project_id": "1904", "label": "VCS project 1904" },
+  "claims": [
+    { "claim_id": 1, "ref": "OO-2026-0001", "seed_file": "northwind_allocation.pdf", "label": "Northwind · claim 1 (anchored)" },
+    { "claim_id": 2, "ref": "OO-2026-0002", "seed_file": "helios_allocation.pdf", "label": "Helios · claim 2 (overlap, blocked)" },
+    { "claim_id": 3, "ref": "OO-2026-0003", "seed_file": "arbor_allocation.pdf", "label": "Arbor · claim 3 (two registries)" }
+  ],
+  "rule_search_example": "RULE-REC-001"
+}

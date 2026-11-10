@@ -309,40 +309,135 @@ def withdraw(con, claim_id: int) -> dict:
 
 # ------------------------------------------------------------------------- verify
 
+COMMITMENT_SCHEME = (
+    "One document: evidence_hash = 0x || SHA-256(document). Several documents: evidence_hash = "
+    "0x || SHA-256(concatenation of the documents' lowercase hex SHA-256 digests, sorted)."
+)
+CHECK_PASS, CHECK_FAIL, CHECK_WARN, CHECK_SKIP = "PASS", "FAIL", "WARN", "NOT_PERFORMED"
+
+
+def assess_document(digest: str, onchain_root: str, committed_digests: list[str] | None) -> dict:
+    """Classify an uploaded document against the on-chain evidence commitment.
+
+    The on-chain record holds one 32-byte evidence commitment. A document is proven to be covered by it
+    only when (a) its digest *is* the commitment (single-document claims) or (b) it belongs to a digest
+    list that recomputes, under COMMITMENT_SCHEME, to exactly the on-chain commitment. A digest that is
+    merely listed in the application database is an off-chain record match, never an on-chain proof.
+    """
+    leaves = sorted(committed_digests or [])
+    recomputed = evidence_root(leaves) if leaves else None
+    listed = digest in leaves
+    if ("0x" + digest) == onchain_root:
+        status = "ONCHAIN_ROOT_MATCH"
+        explanation = "The document's SHA-256 equals the evidence commitment stored on chain."
+    elif listed and len(leaves) > 1 and recomputed == onchain_root:
+        status = "ONCHAIN_MEMBERSHIP_PROVEN"
+        explanation = (f"The document's SHA-256 is one of {len(leaves)} digests whose sorted concatenation hashes to the "
+                       "on-chain evidence commitment. Anyone can recompute this from the digests listed below.")
+    elif listed:
+        status = "OFFCHAIN_RECORD_ONLY"
+        explanation = ("The application database lists this document for the claim, but the database's digest list does not "
+                       "recompute to the on-chain commitment. This is not an on-chain proof; treat the record as inconsistent.")
+    else:
+        status = "NO_MATCH"
+        explanation = "The document differs from every committed evidence document (a one-byte change alters the SHA-256)."
+    return {
+        "sha256": digest,
+        "status": status,
+        "matches_onchain_commitment": status in ("ONCHAIN_ROOT_MATCH", "ONCHAIN_MEMBERSHIP_PROVEN"),
+        "offchain_record_match": listed,
+        "explanation": explanation,
+        "proof": {
+            "scheme": COMMITMENT_SCHEME,
+            "leaves": leaves,
+            "recomputed_root": recomputed,
+            "onchain_root": onchain_root,
+            "recomputed_matches_onchain": recomputed == onchain_root if recomputed else None,
+        },
+        "does_not_prove": "A matching fingerprint shows the bytes are unchanged since registration. It does not show the document's statements are true.",
+    }
+
+
+def _check(cid: str, label: str, status: str, detail: str) -> dict:
+    return {"id": cid, "label": label, "status": status, "detail": detail}
+
+
 def verify(con, ref: str | None, chain_claim_id: int | None, upload: Upload | None, salt: str | None = None, claimant: str | None = None) -> dict:
-    ledger, err = try_ledger()
+    from .chain import namespace, network_kind, try_ledger_detailed
+
+    ledger, code, err = try_ledger_detailed()
     if ledger is None:
-        raise ServiceError(503, f"Ledger unavailable: {err}")
+        raise ServiceError(503, f"Ledger unavailable: {err}", {"code": code})
     if chain_claim_id is None:
         if not ref:
             raise ServiceError(422, "Provide a claim reference (e.g. OO-2026-0001) or an on-chain claim id")
         chain_claim_id = ledger.claim_id_by_ref(ref.strip())
         if chain_claim_id == 0:
-            return {"found": False, "message": f"No claim with reference {ref} exists on the ledger at {ledger.address}."}
+            return {"found": False, "message": f"No claim with reference {ref} exists on the ledger at {ledger.address}.", "chain": ledger.info()}
     try:
         onchain = ledger.get_claim(int(chain_claim_id))
     except Exception:
-        return {"found": False, "message": f"Claim id {chain_claim_id} does not exist on the ledger."}
-    out = {"found": True, "chain": ledger.info(), "onchain": onchain}
-    local = con.execute("SELECT id, ref, claimant, claimant_salt, synthetic, tx_hash, block_number FROM claims WHERE chain_claim_id=? AND contract_address=?",
+        return {"found": False, "message": f"Claim id {chain_claim_id} does not exist on the ledger.", "chain": ledger.info()}
+
+    info = ledger.info()
+    code_check = ledger.code_verification()
+    checks = [
+        _check("NETWORK", "Network identity", CHECK_PASS if info["chain_id"] == info["deployment_chain_id"] else CHECK_FAIL,
+               f"Chain ID {info['chain_id']} ({'local Hardhat development chain, not a public network' if network_kind(info['chain_id']) == 'LOCAL_DEVELOPMENT_CHAIN' else 'non-local chain'}); "
+               f"matches the deployment record's chain ID {info['deployment_chain_id']}."),
+        _check("DEPLOYMENT_CODE", "Contract code", {"CODE_MATCHES_ARTIFACT": CHECK_PASS, "CODE_DIFFERS_FROM_ARTIFACT": CHECK_FAIL}.get(code_check["status"], CHECK_SKIP),
+               {"CODE_MATCHES_ARTIFACT": f"Runtime bytecode at {info['address']} is identical to the compiled ClaimLedger artifact.",
+                "CODE_DIFFERS_FROM_ARTIFACT": f"Runtime bytecode at {info['address']} differs from the compiled ClaimLedger artifact.",
+                }.get(code_check["status"], "The compiled contract artifact is not available on this server, so the deployed code was not compared.")),
+        _check("ONCHAIN_RECORD", "On-chain claim record", CHECK_PASS,
+               f"Claim #{onchain['claim_id']} read from the contract: status '{onchain['status']}', {len(onchain['ranges'])} unit range(s)."),
+    ]
+    out = {"found": True, "chain": info, "code_verification": code_check, "onchain": onchain, "checks": checks,
+           "commitment_scheme": COMMITMENT_SCHEME}
+
+    local = con.execute("SELECT id, ref, claimant, claimant_salt, synthetic, tx_hash, block_number, evidence_hash FROM claims WHERE chain_claim_id=? AND contract_address=?",
                         (int(chain_claim_id), ledger.address)).fetchone()
+    digests: list[str] | None = None
     if local:
         out["local"] = {"id": local["id"], "ref": local["ref"], "tx_hash": local["tx_hash"], "block_number": local["block_number"], "synthetic": bool(local["synthetic"])}
         digests = [r["sha256"] for r in con.execute("SELECT sha256 FROM evidence WHERE claim_id=?", (local["id"],))]
         out["evidence_documents"] = len(digests)
+        blocks = con.execute("SELECT registry, batch_id, unit_start, unit_end FROM claim_blocks WHERE claim_id=?", (local["id"],)).fetchall()
+        local_ranges = sorted(("0x" + namespace(b["registry"], b["batch_id"]).hex(), b["unit_start"], b["unit_end"]) for b in blocks)
+        chain_ranges = sorted((r["namespace"], r["unit_start"], r["unit_end"]) for r in onchain["ranges"])
+        checks.append(_check("RANGES_RECONCILE", "Unit ranges: database vs chain", CHECK_PASS if local_ranges == chain_ranges else CHECK_FAIL,
+                             "The application's unit ranges for this claim equal the ranges stored on chain." if local_ranges == chain_ranges
+                             else "The application's unit ranges differ from the ranges stored on chain; the chain is authoritative."))
+        recomputed = evidence_root(digests) if digests else None
+        checks.append(_check("EVIDENCE_COMMITMENT", "Evidence digests reproduce the on-chain commitment",
+                             CHECK_PASS if recomputed == onchain["evidence_hash"] else CHECK_FAIL,
+                             f"{len(digests)} document digest(s) recompute to the on-chain evidence commitment." if recomputed == onchain["evidence_hash"]
+                             else "The stored document digests do not recompute to the on-chain evidence commitment."))
+    else:
+        checks.append(_check("RANGES_RECONCILE", "Unit ranges: database vs chain", CHECK_SKIP, "This server has no application record for the on-chain claim."))
+        checks.append(_check("EVIDENCE_COMMITMENT", "Evidence digests reproduce the on-chain commitment", CHECK_SKIP,
+                             "No document digest list is available on this server; only a single-document upload can be compared with the commitment."))
+
     if upload is not None:
-        d = sha256_hex(upload.data)
-        if local:
-            digests = [r["sha256"] for r in con.execute("SELECT sha256 FROM evidence WHERE claim_id=?", (local["id"],))]
-            match_member = d in digests
-        else:
-            digests, match_member = [], False
-        match_root = ("0x" + d) == onchain["evidence_hash"]
-        out["document"] = {
-            "filename": upload.filename, "sha256": d, "matches_onchain_commitment": match_root or match_member,
-            "explanation": "The document is byte-identical to evidence committed when the claim was registered." if (match_root or match_member)
-            else "The document differs from every evidence document committed for this claim (even a one-byte change alters the SHA-256 fingerprint).",
-        }
+        doc = assess_document(sha256_hex(upload.data), onchain["evidence_hash"], digests)
+        doc["filename"] = upload.filename
+        out["document"] = doc
+        checks.append(_check("DOCUMENT", "Uploaded document", CHECK_PASS if doc["matches_onchain_commitment"] else CHECK_WARN if doc["status"] == "OFFCHAIN_RECORD_ONLY" else CHECK_FAIL,
+                             f"{doc['status']}: {doc['explanation']}"))
+    else:
+        checks.append(_check("DOCUMENT", "Uploaded document", CHECK_SKIP, "No document was uploaded."))
+
     if claimant and salt:
-        out["claimant_check"] = {"matches": claimant_commitment(claimant, salt) == onchain["claimant_commitment"]}
+        ok = claimant_commitment(claimant, salt) == onchain["claimant_commitment"]
+        out["claimant_check"] = {"matches": ok}
+        checks.append(_check("CLAIMANT", "Claimant commitment", CHECK_PASS if ok else CHECK_FAIL,
+                             "keccak(salt | normalized name) equals the on-chain claimant commitment." if ok else "The name and salt do not reproduce the on-chain claimant commitment."))
+    else:
+        checks.append(_check("CLAIMANT", "Claimant commitment", CHECK_SKIP, "Requires the claimant name and the private salt held by the claimant."))
+
+    out["limitations"] = [
+        "The ledger runs on the network shown above. On a local development chain, these checks are reproducible only by someone with access to that chain.",
+        "The registrar (this server's operator) submitted the record; claimants did not sign it.",
+        "Hash checks show documents are unchanged since registration, not that their contents are accurate.",
+    ]
     return out

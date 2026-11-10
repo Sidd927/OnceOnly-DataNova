@@ -13,15 +13,48 @@ from eth_utils import keccak, to_checksum_address
 from web3 import Web3
 from web3.exceptions import ContractCustomError, ContractLogicError
 
-from .config import settings
+from .config import ROOT, settings
 
 log = logging.getLogger("onceonly.chain")
 
 STATUS = {0: "none", 1: "active", 2: "challenged", 3: "revoked", 4: "withdrawn"}
 
 
+LOCAL_CHAIN_ID = 31337  # Hardhat's default development chain
+HARDHAT_MNEMONIC = "test test test test test test test test test test test junk"  # public, documented by Hardhat
+ARTIFACT_PATH = ROOT / "contracts/artifacts/contracts/ClaimLedger.sol/ClaimLedger.json"
+
+
 class ChainUnavailable(RuntimeError):
-    pass
+    def __init__(self, message: str, code: str = "CHAIN_UNAVAILABLE"):
+        super().__init__(message)
+        self.code = code
+
+
+_dev_addresses: frozenset[str] | None = None
+
+
+def hardhat_dev_addresses() -> frozenset[str]:
+    """Addresses of the 20 publicly known Hardhat development accounts (derived, not hard-coded)."""
+    global _dev_addresses
+    if _dev_addresses is None:
+        Account.enable_unaudited_hdwallet_features()
+        _dev_addresses = frozenset(
+            Account.from_mnemonic(HARDHAT_MNEMONIC, account_path=f"m/44'/60'/0'/0/{i}").address for i in range(20))
+    return _dev_addresses
+
+
+def assert_signers_allowed(chain_id: int, addresses: list[str]) -> None:
+    """Refuse to sign with publicly known development keys anywhere except the local development chain."""
+    if chain_id != LOCAL_CHAIN_ID and any(a in hardhat_dev_addresses() for a in addresses):
+        raise ChainUnavailable(
+            f"Refusing to use a publicly known Hardhat development key on chain {chain_id}. "
+            "These keys are only acceptable on the local development chain (31337).",
+            code="DEV_KEY_ON_NON_LOCAL_CHAIN")
+
+
+def network_kind(chain_id: int) -> str:
+    return "LOCAL_DEVELOPMENT_CHAIN" if chain_id == LOCAL_CHAIN_ID else "NON_LOCAL_CHAIN"
 
 
 @dataclass
@@ -73,23 +106,24 @@ def ranges_with_hints(contract, ranges: list[tuple[bytes, int, int]]) -> list[tu
 class Ledger:
     def __init__(self):
         if not settings.deployment_file.exists():
-            raise ChainUnavailable(f"No deployment file at {settings.deployment_file}. Run `make chain` and `make deploy`.")
+            raise ChainUnavailable(f"No deployment file at {settings.deployment_file}. Run `make chain` and `make deploy`.", code="DEPLOYMENT_MISSING")
         self.deployment = json.loads(settings.deployment_file.read_text())
         self.w3 = Web3(Web3.HTTPProvider(settings.rpc_url, request_kwargs={"timeout": 15}))
         if not self.w3.is_connected():
-            raise ChainUnavailable(f"Cannot reach chain RPC at {settings.rpc_url}")
+            raise ChainUnavailable(f"Cannot reach chain RPC at {settings.rpc_url}", code="RPC_UNREACHABLE")
         self.chain_id = self.w3.eth.chain_id
         if self.chain_id != self.deployment["chainId"]:
-            raise ChainUnavailable(f"RPC chainId {self.chain_id} != deployment chainId {self.deployment['chainId']}")
+            raise ChainUnavailable(f"RPC chainId {self.chain_id} != deployment chainId {self.deployment['chainId']}", code="NETWORK_MISMATCH")
         self.address = to_checksum_address(self.deployment["address"])
         if self.w3.eth.get_code(self.address) in (b"", b"\x00"):
-            raise ChainUnavailable(f"No contract code at {self.address}; the local chain was probably restarted. Run `make deploy`.")
+            raise ChainUnavailable(f"No contract code at {self.address}; the local chain was probably restarted. Run `make deploy`.", code="CONTRACT_CODE_MISSING")
         self.c = self.w3.eth.contract(address=self.address, abi=self.deployment["abi"])
         self.registrar = Account.from_key(settings.registrar_key) if settings.registrar_key else None
         self.reviewer = Account.from_key(settings.reviewer_key) if settings.reviewer_key else self.registrar
         self.challenger = Account.from_key(settings.challenger_key) if settings.challenger_key else self.registrar
         if self.registrar is None:
-            raise ChainUnavailable("REGISTRAR_PRIVATE_KEY is not set (see .env.example)")
+            raise ChainUnavailable("REGISTRAR_PRIVATE_KEY is not set (see .env.example)", code="SIGNER_MISSING")
+        assert_signers_allowed(self.chain_id, [a.address for a in (self.registrar, self.reviewer, self.challenger)])
 
     @cached_property
     def _errors(self) -> dict[bytes, tuple[str, list[str], list[str]]]:
@@ -138,13 +172,25 @@ class Ledger:
         m = re.search(r"reverted with (?:custom error|reason string) '?([^']+)'?", msg)
         return Revert("ContractLogicError", {"message": m.group(1) if m else msg[:300]}, "")
 
+    def code_verification(self) -> dict:
+        """Compare the deployed runtime bytecode with the locally compiled ClaimLedger artifact."""
+        onchain = bytes(self.w3.eth.get_code(self.address))
+        out = {"runtime_code_keccak": "0x" + keccak(onchain).hex(), "artifact": str(ARTIFACT_PATH.relative_to(ROOT))}
+        if not ARTIFACT_PATH.exists():
+            return {**out, "status": "ARTIFACT_UNAVAILABLE"}
+        expected = bytes.fromhex(json.loads(ARTIFACT_PATH.read_text())["deployedBytecode"].removeprefix("0x"))
+        return {**out, "status": "CODE_MATCHES_ARTIFACT" if expected == onchain else "CODE_DIFFERS_FROM_ARTIFACT"}
+
     def info(self) -> dict:
         return {
             "rpc_url": settings.rpc_url,
             "chain_id": self.chain_id,
             "network": self.deployment.get("network"),
-            "public_network": self.chain_id != 31337,
+            "public_network": self.chain_id != LOCAL_CHAIN_ID,
+            "network_kind": network_kind(self.chain_id),
+            "deployment_chain_id": self.deployment.get("chainId"),
             "address": self.address,
+            "deploy_tx": self.deployment.get("deployTx"),
             "deploy_block": self.deployment.get("deployBlock"),
             "block_number": self.w3.eth.block_number,
             "claim_count": self.c.functions.claimCount().call(),
@@ -261,10 +307,16 @@ def get_ledger(refresh: bool = False) -> Ledger:
     return _ledger
 
 
-def try_ledger() -> tuple[Ledger | None, str | None]:
+def try_ledger_detailed() -> tuple[Ledger | None, str | None, str | None]:
+    """(ledger, error_code, error_message)."""
     try:
-        return get_ledger(), None
+        return get_ledger(), None, None
     except ChainUnavailable as e:
-        return None, str(e)
+        return None, e.code, str(e)
     except Exception as e:  # connection errors etc.
-        return None, f"{type(e).__name__}: {e}"
+        return None, "CHAIN_UNAVAILABLE", f"{type(e).__name__}: {e}"
+
+
+def try_ledger() -> tuple[Ledger | None, str | None]:
+    ledger, _, err = try_ledger_detailed()
+    return ledger, err

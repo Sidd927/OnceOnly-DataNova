@@ -54,6 +54,14 @@ async def _svc_err(_: Request, e: service.ServiceError):
     return JSONResponse(status_code=e.status, content={"error": e.message, "detail": e.detail})
 
 
+from .analytics.engine import AnalyticsDatabaseUnavailable  # noqa: E402
+
+
+@app.exception_handler(AnalyticsDatabaseUnavailable)
+async def _analytics_db_err(_: Request, e: AnalyticsDatabaseUnavailable):
+    return JSONResponse(status_code=503, content={"error": str(e), "detail": {"code": "ANALYTICS_DB_UNAVAILABLE"}})
+
+
 # ------------------------------------------------------------------- read models
 
 def claim_detail(claim_id: int) -> dict:
@@ -123,8 +131,18 @@ def health():
         "reference": {"loaded": r is not None, "scope": r.scope if r else None},
         "chain": {"available": ledger is not None, "error": err, **({"chain_id": ledger.chain_id, "address": ledger.address, "block_number": ledger.w3.eth.block_number, "public_network": ledger.chain_id != 31337} if ledger else {})},
         "llm": {"configured": llm_available(), "model": settings.llm_model if llm_available() else None},
+        "analytics": _analytics_health(),
         "public_demo": settings.public_demo,
     }
+
+
+def _analytics_health() -> dict:
+    from .analytics.engine import resolve_analytics_db_path
+
+    try:
+        return {"available": True, "db": Path(resolve_analytics_db_path()).name, "population": "VROD 2026-08 demo subset"}
+    except AnalyticsDatabaseUnavailable as e:
+        return {"available": False, "error": str(e)}
 
 
 # ------------------------------------------------------------- public demo guards
@@ -475,6 +493,26 @@ def evaluation():
         p = d / name
         if p.exists():
             out[name.removesuffix(".json")] = json.loads(p.read_text())
+    # DATANOVA curated benchmarks: aggregate metrics only (per-case payloads stay in the files).
+    for name in ("entity_resolution_results.json", "reconciliation_results.json"):
+        p = d / name
+        if p.exists():
+            r = json.loads(p.read_text())
+            out[name.removesuffix("_results.json")] = {
+                "benchmark_file": r.get("benchmark_file"),
+                "total_cases": r.get("total_test_cases"),
+                "evaluated_at": r.get("evaluation_timestamp"),
+                "models": {m: {k: v for k, v in metrics.items() if k not in ("by_category", "by_split")} for m, metrics in r.get("models", {}).items()},
+                **({"blocking_efficiency": r["blocking_efficiency"]} if "blocking_efficiency" in r else {}),
+            }
+            cases = r.get("cases") or []
+            if cases and "expected_allocation_type" in cases[0]:
+                out["reconciliation"]["semantic"] = {
+                    "allocation_class_exact": sum(c["expected_allocation_type"] == c["predicted_allocation_type"] for c in cases),
+                    "geometry_exact": sum(c["expected_overlap_type"] == c["predicted_overlap_type"] for c in cases),
+                    "n": len(cases),
+                    "classes": r.get("classification_breakdown"),
+                }
     return out
 
 
