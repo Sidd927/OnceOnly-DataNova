@@ -917,6 +917,11 @@ if settings.static_dir and (settings.static_dir / "index.html").exists():
     _static = settings.static_dir
     app.mount("/assets", StaticFiles(directory=_static / "assets"), name="assets")
 
+    # HTML must be revalidated on every visit: it names the content-hashed bundles, and without an explicit
+    # Cache-Control browsers cache it heuristically (up to ~10% of its age), so a redeploy can stay invisible
+    # for a day. index.html is under 1 kB, so refetching it is cheap. Hashed /assets files are unaffected.
+    _HTML_HEADERS = {"Cache-Control": "no-cache"}
+
     @app.get("/{full_path:path}", include_in_schema=False)
     def spa(full_path: str):
         from fastapi.responses import FileResponse
@@ -925,5 +930,6 @@ if settings.static_dir and (settings.static_dir / "index.html").exists():
             raise HTTPException(404, "Not found")
         candidate = (_static / full_path).resolve()
         if full_path and candidate.is_file() and _static.resolve() in candidate.parents:
-            return FileResponse(candidate)  # e.g. favicon.svg
-        return FileResponse(_static / "index.html")  # client-side routes
+            # e.g. favicon.svg
+            return FileResponse(candidate, headers=_HTML_HEADERS if candidate.suffix == ".html" else None)
+        return FileResponse(_static / "index.html", headers=_HTML_HEADERS)  # client-side routes

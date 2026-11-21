@@ -181,3 +181,25 @@ def test_static_frontend_and_spa_fallback(tmp_env, monkeypatch, tmp_path):
     assert c.get("/api/health").json()["status"] == "ok"  # API still wins
     assert c.get("/api/nope").status_code == 404
     assert c.get("/../../etc/passwd").status_code in (200, 404) and "root:" not in c.get("/../../etc/passwd").text
+
+
+def test_spa_html_is_revalidated_but_assets_are_not_forced(tmp_env, monkeypatch, tmp_path):
+    """Regression: index.html had no Cache-Control, so browsers kept a pre-deploy copy for up to a day."""
+    dist = tmp_path / "dist"
+    (dist / "assets").mkdir(parents=True)
+    (dist / "index.html").write_text("<!doctype html><title>OnceOnly</title>")
+    (dist / "assets" / "app-abc123.js").write_text("console.log(1)")
+    (dist / "favicon.svg").write_text("<svg/>")
+    monkeypatch.setenv("ONCEONLY_STATIC_DIR", str(dist))
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    c = TestClient(app)
+    for path in ("/", "/cross-registry", "/claims/2", "/index.html"):
+        r = c.get(path)
+        assert r.status_code == 200 and "OnceOnly" in r.text, path
+        assert r.headers.get("cache-control") == "no-cache", path
+    assert "cache-control" not in c.get("/assets/app-abc123.js").headers
+    assert "cache-control" not in c.get("/favicon.svg").headers
+    assert "cache-control" not in c.get("/api/health").headers
