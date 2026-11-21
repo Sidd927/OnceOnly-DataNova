@@ -329,16 +329,19 @@ test.describe("Sprint 3.3 cross-registry project and entity intelligence workspa
     await page.getByRole("tab", { name: /Project Comparator/ }).click();
     await expect(page.getByText("Quick Demonstration Presets:")).toBeVisible();
 
-    // Click Preset 2: Identifier Collision (VCS 1845 vs GS 1845)
-    await page.getByRole("button", { name: /Identifier Collision/ }).click();
-    await page.getByRole("button", { name: "Compare Project Profiles" }).click();
+    // Presets declare whether they are registry records or a hypothetical illustration
+    const collisionPreset = page.getByRole("button", { name: /Identifier Collision \(illustration\)/ });
+    await expect(collisionPreset).toContainText("Illustration · not registry data");
+    await expect(page.getByRole("button", { name: /Partial Correlation \(VCS 2042 vs GS 5673\)/ })).toContainText("Registry records");
 
-    // Verify collision safety banner
+    // Illustration preset: identifier collision safety banner
+    await collisionPreset.click();
+    await page.getByRole("button", { name: "Compare Project Profiles" }).click();
     await expect(page.getByText("Cross-Registry Identifier Collision Detected")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText(/uncoordinated identifier namespaces/)).toBeVisible();
 
-    // Click Preset 1: Attribute Correlation (VCS 1904 vs GS 3044)
-    await page.getByRole("button", { name: /Attribute Correlation/ }).click();
+    // Real registry records: VCS 2042 vs GS 5673
+    await page.getByRole("button", { name: /Partial Correlation \(VCS 2042 vs GS 5673\)/ }).click();
     await page.getByRole("button", { name: "Compare Project Profiles" }).click();
     await expect(page.getByText("Partial Attribute Correlation")).toBeVisible({ timeout: 10_000 });
   });

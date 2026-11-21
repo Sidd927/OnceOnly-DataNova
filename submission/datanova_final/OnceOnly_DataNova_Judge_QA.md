@@ -251,4 +251,4 @@ AI coding assistants were used during development.
 | "on the blockchain, so it's proven" | "the contract enforces no overlapping units; hashes show a document is unchanged, not that it's true" |
 | "100% accurate" | "on synthetic and curated benchmarks it behaves as specified" |
 | "used by …" / "partners" | "intended for auditors, buyers and registries; no adopters yet" |
-| The `/cross-registry` Project Comparator presets (VCS 1845 vs GS 1845, VCS 1904 vs GS 3044) as real cases | They are hand-entered examples whose project B is not in the dataset. Use the Correlation Explorer list (real data) |
+| The live demo's old `/cross-registry` Project Comparator presets (VCS 1845 vs GS 1845, VCS 1904 vs GS 3044) as real cases | They are hand-entered and not in the dataset (fixed in the repository; live until a redeploy). Use the Correlation Explorer list (real data) |

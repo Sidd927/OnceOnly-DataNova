@@ -61,3 +61,48 @@ def test_claim_assessment_target_reports_claimed_units(tmp_env):
     r = TestClient(app).post("/api/analytics/assessment", json={"scope": "CLAIM", "claim_id": cid})
     assert r.status_code == 200, r.text
     assert "10,000 units" in r.json()["target"]["description"]
+
+
+def _census_profiles() -> dict[tuple[str, str], dict]:
+    from app.analytics import AnalyticsEngine
+
+    resp = AnalyticsEngine.correlate_cross_registry_projects(min_similarity=0.0, limit=500).to_dict()
+    assert resp["total_candidates_evaluated"] == len(resp["correlations"])  # every VCS x GS pair returned
+    profiles = {}
+    for c in resp["correlations"]:
+        for p in (c["project_a"], c["project_b"]):
+            profiles[(p["registry"], str(p["project_id"]))] = p
+    return profiles
+
+
+def test_cross_registry_presets_are_labelled_real_or_illustration():
+    """Regression: comparator presets used hand-entered projects that are not in the dataset, unlabelled."""
+    presets = TARGETS["cross_registry_presets"]
+    assert presets and {p["source"] for p in presets} <= {"REGISTRY_RECORDS", "ILLUSTRATION"}
+    profiles = _census_profiles()
+    for preset in presets:
+        for side in ("projectA", "projectB"):
+            prof = preset[side]
+            key = (prof["registry"], prof["project_id"])
+            if preset["source"] == "REGISTRY_RECORDS":
+                assert key in profiles, (preset["label"], key)
+                census = profiles[key]
+                for field in ("project_name", "country", "vintage"):
+                    assert prof[field] == census[field], (preset["label"], field, prof[field], census[field])
+            else:
+                assert key not in profiles, (preset["label"], key)
+                assert "illustration" in preset["label"].lower() and "not registry data" in preset["desc"].lower()
+
+
+def test_cross_registry_presets_produce_their_expected_category():
+    from app.analytics import AnalyticsEngine
+
+    for preset in TARGETS["cross_registry_presets"]:
+        got = AnalyticsEngine.compare_projects(preset["projectA"], preset["projectB"]).to_dict()["correlation_category"]
+        assert got == preset["expected_category"], (preset["label"], got)
+
+
+def test_frontend_has_no_unlisted_comparator_projects():
+    src = (ROOT / "frontend/src/pages/CrossRegistry.tsx").read_text()
+    for phantom in ("Rimba Raya", "Kasigau", '"3044"', '"1845"', '"2284"'):
+        assert phantom not in src, phantom

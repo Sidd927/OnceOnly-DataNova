@@ -287,7 +287,7 @@ export default function AssessmentConsole() {
                   type="text"
                   value={projectId}
                   onChange={(e) => setProjectId(e.target.value)}
-                  placeholder="e.g. 1904, 1845, 2284"
+                  placeholder="e.g. 1904, 2042, 981"
                   required
                   className="w-full rounded-panel border border-rule-strong bg-sheet px-3 py-2 font-mono text-sm text-ink focus:border-ink focus:outline-none"
                 />

@@ -33,7 +33,7 @@ Optional, if asked about cross-registry: open `/cross-registry`, **Correlation E
 
 ## 2. What to avoid
 
-- **Don't use the Project Comparator presets** on `/cross-registry` ("VCS 1904 vs GS 3044", "VCS 1845 vs GS 1845"). Their second project is hand-entered and **not in the dataset**, and the UI doesn't label them as illustrations.
+- **On the live demo, don't use the Project Comparator presets** on `/cross-registry` ("VCS 1904 vs GS 3044", "VCS 1845 vs GS 1845"). They are hand-entered, not in the dataset and unlabelled. This is fixed in the repository, but Render serves the old build until it is redeployed. After a redeploy, the presets marked "Registry records" are safe to show, and the collision preset is badged as an illustration.
 - **Don't try to anchor, challenge or submit a claim** on the public demo. Writes return 403 by design, and claim checks are rate-limited.
 - Don't say "fraud", "AI model", "public blockchain" or "real companies". The claimants are synthetic.
 - Don't promise uptime: it's a free instance that sleeps.

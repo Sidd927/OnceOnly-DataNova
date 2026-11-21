@@ -1,10 +1,36 @@
 {
-  "_comment": "Assessment Console demo targets. Claim ids follow the submission order in backend/scripts/seed_demo.py and are checked by backend/tests/test_demo_targets.py.",
+  "_comment": "Demo targets and presets. Claim ids follow the submission order in backend/scripts/seed_demo.py. Cross-registry presets with source REGISTRY_RECORDS must equal the reference census profiles; ILLUSTRATION presets must not exist in the reference. All are checked by backend/tests/test_demo_targets.py.",
   "project": { "registry": "VCS", "project_id": "1904", "label": "VCS project 1904" },
   "claims": [
     { "claim_id": 1, "ref": "OO-2026-0001", "seed_file": "northwind_allocation.pdf", "label": "Northwind · claim 1 (anchored)" },
     { "claim_id": 2, "ref": "OO-2026-0002", "seed_file": "helios_allocation.pdf", "label": "Helios · claim 2 (overlap, blocked)" },
     { "claim_id": 3, "ref": "OO-2026-0003", "seed_file": "arbor_allocation.pdf", "label": "Arbor · claim 3 (two registries)" }
   ],
-  "rule_search_example": "RULE-REC-001"
+  "rule_search_example": "RULE-REC-001",
+  "cross_registry_presets": [
+    {
+      "label": "Partial Correlation (VCS 2042 vs GS 5673)",
+      "desc": "Real registry records: similar titles, both in India, overlapping vintages, different project IDs.",
+      "source": "REGISTRY_RECORDS",
+      "expected_category": "PARTIAL_ATTRIBUTE_CORRELATION",
+      "projectA": { "registry": "VCS", "project_id": "2042", "project_name": "Renewable Wind Power Project by Adani", "country": "India", "vintage": "2019 - 2023" },
+      "projectB": { "registry": "GS", "project_id": "5673", "project_name": "Renewable Energy Power project by DDWL", "country": "India", "vintage": "2020 - 2021" }
+    },
+    {
+      "label": "Conflicting Jurisdiction (VCS 2042 vs GS 2290)",
+      "desc": "Real registry records: similar titles, but India vs Brazil, so they describe distinct assets.",
+      "source": "REGISTRY_RECORDS",
+      "expected_category": "CONFLICTING_ATTRIBUTES",
+      "projectA": { "registry": "VCS", "project_id": "2042", "project_name": "Renewable Wind Power Project by Adani", "country": "India", "vintage": "2019 - 2023" },
+      "projectB": { "registry": "GS", "project_id": "2290", "project_name": "Buenos Aires Renewable Energy Project", "country": "Brazil", "vintage": "2012 - 2019" }
+    },
+    {
+      "label": "Identifier Collision (illustration)",
+      "desc": "Hypothetical projects, not registry data: no real pair in the 22-project subset shares an ID. Shows that an identical ID is never treated as the same project.",
+      "source": "ILLUSTRATION",
+      "expected_category": "CROSS_REGISTRY_IDENTIFIER_COLLISION",
+      "projectA": { "registry": "VCS", "project_id": "EX-0001", "project_name": "Coastal Mangrove Restoration", "country": "Kenya", "vintage": "2020" },
+      "projectB": { "registry": "GS", "project_id": "EX-0001", "project_name": "Efficient Cookstove Programme", "country": "Kenya", "vintage": "2021" }
+    }
+  ]
 }

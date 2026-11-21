@@ -33,70 +33,14 @@ import {
 } from "../components/primitives";
 import { ComparativePacingChart } from "../components/ComparativePacingChart";
 import { ProjectCompareModal } from "../components/ProjectCompareModal";
+import demoTargets from "../lib/demoTargets.json";
 
 type ActiveTab = "explorer" | "compare" | "entities";
 
-// Presets for Project Comparison Studio
-const PROJECT_PRESETS = [
-  {
-    label: "Attribute Correlation (VCS 1904 vs GS 3044)",
-    desc: "Wind Power Project in Tamil Nadu, India — matching jurisdiction & overlapping vintage",
-    projectA: {
-      registry: "VCS",
-      project_id: "1904",
-      project_name: "Wind Power Project in Tamil Nadu by Green Infra Renewable Energy Limited",
-      country: "India",
-      vintage: "2018-2020",
-      developer: "Green Infra Renewable Energy Limited",
-    },
-    projectB: {
-      registry: "GS",
-      project_id: "3044",
-      project_name: "Wind Power Project in Tamil Nadu, India",
-      country: "India",
-      vintage: "2019",
-      developer: "Green Infra",
-    },
-  },
-  {
-    label: "Identifier Collision (VCS 1845 vs GS 1845)",
-    desc: "Identical numeric ID 1845 in disjoint namespaces — Rimba Raya (ID) vs Kasigau (KE)",
-    projectA: {
-      registry: "VCS",
-      project_id: "1845",
-      project_name: "Rimba Raya Biodiversity Reserve",
-      country: "Indonesia",
-      vintage: "2020",
-      developer: "InfiniteEARTH",
-    },
-    projectB: {
-      registry: "GS",
-      project_id: "1845",
-      project_name: "Kasigau Corridor REDD Project",
-      country: "Kenya",
-      vintage: "2019",
-      developer: "Wildlife Works",
-    },
-  },
-  {
-    label: "Conflicting Jurisdiction (VCS 2284 vs GS 3044)",
-    desc: "Identical project title text with contradictory countries (Brazil vs India)",
-    projectA: {
-      registry: "VCS",
-      project_id: "2284",
-      project_name: "Renewable Energy Power project by DDWL",
-      country: "Brazil",
-      vintage: "2020",
-    },
-    projectB: {
-      registry: "GS",
-      project_id: "3044",
-      project_name: "Renewable Energy Power project by DDWL",
-      country: "India",
-      vintage: "2020",
-    },
-  },
-];
+// Presets for Project Comparison Studio. REGISTRY_RECORDS presets equal the reference census profiles;
+// ILLUSTRATION presets are hypothetical and absent from the reference (both checked by backend/tests/test_demo_targets.py).
+const PROJECT_PRESETS: { label: string; desc: string; source: string; projectA: ProjectProfile; projectB: ProjectProfile }[] =
+  demoTargets.cross_registry_presets;
 
 // Presets for Entity Comparison
 const ENTITY_PRESETS = [
@@ -669,6 +613,13 @@ export default function CrossRegistry() {
                     className="press rounded-panel border border-rule bg-fog-2/40 p-3 text-left hover:border-ink hover:bg-fog transition-colors space-y-1"
                   >
                     <div className="font-semibold text-xs text-ink">{p.label}</div>
+                    <span
+                      className={`inline-block rounded-token border px-1.5 py-px font-mono text-[10.5px] font-bold ${
+                        p.source === "ILLUSTRATION" ? "border-ochre/40 bg-ochre-wash text-ochre" : "border-lichen/40 bg-lichen-wash text-lichen"
+                      }`}
+                    >
+                      {p.source === "ILLUSTRATION" ? "Illustration · not registry data" : "Registry records (VROD 2026-08)"}
+                    </span>
                     <p className="text-[11px] text-muted leading-snug">{p.desc}</p>
                   </button>
                 ))}
